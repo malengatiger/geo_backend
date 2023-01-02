@@ -211,8 +211,8 @@ public class UserService {
 
         cityCounter++;
         logger.info(E.RED_APPLE + E.RED_APPLE +
-                " " + cityUsers.size() + " users " + E.BLUE_DOT
-                + " city #" + cityCounter +
+                " All " + cityUsers.size() + " users " + E.BLUE_DOT
+                + " of city #" + cityCounter +
                 " " + city.getName() + ", elapsed: "
                 + E.PEAR  + " " + elapsed + " seconds");
 

@@ -79,7 +79,7 @@ public class CityService {
 
         List<City> cities = cityRepo.findByProvince(province);
         logger.info(E.GREEN_APPLE+E.GREEN_APPLE+E.GREEN_APPLE+
-                "Cities found in province: " + province + " " + E.GREEN_APPLE);
+                " Cities found in province: " + province + " " + E.GREEN_APPLE);
         int count = 0;
         for (City place : cities) {
             count++;
