@@ -1,2 +1,2 @@
 # polkadot_snadbox
-Implementation of Polkadot blockchain 
+Springboot and MongoDB geo backend
