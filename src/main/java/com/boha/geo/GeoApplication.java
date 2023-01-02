@@ -56,11 +56,12 @@ public class GeoApplication implements ApplicationListener<ApplicationReadyEvent
 				.getBean("requestMappingHandlerMapping", RequestMappingHandlerMapping.class);
 		Map<RequestMappingInfo, HandlerMethod> map = requestMappingHandlerMapping
 				.getHandlerMethods();
+
 		map.forEach((key, value) -> {
 			logger.info(E.PEAR + E.PEAR +
 					" Endpoint: " + key);
 		});
-		logger.info(E.PEAR + E.PEAR + E.PEAR +
+		logger.info(E.PEAR + E.PEAR + E.PEAR + E.PEAR +
 				" Total Endpoints: " + map.size() + "\n");
 	}
 }
