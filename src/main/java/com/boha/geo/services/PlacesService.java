@@ -232,7 +232,7 @@ public class PlacesService {
     public List<CityPlace> getPlacesByCityName(String name) throws Exception {
         List<CityPlace> list = cityPlaceRepo.findByCityName(name);
         logger.info(E.PEAR + E.PEAR +
-               name +  " - Places by City name : "  + list.size());
+               name +  " - Places found by City name : "  + list.size());
         for (CityPlace place : list) {
             logger.info(" Place: " + E.RED_APPLE + " " + place.getName());
         }

@@ -60,5 +60,7 @@ public class GeoApplication implements ApplicationListener<ApplicationReadyEvent
 			logger.info(E.PEAR + E.PEAR +
 					" Endpoint: " + key);
 		});
+		logger.info(E.PEAR + E.PEAR + E.PEAR +
+				" Total Endpoints: " + map.size() + "\n");
 	}
 }
