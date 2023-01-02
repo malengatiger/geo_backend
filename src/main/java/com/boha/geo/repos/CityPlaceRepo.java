@@ -13,6 +13,8 @@ public interface CityPlaceRepo extends MongoRepository<CityPlace, String> {
     public List<CityPlace> findByCityId(String cityId);
     public List<CityPlace> findByCityName(String name);
 
+    public List<CityPlace> findByCityNameAndTypes(String name, String type);
+
 
     public List<CityPlace> findByCityPlaceLocationNear(Point location, Distance distance);
 }

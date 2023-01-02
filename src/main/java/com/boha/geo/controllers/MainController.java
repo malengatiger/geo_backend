@@ -103,6 +103,20 @@ public class MainController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
+    @GetMapping("/getPlacesByCityNameAndType")
+    private ResponseEntity<Object> getPlacesByCityNameAndType(
+            @RequestParam String city, @RequestParam String type) {
+        try {
+            List<CityPlace> placesByCityName
+                    = placesService.getPlacesByCityNameAndType(city,type);
+            logger.info(E.BLUE_HEART + E.BLUE_HEART + E.CHECK +
+                    " MainController Returning, " + placesByCityName.size() + " places in "
+                    + city + " - type: " + type);
+            return ResponseEntity.ok(placesByCityName);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
 
     @GetMapping("/addCities")
     private ResponseEntity<Object> addCities() {

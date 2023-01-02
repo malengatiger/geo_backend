@@ -238,6 +238,16 @@ public class PlacesService {
         }
         return list;
     }
+    public List<CityPlace> getPlacesByCityNameAndType(String name, String type) throws Exception {
+        List<CityPlace> list = cityPlaceRepo.findByCityNameAndTypes(name, type);
+        logger.info(E.PEAR + E.PEAR +
+                name +  " - Places found by City name and type "+type
+                +" : "  + list.size());
+        for (CityPlace place : list) {
+            logger.info(" Place: " + E.RED_APPLE + " " + place.getName());
+        }
+        return list;
+    }
 
     public String loadCityPlaces() throws Exception {
         cityCounter = 9510;

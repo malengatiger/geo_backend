@@ -89,11 +89,12 @@ public class MongoConfig {
                     + col.countDocuments() + " " + E.BLUE_DOT);
             ListIndexesIterable<org.bson.Document> iter = col.listIndexes();
             for (org.bson.Document doc : iter) {
-                LOGGER.info(mm + " Index anyone?: "
-                        + doc.toJson() + " " + E.BLUE_DOT);
+                LOGGER.info(bb + "index: "
+                        + doc.toJson() + "" + E.BLUE_DOT);
             }
         }
 
         return t;
     }
+    private static final String bb = E.YELLOW_STAR ;
 }
