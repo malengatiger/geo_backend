@@ -8,7 +8,8 @@ import java.util.List;
 @Document(collection = "projectPositions")
 public class ProjectPosition {
 
-    private String projectId, projectPositionId, organizationId;
+    private String projectId, projectPositionId,
+            organizationId;
     private Position position;
     private String projectName;
     private String caption;

@@ -6,8 +6,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "geofenceEvents")
 public class GeofenceEvent {
 
-       private String status, geofenceEventId, date, projectPositionId, projectName, userId;
+       private String status, geofenceEventId,
+               date, projectPositionId,
+       projectId,
+       projectName, userId;
        private User user;
+       private Position position;
 
 
 }

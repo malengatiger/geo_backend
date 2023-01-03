@@ -1,6 +1,5 @@
 package com.boha.geo.monitor.utils;
 
-import com.boha.geo.models.CityLocation;
 import com.boha.geo.monitor.data.*;
 import com.boha.geo.monitor.services.DataService;
 import com.boha.geo.monitor.services.ListService;
@@ -22,12 +21,9 @@ import com.mongodb.client.model.IndexOptions;
 import com.mongodb.client.model.Indexes;
 import org.bson.Document;
 import org.joda.time.DateTime;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.FileReader;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -60,7 +56,7 @@ public class MongoGenerator {
 
 
 
-    public void generate() throws Exception {
+    public void generate(int numberOfOrgs) throws Exception {
         LOGGER.info(E.DICE + E.DICE + " -------- Generating countries .... ");
 
         List<Country> countries = new ArrayList<>();
@@ -96,8 +92,7 @@ public class MongoGenerator {
         }
 
         deleteAuthUsers();
-//        processSouthAfricanCities();
-        generateOrganizations(8);
+        generateOrganizations(numberOfOrgs);
         generateCommunities();
 
         LOGGER.info(E.DICE + E.DICE + E.DICE + E.DICE +
@@ -113,7 +108,7 @@ public class MongoGenerator {
 
     private void createUniqueCityIndex() {
         LOGGER.info(E.FOOTBALL + E.FOOTBALL + "Creating unique index to catch name duplication within province");
-        MongoDatabase db = mongoClient.getDatabase("monitordb");
+        MongoDatabase db = mongoClient.getDatabase("geo");
         MongoCollection<Document> dbCollection = db.getCollection("city");
 
         String result = dbCollection.createIndex(Indexes.ascending("name", "provinceName"), new IndexOptions().unique(true));
@@ -125,7 +120,7 @@ public class MongoGenerator {
 
     private void createCityIndexes() {
         //add index
-        MongoDatabase db = mongoClient.getDatabase("monitordb");
+        MongoDatabase db = mongoClient.getDatabase("geo");
         MongoCollection<Document> dbCollection = db.getCollection("city");
         String result = dbCollection.createIndex(Indexes.geo2dsphere("position"));
         LOGGER.info(E.LEAF + E.LEAF + E.LEAF + E.LEAF +
@@ -143,8 +138,8 @@ public class MongoGenerator {
 
     private void createProjectPositionIndexes() {
         //add index
-        MongoDatabase db = mongoClient.getDatabase("monitordb");
-        MongoCollection<Document> dbCollection = db.getCollection("projectPosition");
+        MongoDatabase db = mongoClient.getDatabase("geo");
+        MongoCollection<Document> dbCollection = db.getCollection("projectPositions");
         String result = dbCollection.createIndex(Indexes.geo2dsphere("position"));
         LOGGER.info(E.LEAF + E.LEAF + E.LEAF + E.LEAF +
                 " projectPosition 2dSphere index should be created on projectPosition collection: " +
@@ -159,7 +154,7 @@ public class MongoGenerator {
 
     private void createPhotoIndexes() {
         //add index
-        MongoDatabase db = mongoClient.getDatabase("monitordb");
+        MongoDatabase db = mongoClient.getDatabase("geo");
         MongoCollection<Document> dbCollection = db.getCollection("photo");
         String result = dbCollection.createIndex(Indexes.geo2dsphere("projectPosition"));
         LOGGER.info(E.LEAF + E.LEAF + E.LEAF + E.LEAF +
@@ -175,7 +170,7 @@ public class MongoGenerator {
 
     private void createVideoIndexes() {
         //add index
-        MongoDatabase db = mongoClient.getDatabase("monitordb");
+        MongoDatabase db = mongoClient.getDatabase("geo");
         MongoCollection<Document> dbCollection = db.getCollection("video");
         String result = dbCollection.createIndex(Indexes.geo2dsphere("projectPosition"));
         LOGGER.info(E.LEAF + E.LEAF + E.LEAF + E.LEAF +
@@ -240,7 +235,7 @@ public class MongoGenerator {
 
     private void createOrganizationIndexes() {
         //add index
-        MongoDatabase db = mongoClient.getDatabase("monitordb");
+        MongoDatabase db = mongoClient.getDatabase("geo");
         MongoCollection<Document> dbCollection = db.getCollection("organization");
 
         String result2 = dbCollection.createIndex(Indexes.ascending("name"),
@@ -253,8 +248,8 @@ public class MongoGenerator {
 
     private void createProjectIndexes() {
         //add index
-        MongoDatabase db = mongoClient.getDatabase("monitordb");
-        MongoCollection<Document> dbCollection = db.getCollection("project");
+        MongoDatabase db = mongoClient.getDatabase("geo");
+        MongoCollection<Document> dbCollection = db.getCollection("projects");
 
         String result2 = dbCollection.createIndex(Indexes.ascending("organizationId", "name"),
                 new IndexOptions().unique(true));
@@ -262,16 +257,12 @@ public class MongoGenerator {
                 " Project unique name index should be created on Project collection: " +
                 E.RED_APPLE + result2);
 
-        String result = dbCollection.createIndex(Indexes.geo2dsphere("position"));
-        LOGGER.info(E.LEAF + E.LEAF + E.LEAF + E.LEAF +
-                " Project 2dSphere index should be created on project collection: " +
-                E.RED_APPLE + result);
     }
 
     private void createUserIndexes() {
         //add index
-        MongoDatabase db = mongoClient.getDatabase("monitordb");
-        MongoCollection<Document> dbCollection = db.getCollection("user");
+        MongoDatabase db = mongoClient.getDatabase("geo");
+        MongoCollection<Document> dbCollection = db.getCollection("users");
 
         String result2 = dbCollection.createIndex(Indexes.ascending("email"),
                 new IndexOptions().unique(true));
@@ -287,8 +278,8 @@ public class MongoGenerator {
 
     private void createCommunityIndexes() {
         //add index
-        MongoDatabase db = mongoClient.getDatabase("monitordb");
-        MongoCollection<Document> dbCollection = db.getCollection("community");
+        MongoDatabase db = mongoClient.getDatabase("geo");
+        MongoCollection<Document> dbCollection = db.getCollection("communities");
 
         String result2 = dbCollection.createIndex(Indexes.ascending("name", "countryId"),
                 new IndexOptions().unique(true));
@@ -301,8 +292,28 @@ public class MongoGenerator {
                 " user countryId index should be created on community collection: " +
                 E.RED_APPLE + result);
     }
+    private void createGeofenceIndexes() {
+        //add index
+        MongoDatabase db = mongoClient.getDatabase("geo");
+        MongoCollection<Document> dbCollection = db.getCollection("geofenceEvents");
 
-    public void generateOrganizations(int numberOfOrgs) throws Exception {
+        String result2 = dbCollection.createIndex(Indexes.ascending("projectId"),
+                new IndexOptions().unique(false));
+        LOGGER.info(E.LEAF + E.LEAF + E.LEAF + E.LEAF +
+                " projectId index should be created on geofenceEvents collection: " +
+                E.RED_APPLE + result2);
+
+        String result = dbCollection.createIndex(Indexes.ascending("userId"));
+        LOGGER.info(E.LEAF + E.LEAF + E.LEAF + E.LEAF +
+                " userId index should be created on geofenceEvents collection: " +
+                E.RED_APPLE + result);
+
+        String result3 = dbCollection.createIndex(Indexes.geo2dsphere("position"));
+        LOGGER.info(E.LEAF + E.LEAF + E.LEAF + E.LEAF +
+                " position 2dSphere index should be created on geofenceEvents collection: " +
+                E.RED_APPLE + result3);
+    }
+    private void generateOrganizations(int numberOfOrgs) throws Exception {
         setFirstNames();
         setLastNames();
         setOrgNames();
@@ -330,7 +341,7 @@ public class MongoGenerator {
             org1.setName(name);
             org1.setOrganizationId(UUID.randomUUID().toString());
             org1.setCreated(DateTime.now().toDateTime().toString());
-            org1.setCountryName("South Africa");
+            org1.setCountryName(country.getName());
 
             Organization id1 = organizationRepository.save(org1);
             organizations.add(id1);
@@ -350,7 +361,7 @@ public class MongoGenerator {
     private FieldMonitorScheduleRepository fieldMonitorScheduleRepository;
 
 
-    public void generateFieldMonitorSchedules() {
+    private void generateFieldMonitorSchedules() {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS +
                 E.RAIN_DROPS.concat(" generateFieldMonitorSchedules ...")));
 
@@ -392,7 +403,7 @@ public class MongoGenerator {
 
     }
 
-    public void generateProjects() {
+    private void generateProjects() {
         setLocations();
         List<Organization> organizations = organizationRepository.findAll();
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS + E.RAIN_DROPS.concat(" Generating projects ...")));
@@ -401,6 +412,7 @@ public class MongoGenerator {
         createProjectPositionIndexes();
         createPhotoIndexes();
         createVideoIndexes();
+        createGeofenceIndexes();
 
         for (ProjectLocation loc : projectLocations) {
             //assign this project location to a random organization
@@ -416,7 +428,7 @@ public class MongoGenerator {
             p0.setProjectId(UUID.randomUUID().toString());
             p0.setName(loc.name);
             p0.setCreated(DateTime.now().toDateTimeISO().toString());
-            p0.setDescription("Monitored Project");
+            p0.setDescription(testProjectDesc);
             p0.setOrganizationName(organization.getName());
             p0.setOrganizationId(organization.getOrganizationId());
             p0.setMonitorMaxDistanceInMetres(500);
@@ -429,26 +441,22 @@ public class MongoGenerator {
             pPos.setProjectName(p0.getName());
             pPos.setCaption("Project Position Caption");
             pPos.setProjectPositionId(UUID.randomUUID().toString());
-            Position p = new Position();
-            p.setType("Point");
-            List<Double> cords = new ArrayList<>();
-            cords.add(loc.longitude);
-            cords.add(loc.latitude);
-            pos.setCoordinates(cords);
-            pPos.setPosition(p);
+            
+            pPos.setPosition(pos);
 
             List<City> list1 = listService.findCitiesByLocation(loc.latitude, loc.longitude, 5);
             pPos.setNearestCities(list1);
+            
             projectPositionRepository.save(pPos);
 
-            LOGGER.info(" \uD83E\uDD6C \uD83E\uDD6C \uD83E\uDD6C " +
+            LOGGER.info(xx +
                     "Project added, project: \uD83C\uDF4E " + p0.getName() + "\t \uD83C\uDF4E " + p0.getOrganizationName());
         }
 
-        LOGGER.info("\uD83C\uDF3F\uD83C\uDF3F\uD83C\uDF3F\uD83C\uDF3F ORGANIZATIONS on database ....");
+        LOGGER.info(xx+" ORGANIZATIONS on database ....");
         for (Organization organization : organizations) {
-            LOGGER.info("\uD83C\uDF3F\uD83C\uDF3F\uD83C\uDF3F " +
-                    "Organization: " + organization.getName());
+            LOGGER.info(xx+
+                    " Organization: " + organization.getName());
         }
 
 
@@ -477,7 +485,7 @@ public class MongoGenerator {
                 random.nextInt(9);
     }
 
-    public void generateUsers(boolean eraseExistingUsers) throws Exception {
+    private void generateUsers(boolean eraseExistingUsers) throws Exception {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS + E.RAIN_DROPS.concat(" Generating Users ...")));
         List<Organization> organizations = (List<Organization>) organizationRepository.findAll();
         if (eraseExistingUsers) {
@@ -538,7 +546,7 @@ public class MongoGenerator {
 
     }
 
-    public String buildEmail(String prefix) {
+    private String buildEmail(String prefix) {
         String s1 = alphabet[random.nextInt(alphabet.length)];
         String s2 = alphabet[random.nextInt(alphabet.length)];
         String s3 = alphabet[random.nextInt(alphabet.length)];
@@ -549,7 +557,7 @@ public class MongoGenerator {
     private final String[] alphabet = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N",
             "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
 
-    public void generateCommunities() throws Exception {
+    private void generateCommunities() throws Exception {
 
         createCommunityIndexes();
         List<Country> countries = countryRepository.findAll();
