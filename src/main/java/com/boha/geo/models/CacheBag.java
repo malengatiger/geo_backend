@@ -1,5 +1,7 @@
 package com.boha.geo.models;
 
+import com.boha.geo.monitor.data.City;
+
 import java.util.List;
 
 public class CacheBag {

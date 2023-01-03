@@ -14,6 +14,9 @@ public class Position {
         this.coordinates = coordinates;
     }
 
+    public Position() {
+    }
+
     public String getType() {
         return type;
     }

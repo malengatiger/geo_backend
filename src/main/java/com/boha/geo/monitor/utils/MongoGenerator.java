@@ -1,5 +1,6 @@
 package com.boha.geo.monitor.utils;
 
+import com.boha.geo.models.CityLocation;
 import com.boha.geo.monitor.data.*;
 import com.boha.geo.monitor.services.DataService;
 import com.boha.geo.monitor.services.ListService;
@@ -38,7 +39,7 @@ public class MongoGenerator {
     private static final String xx = E.COFFEE+E.COFFEE+E.COFFEE;
 
     public MongoGenerator() {
-        LOGGER.info(xx+ "MongoGenerator is up and good ");
+        LOGGER.info(xx+ " MongoGenerator is up and good ");
     }
 
     @Autowired
@@ -53,25 +54,37 @@ public class MongoGenerator {
     private static final double latitudeRandburg = -26.093611, longitudeRandburg = 28.006390;
     private static final double latitudeRosebank = -26.140499438, longitudeRosebank = 28.037666516;
     private static final double latitudeJHB = -26.195246, longitudeJHB = 28.034088;
+    // -19.0169211 29.1528018
+    private static final double latitudeZA = -28.4792625, longitudeZA = 24.6727135;
+    private static final double latitudeZIM = -19.0169211, longitudeZIM = 29.1528018;
+
+
 
     public void generate() throws Exception {
         LOGGER.info(E.DICE + E.DICE + " -------- Generating countries .... ");
+
         List<Country> countries = new ArrayList<>();
         List<Double> cords = new ArrayList<>();
-        cords.add(longitudeHarties);
-        cords.add(latitudeHarties);
-        Country c1 = new Country("PUBLIC", null,
-                UUID.randomUUID().toString(), "South Africa", "ZAR",
-                new Position("Point", cords));
-        Country c2 = new Country("PUBLIC", null,
-                UUID.randomUUID().toString(), "Zimbabwe", "ZIM",
-                new Position("Point", cords));
+        cords.add(longitudeZA);
+        cords.add(latitudeZA);
 
-        if (countryRepository == null) {
-            throw new Exception("CountryRepository is NULL");
-        }
+        Country c1 = new Country();
+        c1.setName("South Africa");
+        c1.setPosition(new Position("Point", cords));
+        c1.setCountryCode("ZA");
+        c1.setCountryId(UUID.randomUUID().toString());
 
-        Country southAfrica = countryRepository.insert(c1);
+        cords.clear();
+        cords.add(longitudeZIM);
+        cords.add(latitudeZIM);
+
+        Country c2 = new Country();
+        c2.setName("Zimbabwe");
+        c2.setPosition(new Position("Point", cords));
+        c2.setCountryCode("ZIM");
+        c2.setCountryId(UUID.randomUUID().toString());
+
+        Country southAfrica = countryRepository.insert(c2);
         Country zimbabwe = countryRepository.insert(c2);
 
         countries.add(southAfrica);
@@ -83,7 +96,7 @@ public class MongoGenerator {
         }
 
         deleteAuthUsers();
-        processSouthAfricanCities();
+//        processSouthAfricanCities();
         generateOrganizations(8);
         generateCommunities();
 
@@ -95,101 +108,8 @@ public class MongoGenerator {
     @Autowired
     private ListService listService;
 
-    public void processSouthAfricanCities() throws Exception {
-        createUniqueCityIndex();
-        List<Country> countries = countryRepository.findAll();
-        for (Country country : countries) {
-            if (country.getName().contains("South Africa")) {
-                migrateCities(country);
-            }
-        }
-
-    }
-
     @Autowired
     MongoClient mongoClient;
-
-    public void migrateCities(Country country) throws Exception {
-        LOGGER.info(E.FLOWER_RED + E.FLOWER_RED + E.FLOWER_RED + E.FLOWER_RED
-                + " Migrating cities for country: "
-                .concat(country.getName())
-                .concat(" starting at: " + new DateTime().toDateTimeISO().toString()));
-
-        DateTime start = new DateTime();
-        if (cityRepository == null) {
-            throw new Exception("cityRepository is missing!! " + E.NOT_OK + E.ERROR);
-        }
-
-        List<City> mCities = new ArrayList<>();
-        JSONParser parser = new JSONParser();
-        try {
-            Object obj = parser.parse(new FileReader("cities.json"));
-            JSONObject jsonObject = (JSONObject) obj;
-            for (Object o : jsonObject.keySet()) {
-                Double latitude;
-                Double longitude;
-                String key = (String) o;
-                JSONObject object = (JSONObject) jsonObject.get(key);
-                String cityName = (String) object.get("name");
-                String province = (String) object.get("provinceName");
-                try {
-                    try {
-                        latitude = (Double) object.get("latitude");
-                    } catch (Exception e) {
-                        latitude = (Long) object.get("latitude") * 1.0;
-
-                    }
-                    try {
-                        longitude = (Double) object.get("longitude");
-                    } catch (Exception e) {
-                        longitude = (Long) object.get("longitude") * 1.0;
-
-                    }
-
-                    if (cityName != null && !cityName.isEmpty() && province != null) {
-                        List<Double> cords = new ArrayList<>();
-                        if (latitude == null || longitude == null) {
-                            throw new Exception("Coordinate is null");
-                        }
-                        cords.add(longitude);
-                        cords.add(latitude);
-                        City city = new City("PUBLIC", null, cityName.trim(),
-                                UUID.randomUUID().toString(), country.getCountryId(), province,
-                                new Position("Point", cords));
-                        mCities.add(city);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-
-            HashMap<String, City> cityMap = new HashMap<>();
-            for (City city : mCities) {
-                cityMap.put(city.getName() + city.getProvince(), city);
-            }
-            mCities.clear();
-            mCities.addAll(cityMap.values());
-            LOGGER.info(E.FERN + E.FERN + E.FERN
-                    + "....... Beginning to load " + mCities.size() + " cities to database .....");
-            writeBatches(mCities);
-            createCityIndexes();
-            DateTime end = new DateTime();
-            long ms = end.toDate().getTime() - start.toDate().getTime();
-            long seconds = ms / 1000;
-            long minutes = seconds / 60;
-
-            LOGGER.info(E.LEAF + E.LEAF + E.LEAF + E.LEAF + " Cities migrated: " + cnt + " " + E.RED_APPLE +
-                    E.DICE + " minutes elapsed: " + minutes + " " + E.DICE);
-            LOGGER.info(E.LEAF + E.LEAF + E.LEAF + E.LEAF + " Cities migrated: " + cnt + " " + E.RED_APPLE +
-                    E.DICE + " seconds elapsed: " + seconds + " " + E.DICE + " completed at: " + new DateTime().toDateTimeISO().toString());
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     private void createUniqueCityIndex() {
         LOGGER.info(E.FOOTBALL + E.FOOTBALL + "Creating unique index to catch name duplication within province");
@@ -406,9 +326,12 @@ public class MongoGenerator {
         }
         Collection<String> orgNames = hMap.values();
         for (String name : orgNames) {
-            Organization org1 = new Organization("PUBLIC", null, name, country.getName(),
-                    Objects.requireNonNull(country.getCountryId()), UUID.randomUUID().toString(),
-                    new DateTime().toDateTimeISO().toString());
+            Organization org1 = new Organization();
+            org1.setName(name);
+            org1.setOrganizationId(UUID.randomUUID().toString());
+            org1.setCreated(DateTime.now().toDateTime().toString());
+            org1.setCountryName("South Africa");
+
             Organization id1 = organizationRepository.save(org1);
             organizations.add(id1);
             LOGGER.info(E.RAINBOW.concat(E.RAINBOW.concat("Organization has been generated ".concat(org1.getName()
@@ -471,7 +394,7 @@ public class MongoGenerator {
 
     public void generateProjects() {
         setLocations();
-        List<Organization> organizations = (List<Organization>) organizationRepository.findAll();
+        List<Organization> organizations = organizationRepository.findAll();
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS + E.RAIN_DROPS.concat(" Generating projects ...")));
 
         createProjectIndexes();
@@ -487,29 +410,32 @@ public class MongoGenerator {
             coordinates.add(loc.longitude);
             coordinates.add(loc.latitude);
 
-
             Position pos = new Position("Point", coordinates);
 
-            Project p0 = new Project(organization.getOrganizationId(), null,
-                    UUID.randomUUID().toString(),
-                    loc.name,
-                    Objects.requireNonNull(organization.getOrganizationId()),
-                    testProjectDesc,
-                    organization.getName(),
-                    monitorMaxDistanceInMetres,
-                    new DateTime().toDateTimeISO().toString(), new ArrayList<>());
-
+            Project p0 = new Project();
+            p0.setProjectId(UUID.randomUUID().toString());
+            p0.setName(loc.name);
+            p0.setCreated(DateTime.now().toDateTimeISO().toString());
+            p0.setDescription("Monitored Project");
+            p0.setOrganizationName(organization.getName());
+            p0.setOrganizationId(organization.getOrganizationId());
+            p0.setMonitorMaxDistanceInMetres(500);
             List<City> list = listService.findCitiesByLocation(loc.latitude, loc.longitude, 5);
             p0.setNearestCities(list);
             projectRepository.save(p0);
 
-            ProjectPosition pPos = new ProjectPosition(
-                    UUID.randomUUID().toString(),
-                    Objects.requireNonNull(p0.getProjectId()),
-                    pos,
-                    p0.getName(),
-                    "tbd",
-                    new DateTime().toDateTimeISO().toString(), null, new ArrayList<>());
+            ProjectPosition pPos = new ProjectPosition();
+            pPos.setProjectId(p0.getProjectId());
+            pPos.setProjectName(p0.getName());
+            pPos.setCaption("Project Position Caption");
+            pPos.setProjectPositionId(UUID.randomUUID().toString());
+            Position p = new Position();
+            p.setType("Point");
+            List<Double> cords = new ArrayList<>();
+            cords.add(loc.longitude);
+            cords.add(loc.latitude);
+            pos.setCoordinates(cords);
+            pPos.setPosition(p);
 
             List<City> list1 = listService.findCitiesByLocation(loc.latitude, loc.longitude, 5);
             pPos.setNearestCities(list1);
@@ -640,11 +566,16 @@ public class MongoGenerator {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS + E.RAIN_DROPS
                 .concat(" Generating " + communities.size() + " Communities ...")));
         for (String name : communities) {
-            Community c = new Community(country.getCountryId(), null, name, "id",
-                    Objects.requireNonNull(country.getCountryId()), getPopulation(),
-                    country.getName(),
-                    new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
-            Community sComm = communityRepository.save(c);
+
+            Community cs = new Community();
+            cs.setCommunityId(UUID.randomUUID().toString());
+            cs.setName(name);
+            cs.setNearestCities(new ArrayList<>());
+            cs.setPhotos(new ArrayList<>());
+            cs.setPopulation(getPopulation());
+            cs.setCountryName("South Africa");
+            cs.setVideos(new ArrayList<>());
+            Community sComm = communityRepository.save(cs);
             LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS + E.RAIN_DROPS
                     .concat(" Community Generated " + E.LEMON + E.LEMON +
                             sComm.getName() + " " + E.LEMON + " on mongodb database "
@@ -857,7 +788,7 @@ public class MongoGenerator {
     private void setLocations() {
         ProjectLocation loc1 = new ProjectLocation(latitudeLanseria, longitudeLanseria, "Lanseria Road Upgrades");
         projectLocations.add(loc1);
-        ProjectLocation loc2 = new ProjectLocation(latitudeHarties, longitudeHarties, "HartebeestPoort Shopping Centre");
+        ProjectLocation loc2 = new ProjectLocation(latitudeHarties, longitudeHarties, "Hartebeestpoort Shopping Centre");
         projectLocations.add(loc2);
         ProjectLocation loc3 = new ProjectLocation(latitudeJHB, longitudeJHB, "Johannesburg Road ProjectX");
         projectLocations.add(loc3);

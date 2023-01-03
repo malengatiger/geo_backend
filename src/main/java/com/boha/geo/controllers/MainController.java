@@ -1,8 +1,8 @@
 package com.boha.geo.controllers;
 
 import com.boha.geo.GeoApplication;
-import com.boha.geo.models.City;
 import com.boha.geo.models.CityPlace;
+import com.boha.geo.monitor.data.City;
 import com.boha.geo.services.CityService;
 import com.boha.geo.services.MongoService;
 import com.boha.geo.services.PlacesService;
@@ -24,18 +24,22 @@ public class MainController {
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private static final Logger logger = Logger.getLogger(GeoApplication.class.getSimpleName());
     private static final String alien = E.AMP+E.AMP+E.AMP;
+    private static final String xx = E.COFFEE+E.COFFEE+E.COFFEE;
+
 
     final PlacesService placesService;
     final MongoService mongoService;
     final UserService userService;
     final CityService cityService;
 
-    public MainController(PlacesService placesService, MongoService mongoService, UserService userService, CityService cityService) {
+    public MainController(PlacesService placesService, MongoService mongoService,
+                          UserService userService, CityService cityService) {
         this.placesService = placesService;
         this.mongoService = mongoService;
         this.userService = userService;
         this.cityService = cityService;
-        logger.info(E.RAIN+E.RAIN+" MainController constructed and services injected");
+
+        logger.info(xx+" MainController constructed and services injected");
     }
 
     @GetMapping("/addUsers")

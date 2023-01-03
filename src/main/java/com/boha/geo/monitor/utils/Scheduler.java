@@ -24,7 +24,7 @@ public class Scheduler {
 
     public Scheduler() {
         LOGGER.info(xx +
-                "Scheduler constructed. Waiting to be triggered ");
+                " Scheduler constructed. Waiting to be triggered ");
     }
 
     @Scheduled(fixedRate = 1000 * 60 * 60 * 4) //4 Hours

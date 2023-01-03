@@ -33,7 +33,7 @@ public class E {
             CORN = "\uD83C\uDF3D ",         // 🌽
             PEPPER = "\uD83C\uDF36 ",       // 🌶
             PRETZEL = "\uD83E\uDD68 ",      // 🥨
-            COFFEE = "☕️ ",                 // ☕️
+            COFFEE = "☕️",                 // ☕️
             WINE = "\uD83C\uDF77 ",         // 🍷
             PRESCRIPTION = "\uD83E\uDD63 ", // 🥣
             HASH = "\uD83E\uDDE9 ",         // 🧩

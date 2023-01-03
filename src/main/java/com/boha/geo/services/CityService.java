@@ -1,7 +1,8 @@
 package com.boha.geo.services;
 
-import com.boha.geo.models.City;
+import com.boha.geo.monitor.data.City;
 import com.boha.geo.repos.CityRepo;
+import com.boha.geo.repos.CityRepository;
 import com.boha.geo.util.E;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -26,12 +27,12 @@ import static com.mongodb.client.model.Filters.near;
 public class CityService {
 
     final MongoClient mongoClient;
-    final CityRepo cityRepo;
+    final CityRepository cityRepo;
 
 
     private static final String xx = E.COFFEE+E.COFFEE+E.COFFEE;
 
-    public CityService(MongoClient mongoClient, CityRepo cityRepo) {
+    public CityService(MongoClient mongoClient, CityRepository cityRepo) {
         this.mongoClient = mongoClient;
         this.cityRepo = cityRepo;
 

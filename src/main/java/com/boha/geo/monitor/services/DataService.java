@@ -161,7 +161,7 @@ public class DataService {
             photo.setPhotoId(UUID.randomUUID().toString());
         }
         photoRepository.save(photo);
-        LOGGER.info(E.LEAF.concat(E.LEAF).concat("Photo added: " + photo.get_id()));
+        LOGGER.info(E.LEAF.concat(E.LEAF).concat("Photo added: " + photo.getPhotoId()));
         return messageService.sendMessage(photo);
     }
 
@@ -170,13 +170,13 @@ public class DataService {
             video.setVideoId(UUID.randomUUID().toString());
         }
         videoRepository.save(video);
-        LOGGER.info(E.LEAF.concat(E.LEAF).concat("Video added: " + video.get_id()));
+        LOGGER.info(E.LEAF.concat(E.LEAF).concat("Video added: " + video.getVideoId()));
         return messageService.sendMessage(video);
     }
 
     public String addCondition(Condition condition) throws Exception {
         conditionRepository.save(condition);
-        LOGGER.info(E.LEAF.concat(E.LEAF).concat("Condition added: " + condition.get_id()));
+        LOGGER.info(E.LEAF.concat(E.LEAF).concat("Condition added: " + condition.getConditionId()));
         return messageService.sendMessage(condition);
     }
 

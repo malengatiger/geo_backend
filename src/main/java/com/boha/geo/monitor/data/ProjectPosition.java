@@ -1,9 +1,10 @@
 package com.boha.geo.monitor.data;
 
+import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
-
+@Data
 @Document(collection = "projectPositions")
 public class ProjectPosition {
 
@@ -12,93 +13,23 @@ public class ProjectPosition {
     private String projectName;
     private String caption;
     private String created;
-    private Placemark placemark;
+    private PlaceMark placemark;
     private List<City> nearestCities;
-
-
-    public ProjectPosition(String projectPositionId, String projectId, Position position, String projectName, String caption, String created, Placemark placemark, List<City> nearestCities) {
-        this.projectId = projectId;
-        this.projectPositionId = projectPositionId;
-        this.position = position;
-        this.projectName = projectName;
-        this.caption = caption;
-        this.created = created;
-        this.placemark = placemark;
-        this.nearestCities = nearestCities;
-    }
 
     public ProjectPosition() {
     }
 
-    public String getOrganizationId() {
-        return organizationId;
-    }
-
-    public void setOrganizationId(String organizationId) {
-        this.organizationId = organizationId;
-    }
-
-    public String getProjectPositionId() {
-        return projectPositionId;
-    }
-
-    public void setProjectPositionId(String projectPositionId) {
-        this.projectPositionId = projectPositionId;
-    }
-
-    public List<City> getNearestCities() {
-        return nearestCities;
-    }
-
-    public void setNearestCities(List<City> nearestCities) {
-        this.nearestCities = nearestCities;
-    }
-
-    public Placemark getPlacemark() {
-        return placemark;
-    }
-
-    public void setPlacemark(Placemark placemark) {
-        this.placemark = placemark;
-    }
-
-    public String getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(String projectId) {
+    public ProjectPosition(String projectId, String projectPositionId, String organizationId,
+                           Position position, String projectName, String caption,
+                           String created, PlaceMark placemark, List<City> nearestCities) {
         this.projectId = projectId;
-    }
-
-    public Position getPosition() {
-        return position;
-    }
-
-    public void setPosition(Position position) {
+        this.projectPositionId = projectPositionId;
+        this.organizationId = organizationId;
         this.position = position;
-    }
-
-    public String getProjectName() {
-        return projectName;
-    }
-
-    public void setProjectName(String projectName) {
         this.projectName = projectName;
-    }
-
-    public String getCaption() {
-        return caption;
-    }
-
-    public void setCaption(String caption) {
         this.caption = caption;
-    }
-
-    public String getCreated() {
-        return created;
-    }
-
-    public void setCreated(String created) {
         this.created = created;
+        this.placemark = placemark;
+        this.nearestCities = nearestCities;
     }
 }

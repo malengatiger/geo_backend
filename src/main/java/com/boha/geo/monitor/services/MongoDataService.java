@@ -5,9 +5,12 @@ import com.boha.geo.repos.CityRepository;
 import com.boha.geo.util.E;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Distance;
+import org.springframework.data.geo.GeoResult;
+import org.springframework.data.geo.GeoResults;
 import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -29,10 +32,14 @@ public class MongoDataService {
     }
 
     public List<City> getCitiesByLocation(Point location, Distance distance) {
-        List<City> cities = cityRepository.findByPositionNear(location,distance);
-        LOGGER.info(E.DICE + "Found " + cities.size()
+        GeoResults<City> cities = cityRepository.findByCityLocationNear(location,distance);
+        LOGGER.info(E.DICE + "Found " + cities.getContent().size()
                 + " cities by location; radiusInKM = " + distance.getValue());
+        List<City> mList = new ArrayList<>();
+        for (GeoResult<City> city : cities) {
+            mList.add(city.getContent());
+        }
 
-        return cities;
+        return mList;
     }
 }

@@ -14,9 +14,10 @@ import java.util.Enumeration;
 @Component
 public class SimpleCorsFilter implements Filter {
     static final Logger log = LoggerFactory.getLogger(SimpleCorsFilter.class);
+    private static final String xx = E.COFFEE+E.COFFEE+E.COFFEE;
 
     public SimpleCorsFilter() {
-        log.info(E.AMP + E.AMP + " SimpleCorsFilter constructed");
+        log.info(xx + " SimpleCorsFilter constructed");
     }
 
     @Override

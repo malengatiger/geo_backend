@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mongodb.client.MongoClient;
 import lombok.val;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +56,7 @@ public class ListService {
     FieldMonitorScheduleRepository fieldMonitorScheduleRepository;
 
     public ListService() {
+
         LOGGER.info(xx + " ListService constructed ");
     }
 
@@ -217,13 +219,18 @@ public class ListService {
         LOGGER.info(E.DICE.concat(E.DICE).concat(" findCitiesByLocation ... radiusInKM: " + radiusInKM));
         Point point = new Point(longitude, latitude);
         Distance distance = new Distance(radiusInKM, Metrics.KILOMETERS);
-        List<City> cities = cityRepository.findByPositionNear(point, distance);
+        GeoResults<City> cities = cityRepository.findByCityLocationNear(point, distance);
         LOGGER.info(E.DOLPHIN.concat(E.DOLPHIN).concat(E.DOLPHIN)
-                + " Nearby Cities found: "+ E.RED_APPLE + E.RED_APPLE + cities.size() + " : "
+                + " Nearby Cities found: "+ E.RED_APPLE + E.RED_APPLE + cities.getContent().size() + " : "
                 + E.RED_APPLE+ E.RED_APPLE + " radiusInKM: " + radiusInKM);
 
-        LOGGER.info(E.DOLPHIN.concat(E.DOLPHIN + E.RED_APPLE + E.RED_APPLE) + "Total cities found: " + cities.size());
-        return cities;
+        LOGGER.info(E.DOLPHIN.concat(E.DOLPHIN + E.RED_APPLE + E.RED_APPLE)
+                + "Total cities found: " + cities.getContent().size());
+        List<City> mList = new ArrayList<>();
+        for (GeoResult<City> city : cities) {
+            mList.add(city.getContent());
+        }
+        return mList;
     }
 
     @Autowired
@@ -241,7 +248,10 @@ public class ListService {
 
         int photos = photoRepository.findByProjectId(projectId).size();
         int videos = videoRepository.findByProjectId(projectId).size();
-        val pc = new ProjectCount(projectId, photos, videos, 0);
+        val pc = new ProjectCount();
+        pc.setPhotos(photos);
+        pc.setDate(new DateTime().toDateTimeISO().toString());
+        pc.setVideos(videos);
 
         LOGGER.info(E.HEART_ORANGE.concat(E.HEART_ORANGE)
                 + " getCountsByProject, \uD83C\uDF3F found: " + G.toJson(pc));
@@ -260,7 +270,12 @@ public class ListService {
             map.put(video.getProjectId(), video.getProjectId());
         }
 
-        val pc = new UserCount(userId, photos.size(), videos.size(), map.size());
+        User user = userRepository.findByUserId(userId);
+        val pc = new UserCount();
+        pc.setUser(user);
+        pc.setVideos(videos.size());
+        pc.setPhotos(photos.size());
+        pc.setDate(DateTime.now().toDateTimeISO().toString());
 
         LOGGER.info(E.HEART_ORANGE.concat(E.HEART_ORANGE)
                 + " getCountsByUser, \uD83C\uDF3F found: " + G.toJson(pc));
@@ -351,11 +366,15 @@ public class ListService {
         LOGGER.info(E.DICE.concat(E.DICE).concat(" getNearbyCities ..."));
         Point point = new Point(longitude, latitude);
         Distance distance = new Distance(radiusInKM, Metrics.KILOMETERS);
-        List<City> cities = cityRepository.findByPositionNear(point, distance);
+        GeoResults<City> cities = cityRepository.findByCityLocationNear(point, distance);
         LOGGER.info(E.DOLPHIN.concat(E.DOLPHIN).concat(E.DOLPHIN)
-                + " Nearby Cities found: " + cities.size() + " : " + E.RED_APPLE + " radius: " + radiusInKM);
-
-        return cities;
+                + " Nearby Cities found: " + cities.getContent().size() + " : "
+                + E.RED_APPLE + " radius: " + radiusInKM);
+        List<City> mList = new ArrayList<>();
+        for (GeoResult<City> city : cities) {
+            mList.add(city.getContent());
+        }
+        return mList;
     }
 
     public List<Project> getOrganizationProjects(String organizationId)  {

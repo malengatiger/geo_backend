@@ -1,22 +1,21 @@
 package com.boha.geo.services;
 
-import com.boha.geo.models.City;
 import com.boha.geo.models.CityLocation;
+import com.boha.geo.monitor.data.City;
+import com.boha.geo.monitor.data.Position;
 import com.boha.geo.repos.CityRepo;
+import com.boha.geo.repos.CityRepository;
 import com.boha.geo.util.E;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -31,7 +30,7 @@ public class MongoService {
     private static final String mm = E.RAIN + E.RAIN + E.RAIN;
     private static final String xx = E.COFFEE+E.COFFEE+E.COFFEE;
     @Autowired
-    private CityRepo cityRepo;
+    private CityRepository cityRepo;
 
     public MongoService() {
         logger.info(xx + " MongoService constructed ");
@@ -61,13 +60,13 @@ public class MongoService {
             city.setName(name);
             city.setCityId(UUID.randomUUID().toString());
             city.setProvince(province);
-            CityLocation loc = new CityLocation();
-            loc.setType("Point");
+            CityLocation position = new CityLocation();
+            position.setType("Point");
             List<Double> list = new ArrayList<>();
             list.add(longitude);
             list.add(latitude);
-            loc.setCoordinates(list);
-            city.setCityLocation(loc);
+            position.setCoordinates(list);
+            city.setCityLocation(position);
             city.setCountry("South Africa");
             cities.add(city);
         }

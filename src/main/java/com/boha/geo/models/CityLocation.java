@@ -3,6 +3,14 @@ package com.boha.geo.models;
 import java.util.List;
 
 public class CityLocation {
+    public CityLocation(String type, List<Double> coordinates) {
+        this.type = type;
+        this.coordinates = coordinates;
+    }
+
+    public CityLocation() {
+    }
+
     private String type = "Point";
     private List<Double> coordinates;
 

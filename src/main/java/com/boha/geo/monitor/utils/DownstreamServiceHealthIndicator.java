@@ -11,10 +11,10 @@ import java.util.logging.Logger;
 @Component
 public class DownstreamServiceHealthIndicator implements ReactiveHealthIndicator {
     private static final Logger LOGGER = Logger.getLogger(DownstreamServiceHealthIndicator.class.getSimpleName());
+    private static final String xx = E.COFFEE+E.COFFEE+E.COFFEE;
 
     public DownstreamServiceHealthIndicator() {
-        LOGGER.info(E.PRESCRIPTION.concat(E.PRESCRIPTION.concat(" DownstreamServiceHealthIndicator will observe "
-        .concat(E.PRESCRIPTION))));
+        LOGGER.info(xx+" DownstreamServiceHealthIndicator will observe ... ");
     }
 
     @Override

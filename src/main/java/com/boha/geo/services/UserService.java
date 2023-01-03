@@ -1,7 +1,7 @@
 package com.boha.geo.services;
 
-import com.boha.geo.models.City;
 import com.boha.geo.models.User;
+import com.boha.geo.monitor.data.City;
 import com.boha.geo.repos.CityRepo;
 import com.boha.geo.repos.UserRepo;
 import com.boha.geo.util.E;

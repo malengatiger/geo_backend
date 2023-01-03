@@ -1,6 +1,6 @@
 package com.boha.geo.repos;
 
-import com.boha.geo.models.City;
+import com.boha.geo.monitor.data.City;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
