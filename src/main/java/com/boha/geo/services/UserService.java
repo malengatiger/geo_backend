@@ -21,6 +21,7 @@ public class UserService {
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private static final Logger logger = Logger.getLogger(UserService.class.getSimpleName());
     private static final String alien = E.PEAR+E.PEAR+E.PEAR;
+    private static final String xx = E.COFFEE+E.COFFEE+E.COFFEE;
 
     final MongoService mongoService;
     final CityRepo cityRepo;
@@ -28,13 +29,15 @@ public class UserService {
     final UserRepo userRepo;
 
 
-    public UserService(MongoService mongoService, CityRepo cityRepo, StorageService storageService, UserRepo userRepo) {
+    public UserService(MongoService mongoService, CityRepo cityRepo,
+                       StorageService storageService,
+                       UserRepo userRepo) {
         this.mongoService = mongoService;
         this.cityRepo = cityRepo;
         this.storageService = storageService;
         this.userRepo = userRepo;
 
-        logger.info(E.RED_APPLE +E.RED_APPLE +E.RED_APPLE
+        logger.info(xx
                 + " UserService constructed and services injected");
     }
     @Value("${surnames}")

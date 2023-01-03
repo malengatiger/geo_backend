@@ -25,8 +25,8 @@ public class StorageService {
     private static final Logger LOGGER = Logger.getLogger(StorageService.class.getSimpleName());
 
     public StorageService() {
-        LOGGER.info(E.RED_APPLE + E.RED_APPLE + E.RED_APPLE +
-                "StorageService constructed: ");
+        LOGGER.info(xx +
+                " StorageService constructed: ");
     }
 
     private Storage storage;
@@ -35,6 +35,9 @@ public class StorageService {
     private String bucketName;
     @Value("${projectId}")
     private String projectId;
+
+    private static final String xx = E.COFFEE+E.COFFEE+E.COFFEE;
+
 
     public String downloadObject(
             String objectName) {

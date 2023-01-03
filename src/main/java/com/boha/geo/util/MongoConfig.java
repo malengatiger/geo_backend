@@ -34,6 +34,9 @@ public class MongoConfig {
     @Value("${spring.data.mongodb.uri.one}")
     private String mongoPrefix;
 
+    @Value("${mongoString}")
+    private String mongoString;
+
     @Value("${spring.data.mongodb.uri.two}")
     private String mongoSuffix;
 
@@ -42,8 +45,15 @@ public class MongoConfig {
 
     @Bean
     public MongoClient mongo() {
-        String encodedPassword = URLEncoder.encode(password, StandardCharsets.UTF_8);
-        String uri = mongoPrefix + encodedPassword + mongoSuffix;
+        String uri;
+        if (mongoString != null) {
+            LOGGER.info(E.RAIN+E.RAIN+E.RAIN+E.RAIN+
+                    " Using local MongoDB Server with " + mongoString);
+            uri = mongoString;
+        } else {
+            String encodedPassword = URLEncoder.encode(password, StandardCharsets.UTF_8);
+            uri = mongoPrefix + encodedPassword + mongoSuffix;
+        }
         LOGGER.info(mm + "MongoDB Connection string: " + E.RED_APPLE + " with encoded password: " + uri);
 //        String enc = URLEncoder.encode(mongoString, StandardCharsets.UTF_8);
 //        LOGGER.info(mm + "MongoDB Connection string: " + E.RED_APPLE + "encoded:" + mongoString);

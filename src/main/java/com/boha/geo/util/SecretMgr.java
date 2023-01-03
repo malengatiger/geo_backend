@@ -41,6 +41,7 @@ public class SecretMgr {
         // the "close" method on the client to safely clean up any remaining background resources.
         LOGGER.info(E.RED_APPLE+E.RED_APPLE+E.RED_APPLE+E.RED_APPLE
                 +" SecretMgr: getPlacesAPIKey: projectId: " + projectId);
+        String payload = null;
         try (SecretManagerServiceClient client = SecretManagerServiceClient.create()) {
             SecretVersionName secretVersionName = SecretVersionName.of(projectId, placesAPIKeyName, secretsVersion);
             // Access the secret version.
@@ -61,14 +62,18 @@ public class SecretMgr {
             //
             // WARNING: Do not print the secret in a production environment - this
             // snippet is showing how to access the secret material.
-            String payload = response.getPayload().getData().toStringUtf8();
+             payload = response.getPayload().getData().toStringUtf8();
             String check = payload.substring(0,4);
             if (check.contains("AIza")) {
                 LOGGER.info(E.RED_DOT + E.RED_DOT + E.RED_DOT +
                         " Secret Payload contains: " + check);
             }
-            return payload;
+
+        } catch (Exception e) {
+            LOGGER.severe("Problem with secrtes: " + e.getMessage());
+            e.printStackTrace();
         }
+        return payload;
     }
 
 }

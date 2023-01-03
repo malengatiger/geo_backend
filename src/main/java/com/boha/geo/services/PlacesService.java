@@ -15,12 +15,10 @@ import com.mongodb.client.model.geojson.Position;
 import com.squareup.okhttp.*;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.joda.time.DateTime;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Logger;
 
 import static com.mongodb.client.model.Filters.near;
@@ -41,14 +39,18 @@ public class PlacesService {
     private final MongoClient mongoClient;
 
     private String apiKey;
+    private static final String xx = E.COFFEE+E.COFFEE+E.COFFEE;
 
-    public PlacesService(SecretMgr secretMgr, CityRepo cityRepo, CityPlaceRepo cityPlaceRepo, MongoClient mongoClient) {
+
+    public PlacesService(SecretMgr secretMgr, CityRepo cityRepo,
+                         CityPlaceRepo cityPlaceRepo,
+                         MongoClient mongoClient) {
         this.secretMgr = secretMgr;
         this.cityRepo = cityRepo;
         this.cityPlaceRepo = cityPlaceRepo;
         this.mongoClient = mongoClient;
 
-        logger.info(E.YELLOW+E.YELLOW+" PlacesService constructed and services injected");
+        logger.info(xx+ " PlacesService constructed and services injected");
     }
 
     private String buildLink(double lat, double lng, int radiusInMetres) throws Exception {
@@ -86,12 +88,28 @@ public class PlacesService {
             }
         }
 
+        processCity(city, radiusInMetres, pageToken);
+    }
+
+    private void processCity(City city, int radiusInMetres, String pageToken) throws Exception {
+        logger.info(E.YELLOW+" Process places for "
+                + city.getName() + ", pageCount: " + pageCount
+                + " of " + MAX_PAGE_COUNT);
+
         String link = buildLink(city.getCityLocation().getCoordinates().get(1),
                 city.getCityLocation().getCoordinates().get(0), radiusInMetres);
         if (pageToken != null) {
             link += "&pagetoken=" + pageToken;
+            try {
+                Thread.sleep(2000);
+                logger.info(E.PEAR+" ... woke up after sleeping for 2 seconds .. " + new DateTime().toDateTimeISO());
+            } catch (Exception d) {
+                //ignore
+            }
+        } else {
+            logger.info(E.AMP+E.AMP+"PageToken is NULL, okay if pageCount is Zero: " + pageCount);
         }
-//        LOGGER.info(E.YELLOW_STAR + E.YELLOW_STAR + " " + link);
+
         HttpUrl.Builder urlBuilder
                 = HttpUrl.parse(link).newBuilder();
 
@@ -100,41 +118,64 @@ public class PlacesService {
         Request request = new Request.Builder()
                 .url(url)
                 .build();
+
+        client = new OkHttpClient();
         Call call = client.newCall(request);
         Response response = call.execute();
-        String mResp = response.body().string();
-        Root root = gson.fromJson(mResp, Root.class);
-        for (CityPlace cityPlace : root.getResults()) {
-            cityPlace.setCityId(city.getCityId());
-            cityPlace.setCityName(city.getName());
-            cityPlace.setProvince(city.getProvince());
-            CityPlaceLocation loc = new CityPlaceLocation();
-            loc.setType("Point");
-            List<Double> list = new ArrayList<>();
-            list.add(cityPlace.getGeometry().getLocation().lng);
-            list.add(cityPlace.getGeometry().getLocation().lat);
-            loc.setCoordinates(list);
-            cityPlace.setCityPlaceLocation(loc);
-        }
-        addCityPlacesToMongo(root, city);
-        pageCount++;
-
-        totalPlaceCount += root.getResults().size();
-        if (pageCount <= MAX_PAGE_COUNT) {
-            if (root.getNextPageToken() != null) {
-                getCityPlaces(city, radiusInMetres, root.getNextPageToken());
+        if (response.isSuccessful()) {
+            String mResp = response.body().string();
+            Root root = gson.fromJson(mResp, Root.class);
+            for (CityPlace cityPlace : root.getResults()) {
+                cityPlace.setCityId(city.getCityId());
+                cityPlace.setCityName(city.getName());
+                cityPlace.setProvince(city.getProvince());
+                CityPlaceLocation loc = new CityPlaceLocation();
+                loc.setType("Point");
+                List<Double> list = new ArrayList<>();
+                list.add(cityPlace.getGeometry().getLocation().lng);
+                list.add(cityPlace.getGeometry().getLocation().lat);
+                loc.setCoordinates(list);
+                cityPlace.setCityPlaceLocation(loc);
             }
+
+            if (root.getResults().isEmpty()) {
+                logger.info(E.RED_DOT + E.RED_DOT + " Places Api returned NO PLACES! " + city.getName());
+                logger.info(response.message());
+                logger.info(response.body().string());
+                logger.info(url);
+            } else {
+                addCityPlacesToMongo(root, city);
+                totalPlaceCount += root.getResults().size();
+                String mToken = root.getNextPageToken();
+                pageCount++;
+                if (pageCount <= MAX_PAGE_COUNT) {
+                    if (mToken != null) {
+                        processCity(city, radiusInMetres, mToken);
+                    }
+                }
+            }
+        } else {
+            logger.severe(E.RED_DOT+E.RED_DOT+
+                    "A problem with Places Api: " + response.message());
+            return;
         }
+
+        logger.info(E.PINK + " Finished places processing for "
+                + city.getName() + ", pageCount:" + pageCount + " of " + MAX_PAGE_COUNT + "\n");
     }
 
     private void addCityPlacesToMongo(Root root, City city) throws Exception {
 
-        cityCounter++;
-        cityPlaceRepo.insert(root.getResults());
+        try {
+            cityPlaceRepo.insert(root.getResults());
+        } catch (Exception e) {
+            logger.severe(E.RED_DOT+E.RED_DOT+E.RED_DOT+
+                    " Problem with Mongo: " + e.getMessage());
+        }
 
         logger.info(E.RED_APPLE + E.RED_APPLE + " city #" + cityCounter +
-                "  - " + city.getName() + " added to db" + E.YELLOW_STAR
-        + " with " + E.AMP + " " + root.getResults().size() + " places");
+                "  - " + city.getName() + " - places added to db " + E.YELLOW_STAR
+                + " with " + E.AMP + " " + root.getResults().size() + " places");
     }
 
     public List<CityPlace> getPlacesByCityId(String cityId) throws Exception {
@@ -164,15 +205,15 @@ public class PlacesService {
                     places.add(place);
                 });
 
-        logger.info(E.PINK+E.PINK+"" + places.size()
+        logger.info(E.PINK + E.PINK + "" + places.size()
                 + " places found with min: " + minDistanceInMetres
-        + " max: " + maxDistanceInMetres);
+                + " max: " + maxDistanceInMetres);
         HashMap<String, CityPlace> map = filter(places);
         List<CityPlace> filteredPlaces = map.values().stream().toList();
         int count = 0;
         for (CityPlace place : filteredPlaces) {
             count++;
-            logger.info(E.LEAF+E.LEAF+" Place: #" + count + " " + E.RED_APPLE + " " + place.getName()
+            logger.info(E.LEAF + E.LEAF + " Place: #" + count + " " + E.RED_APPLE + " " + place.getName()
                     + ", " + place.getCityName());
         }
         return filteredPlaces;
@@ -180,7 +221,7 @@ public class PlacesService {
     }
 
     private static HashMap<String, CityPlace> filter(List<CityPlace> places) {
-        HashMap<String,CityPlace> map = new HashMap<>();
+        HashMap<String, CityPlace> map = new HashMap<>();
         for (CityPlace place : places) {
             if (!map.containsKey(place.getName())) {
                 map.put(place.getName(), place);
@@ -229,24 +270,42 @@ public class PlacesService {
     public CityPlace getPlaceById(String placeId) throws Exception {
         return cityPlaceRepo.findByPlaceId(placeId);
     }
+
     public List<CityPlace> getPlacesByCityName(String name) throws Exception {
         List<CityPlace> list = cityPlaceRepo.findByCityName(name);
         logger.info(E.PEAR + E.PEAR +
-               name +  " - Places found by City name : "  + list.size());
+                name + " - Places found by City name : " + list.size());
+        Collections.sort(list);
         for (CityPlace place : list) {
-            logger.info(" Place: " + E.RED_APPLE + " " + place.getName());
+            logger.info(" Place: " + E.RED_APPLE + " " + place.getName() + ", "
+                    + E.YELLOW + " " + place.getProvince());
         }
         return list;
     }
+
     public List<CityPlace> getPlacesByCityNameAndType(String name, String type) throws Exception {
         List<CityPlace> list = cityPlaceRepo.findByCityNameAndTypes(name, type);
         logger.info(E.PEAR + E.PEAR +
-                name +  " - Places found by City name and type "+type
-                +" : "  + list.size());
+                name + " - Places found by City name and type " + type
+                + " : " + list.size());
+
+        HashMap<String,CityPlace> map = new HashMap<>();
         for (CityPlace place : list) {
+            if (!map.containsKey(place.getName())) {
+                map.put(place.getName(),place);
+            }
+        }
+
+        Iterator<CityPlace> filteredIterator = map.values().iterator();
+        List<CityPlace> mPlaces = new ArrayList<>();
+        while (filteredIterator.hasNext()) {
+            mPlaces.add(filteredIterator.next());
+        }
+        Collections.sort(mPlaces);
+        for (CityPlace place : mPlaces) {
             logger.info(" Place: " + E.RED_APPLE + " " + place.getName());
         }
-        return list;
+        return mPlaces;
     }
 
     public String loadCityPlaces() throws Exception {
@@ -267,6 +326,69 @@ public class PlacesService {
 
 
         return totalPlaceCount + " Total City Places Loaded " + E.AMP + E.AMP + E.AMP;
+    }
+
+    public String loadSpecialCityPlaces() throws Exception {
+        logger.info("\n\n"+E.RED_APPLE+ " .... Loading places for special cities ...");
+        cityCounter = 0;
+        List<City> cities = cityRepo.findAll();
+        Collections.sort(cities);
+
+        apiKey = secretMgr.getPlacesAPIKey();
+        MAX_PAGE_COUNT = 3;
+
+        setHashMap();
+        long start = System.currentTimeMillis();
+
+        for (City city : cities) {
+            String name = city.getName();
+            if (map.containsKey(name)) {
+                pageCount = 0;
+                processCity(city, 15000, null);
+                cityCounter++;
+            }
+        }
+
+        long end = System.currentTimeMillis();
+        long elapsed = (end - start)/1000;
+
+        return "\n" + totalPlaceCount + " Total Places Loaded for " + cityCounter + " cities "
+                + E.AMP + E.AMP + E.AMP + "; elapsed: " + elapsed + " seconds " + E.LEAF;
+    }
+
+    HashMap<String, String> map = new HashMap<>();
+    private void setHashMap() {
+        map.put("Four Ways","Four Ways");
+        map.put("Hartebeestpoort","Hartebeestpoort");
+        map.put("Laudium","Laudium");
+        map.put("Pretoria","Pretoria");
+        map.put("Saulsville","Saulsville");
+        map.put("Mamelodi","Mamelodi");
+        map.put("Atteridgeville","Atteridgeville");
+        map.put("Kempton Park","Kempton Park");
+        map.put("Rosebank","Rosebank");
+        map.put("Kimberley","Kimberley");
+        map.put("Cape Town","Cape Town");
+        map.put("George","George");
+        map.put("Hermanus","Hermanus");
+        map.put("Durban","Durban");
+        map.put("Polokwane","Polokwane");
+        map.put("Soweto","Soweto");
+        map.put("Klerksdorp","Klerksdorp");
+        map.put("Rustenburg","Rustenburg");
+        map.put("Roodepoort","Roodepoort");
+        map.put("Spruitview","Spruitview");
+        map.put("Dullstroom","Dullstroom");
+        map.put("Hyde Park","Hyde Park");
+        map.put("Randburg","Randburg");
+        map.put("Randfontein","Randfontein");
+        map.put("Bedfordview","Bedfordview");
+        map.put("Pelindaba","Pelindaba");
+        map.put("Mossel Bay","Mossel Bay");
+        map.put("Paarl","Paarl");
+        map.put("Stellenbosch","Stellenbosch");
+
+        logger.info(E.PINK + E.PINK +" Special Cities: " + map.size());
     }
 
     public long countPlaces() throws Exception {

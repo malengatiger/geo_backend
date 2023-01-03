@@ -28,10 +28,14 @@ public class CityService {
     final MongoClient mongoClient;
     final CityRepo cityRepo;
 
+
+    private static final String xx = E.COFFEE+E.COFFEE+E.COFFEE;
+
     public CityService(MongoClient mongoClient, CityRepo cityRepo) {
         this.mongoClient = mongoClient;
         this.cityRepo = cityRepo;
-        logger.info(E.PINK+E.PINK+" CityService constructed and services injected");
+
+        logger.info(xx+" CityService constructed and services injected");
     }
     private static final Logger logger
             = Logger.getLogger(CityService.class.getSimpleName());

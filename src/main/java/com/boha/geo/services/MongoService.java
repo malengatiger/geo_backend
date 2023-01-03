@@ -29,12 +29,12 @@ public class MongoService {
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private static final Logger logger = Logger.getLogger(MongoService.class.getSimpleName());
     private static final String mm = E.RAIN + E.RAIN + E.RAIN;
-    private static final String xx = E.YELLOW + E.YELLOW + E.YELLOW;
+    private static final String xx = E.COFFEE+E.COFFEE+E.COFFEE;
     @Autowired
     private CityRepo cityRepo;
 
     public MongoService() {
-        logger.info(mm + " MongoService constructed ");
+        logger.info(xx + " MongoService constructed ");
     }
 
     @Autowired

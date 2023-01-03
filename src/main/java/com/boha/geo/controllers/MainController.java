@@ -117,6 +117,18 @@ public class MainController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
+    @GetMapping("/countPlaces")
+    private ResponseEntity<Object> countPlaces() {
+        try {
+            long placesByCount
+                    = placesService.countPlaces();
+            logger.info(E.BLUE_HEART + E.BLUE_HEART + E.CHECK +
+                    " MainController Returning, places counted: " + placesByCount);
+            return ResponseEntity.ok(placesByCount);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
 
     @GetMapping("/addCities")
     private ResponseEntity<Object> addCities() {
@@ -133,6 +145,18 @@ public class MainController {
     private ResponseEntity<Object> addCityPlaces() {
         try {
             String result = placesService.loadCityPlaces();
+            logger.info(E.BLUE_HEART + E.BLUE_HEART + E.CHECK +
+                    " MainController Returning " + result + " " + E.RED_APPLE);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
+        }
+    }
+
+    @GetMapping("/loadSpecialCityPlaces")
+    private ResponseEntity<Object> loadSpecialCityPlaces() {
+        try {
+            String result = placesService.loadSpecialCityPlaces();
             logger.info(E.BLUE_HEART + E.BLUE_HEART + E.CHECK +
                     " MainController Returning " + result + " " + E.RED_APPLE);
             return ResponseEntity.ok(result);
