@@ -161,7 +161,7 @@ public class DataService {
             photo.setPhotoId(UUID.randomUUID().toString());
         }
         photoRepository.save(photo);
-        LOGGER.info(E.LEAF.concat(E.LEAF).concat("Photo added: " + photo.getPhotoId()));
+        LOGGER.info(E.LEAF.concat(E.LEAF).concat("Photo added to Mongo, : " + photo.getUrl()));
         return messageService.sendMessage(photo);
     }
 

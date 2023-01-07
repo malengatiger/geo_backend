@@ -1,5 +1,6 @@
 package com.boha.geo;
 
+import com.boha.geo.services.FirebaseService;
 import com.boha.geo.services.MongoService;
 import com.boha.geo.util.E;
 import com.google.gson.Gson;
@@ -29,6 +30,10 @@ public class GeoApplication implements ApplicationListener<ApplicationReadyEvent
 	@Autowired
 	private MongoService mongoService;
 
+	@Autowired
+	private FirebaseService firebaseService;
+
+
 	public static void main(String[] args) {
 
 		logger.info(alien + " GeoApplication starting ...");
@@ -48,11 +53,20 @@ public class GeoApplication implements ApplicationListener<ApplicationReadyEvent
 		Map<RequestMappingInfo, HandlerMethod> map = requestMappingHandlerMapping
 				.getHandlerMethods();
 
-		map.forEach((key, value) -> {
-			logger.info(E.PEAR + E.PEAR +
-					" Endpoint: " + key);
-		});
+//		map.forEach((key, value) -> {
+//			logger.info(E.PEAR + E.PEAR +
+//					" Endpoint: " + key);
+//		});
 		logger.info(E.PEAR + E.PEAR + E.PEAR + E.PEAR +
 				" Total Endpoints: " + map.size() + "\n");
+		try {
+
+			firebaseService.initializeFirebase();
+			mongoService.printOrganizations();
+			mongoService.initializeIndexes();
+
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
 	}
 }

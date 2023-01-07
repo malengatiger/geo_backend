@@ -2,12 +2,20 @@ package com.boha.geo.services;
 
 import com.boha.geo.models.CityLocation;
 import com.boha.geo.monitor.data.City;
-import com.boha.geo.monitor.data.Position;
-import com.boha.geo.repos.CityRepo;
+import com.boha.geo.monitor.data.Organization;
+import com.boha.geo.monitor.data.User;
 import com.boha.geo.repos.CityRepository;
+import com.boha.geo.repos.OrganizationRepository;
+import com.boha.geo.repos.UserRepository;
 import com.boha.geo.util.E;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.IndexOptions;
+import com.mongodb.client.model.Indexes;
+import org.bson.Document;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,17 +35,24 @@ import java.util.logging.Logger;
 public class MongoService {
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private static final Logger logger = Logger.getLogger(MongoService.class.getSimpleName());
-    private static final String mm = E.RAIN + E.RAIN + E.RAIN;
     private static final String xx = E.COFFEE+E.COFFEE+E.COFFEE;
     @Autowired
     private CityRepository cityRepo;
 
-    public MongoService() {
-        logger.info(xx + " MongoService constructed ");
+    public MongoService(CityRepository cityRepo, MongoClient mongoClient, ResourceLoader resourceLoader, UserRepository userRepository, OrganizationRepository organizationRepository) {
+        this.cityRepo = cityRepo;
+        this.mongoClient = mongoClient;
+        this.resourceLoader = resourceLoader;
+        this.userRepository = userRepository;
+        this.organizationRepository = organizationRepository;
+        logger.info(xx + " MongoService constructed, will set database and initializeIndexes " + E.BELL+E.BELL);
+        setDatabase();
+        initializeIndexes();
     }
-
-    @Autowired
-    private ResourceLoader resourceLoader;
+    private final MongoClient mongoClient;
+    private final ResourceLoader resourceLoader;
+    private final UserRepository userRepository;
+    private final OrganizationRepository organizationRepository;
 
 
     private List<City> getCitiesFromFile() throws IOException {
@@ -109,5 +124,244 @@ public class MongoService {
         return cities;
     }
 
+    public void initializeIndexes() {
+        try {
+            createCityIndexes();
+            createProjectPositionIndexes();
+            createPhotoIndexes();
+            createVideoIndexes();
+
+            createUserIndexes();
+            createOrganizationIndexes();
+            createProjectIndexes();
+            createCommunityIndexes();
+
+            createGeofenceIndexes();
+            createSchedulesIndexes();
+            createUniqueCityIndex();
+
+        } catch (Exception e) {
+            logger.severe(E.RED_DOT+E.RED_DOT+" Index building failed: " + e.getMessage());
+        }
+    }
+    private void createOrganizationIndexes() {
+        //add index
+        MongoCollection<Document> dbCollection = db.getCollection("organizations");
+
+        String result2 = dbCollection.createIndex(Indexes.ascending("name"),
+                new IndexOptions().unique(true));
+        logger.info(mm +
+                " unique name index on organizations collection: " +
+                E.RED_APPLE + result2);
+
+        String result3 = dbCollection.createIndex(Indexes.ascending("organizationId"));
+        logger.info(mm +
+                " organizationId index on organizations collection: " +
+                E.RED_APPLE + result3);
+
+    }
+    private void createProjectIndexes() {
+        //add index
+        MongoCollection<Document> dbCollection = db.getCollection("projects");
+
+        String result2 = dbCollection.createIndex(Indexes.ascending("organizationId", "name"),
+                new IndexOptions().unique(true));
+        logger.info(mm +
+                " unique name index on projects collection: " +
+                E.RED_APPLE + result2);
+
+        String result3 = dbCollection.createIndex(Indexes.ascending("organizationId"));
+        logger.info(mm +
+                " organizationId index on projects collection: " +
+                E.RED_APPLE + result3);
+
+    }
+    private void createUserIndexes() {
+        //add index
+        MongoCollection<Document> dbCollection = db.getCollection("users");
+
+        String result2 = dbCollection.createIndex(Indexes.ascending("email"),
+                new IndexOptions().unique(true));
+        logger.info(mm +
+                " user unique email index on users collection: " +
+                E.RED_APPLE + result2);
+
+        String result = dbCollection.createIndex(Indexes.ascending("cellphone"));
+        logger.info(mm +
+                " user cellphone index on users collection: " +
+                E.RED_APPLE + result);
+
+        String result3 = dbCollection.createIndex(Indexes.ascending("organizationId"));
+        logger.info(mm +
+                " organizationId index on users collection: " +
+                E.RED_APPLE + result3);
+    }
+    private void createCommunityIndexes() {
+        //add index
+        MongoCollection<Document> dbCollection = db.getCollection("communities");
+
+        String result2 = dbCollection.createIndex(Indexes.ascending("name", "countryId"),
+                new IndexOptions().unique(true));
+        logger.info(mm +
+                " user unique name index on community collection: " +
+                E.RED_APPLE + result2);
+
+        String result = dbCollection.createIndex(Indexes.ascending("countryId"));
+        logger.info(mm +
+                " user countryId index on community collection: " +
+                E.RED_APPLE + result);
+    }
+    private void createGeofenceIndexes() {
+        //add index
+        MongoCollection<Document> dbCollection = db.getCollection("geofenceEvents");
+
+        String result2 = dbCollection.createIndex(Indexes.ascending("projectId"),
+                new IndexOptions().unique(false));
+        logger.info(mm +
+                " projectId index on geofenceEvents collection: " +
+                E.RED_APPLE + result2);
+
+        String result = dbCollection.createIndex(Indexes.ascending("userId"));
+        logger.info(mm+
+                " userId index on geofenceEvents collection: " +
+                E.RED_APPLE + result);
+
+        String result3 = dbCollection.createIndex(Indexes.geo2dsphere("position"));
+        logger.info(mm+
+                " position 2dSphere index on geofenceEvents collection: " +
+                E.RED_APPLE + result3);
+    }
+    private void createSchedulesIndexes() {
+        //add index
+        MongoCollection<Document> dbCollection = db.getCollection("fieldMonitorSchedules");
+
+        String result2 = dbCollection.createIndex(Indexes.ascending("projectId"),
+                new IndexOptions().unique(false));
+        logger.info(mm +
+                " projectId index on fieldMonitorSchedules collection: " +
+                E.RED_APPLE + result2);
+
+        String result = dbCollection.createIndex(Indexes.ascending("userId"));
+        logger.info(mm+
+                " userId index on fieldMonitorSchedules collection: " +
+                E.RED_APPLE + result);
+
+        String result3 = dbCollection.createIndex(Indexes.geo2dsphere("position"));
+        logger.info(mm+
+                " position 2dSphere index on fieldMonitorSchedules collection: " +
+                E.RED_APPLE + result3);
+    }
+    private void createUniqueCityIndex() {
+        MongoCollection<Document> dbCollection = db.getCollection("cities");
+
+        String result = dbCollection.createIndex(Indexes.ascending( "province", "name"),
+                new IndexOptions().unique(true));
+
+        logger.info(mm +
+                " unique index : province & name - cities collection: " +
+                E.RED_APPLE + result);
+    }
+
+    private static final String mm = E.LEAF + " ";
+    private void createCityIndexes() {
+        //add index
+        MongoCollection<Document> dbCollection = db.getCollection("cities");
+        String result = dbCollection.createIndex(Indexes.geo2dsphere("cityLocation"));
+        logger.info(mm +
+                " cityLocation 2dSphere index on city collection: " +
+                E.RED_APPLE + result);
+
+        String result2 = dbCollection.createIndex(Indexes.ascending("name"));
+        logger.info(mm +
+                " name index on city collection: " +
+                E.RED_APPLE + result2);
+
+        String result3 = dbCollection.createIndex(Indexes.ascending("cityId"));
+        logger.info(mm +
+                " cityId index on city collection: " +
+                E.RED_APPLE + result3);
+    }
+
+    private void createProjectPositionIndexes() {
+        //add index
+        MongoCollection<Document> dbCollection = db.getCollection("projectPositions");
+        String result = dbCollection.createIndex(Indexes.geo2dsphere("position"));
+        logger.info(mm +
+                " projectPosition 2dSphere index on projectPositions collection: " +
+                E.RED_APPLE + result);
+
+        String result2 = dbCollection.createIndex(Indexes.ascending("projectId"));
+        logger.info(mm +
+                " projectId index on projectPositions collection: " +
+                E.RED_APPLE + result2);
+
+        String result3 = dbCollection.createIndex(Indexes.ascending("organizationId"));
+        logger.info(mm +
+                " organizationId index on projectPositions collection: " +
+                E.RED_APPLE + result3);
+
+    }
+
+    private void createPhotoIndexes() {
+        //add index
+        MongoCollection<Document> dbCollection = db.getCollection("photos");
+        String result = dbCollection.createIndex(Indexes.geo2dsphere("projectPosition"));
+        logger.info(mm +
+                " photo 2dSphere index on photos collection: " +
+                E.RED_APPLE + result);
+
+        String result2 = dbCollection.createIndex(Indexes.ascending("projectId"));
+        logger.info(mm +
+                " projectId index on photos collection: " +
+                E.RED_APPLE + result2);
+
+        String result3 = dbCollection.createIndex(Indexes.ascending("organizationId"));
+        logger.info(mm +
+                " organizationId index on photos collection: " +
+                E.RED_APPLE + result3);
+
+    }
+
+    private MongoDatabase db;
+    private void setDatabase() {
+        if (db == null) {
+            db = mongoClient.getDatabase("geo");
+            logger.info(mm+" Mongo Database set up, name: " + db.getName());
+        }
+    }
+    private void createVideoIndexes() {
+        //add index
+        MongoCollection<Document> dbCollection = db.getCollection("videos");
+        String result = dbCollection.createIndex(Indexes.geo2dsphere("projectPosition"));
+        logger.info(mm +
+                " photo 2dSphere index on videos collection: " +
+                E.RED_APPLE + result);
+
+        String result2 = dbCollection.createIndex(Indexes.ascending("projectId"));
+        logger.info(mm +
+                " projectId index on videos collection: " +
+                E.RED_APPLE + result2);
+
+        String result3 = dbCollection.createIndex(Indexes.ascending("organizationId"));
+        logger.info(mm +
+                " organizationId index on videos collection: " +
+                E.RED_APPLE + result3);
+
+    }
+
+    public void printOrganizations() {
+        List<Organization> orgs = organizationRepository.findAll();
+        for (Organization org : orgs) {
+            List<User> users = userRepository.findByOrganizationId(org.getOrganizationId());
+            logger.info(E.PEAR+E.PEAR+E.PEAR+ " Organization: " + org.getName());
+            logger.info(E.PEAR+E.PEAR+E.PEAR+ " organizationId: " + org.getOrganizationId());
+            for (User user : users) {
+                logger.info(E.PEAR+E.PEAR + " user: " + user.getUserType() + " " + E.RED_APPLE
+                        + "  " + user.getEmail() + " " + E.BLUE_DOT +"  " + user.getName());
+                logger.info(E.PEAR+E.PEAR + " \tuserId: " + user.getUserId() + " " + E.RED_APPLE);
+            }
+            logger.info("\n\n");
+        }
+    }
 
 }

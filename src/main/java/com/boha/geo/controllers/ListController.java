@@ -503,6 +503,48 @@ public class ListController {
         }
 
     }
+    @GetMapping("/getProjectData")
+    public ResponseEntity<Object> getProjectData(@RequestParam String projectId) {
+        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
+                .concat("getProjectData: " + projectId));
+        try {
+            return ResponseEntity.ok(listService.getProjectData(projectId));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "getProjectData failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+
+    }
+    @GetMapping("/getOrganizationData")
+    public ResponseEntity<Object> getOrganizationData(@RequestParam String organizationId) {
+        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
+                .concat("getOrganizationData: " + organizationId));
+        try {
+            return ResponseEntity.ok(listService.getOrganizationData(organizationId));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "getOrganizationData failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+
+    }
+    @GetMapping("/getUserData")
+    public ResponseEntity<Object> getUserData(@RequestParam String userId) {
+        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
+                .concat("getUserData: " + userId));
+        try {
+            return ResponseEntity.ok(listService.getUserData(userId));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "getUserData failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+
+    }
 
     @GetMapping("/getUserProjectPhotos")
     public ResponseEntity<Object> getUserProjectPhotos(String userId) {

@@ -1,6 +1,7 @@
 package com.boha.geo.monitor.services;
 
 
+import com.boha.geo.monitor.data.DataBag;
 import com.boha.geo.monitor.data.*;
 import com.boha.geo.repos.*;
 import com.boha.geo.util.E;
@@ -158,7 +159,80 @@ public class ListService {
 
         return mList;
     }
-    public List<Photo> getUserProjectPhotos(String userId)  {
+
+    public DataBag getUserData(String userId)  {
+        DataBag bag = new DataBag();
+        User user = userRepository.findByUserId(userId);
+        List<Project> projects = projectRepository.findByOrganizationId(user.getOrganizationId());
+        List<Photo> photos = getUserProjectPhotos(userId);
+        List<Video> videos = getUserProjectVideos(userId);
+        List<ProjectPosition> projectPositions = getOrganizationProjectPositions(user.getOrganizationId());
+        List<FieldMonitorSchedule> fieldMonitorSchedules = getOrgFieldMonitorSchedules(user.getOrganizationId());
+        List<User> users = getOrganizationUsers(user.getOrganizationId());
+
+        bag.setDate(DateTime.now().toDateTimeISO().toString());
+        bag.setProjects(projects);
+        bag.setFieldMonitorSchedules(fieldMonitorSchedules);
+        bag.setProjectPositions(projectPositions);
+        bag.setPhotos(photos);
+        bag.setVideos(videos);
+        bag.setUsers(users);
+
+        LOGGER.info(E.RED_APPLE+" Project data found: photos: " + bag.getPhotos().size() + " videos: " + bag.getVideos().size()
+                + " schedules: " + bag.getFieldMonitorSchedules().size());
+
+        return bag;
+    }
+
+    public DataBag getProjectData(String projectId)  {
+        DataBag bag = new DataBag();
+        Project project = projectRepository.findByProjectId(projectId);
+        List<Project> projects = new ArrayList<>();
+        projects.add(project);
+
+        List<Photo> photos = getProjectPhotos(projectId);
+        List<Video> videos = getProjectVideos(projectId);
+        List<ProjectPosition> projectPositions = getProjectPositions(projectId);
+        List<FieldMonitorSchedule> fieldMonitorSchedules = getProjectFieldMonitorSchedules(projectId);
+        List<User> users = getOrganizationUsers(project.getOrganizationId());
+
+        bag.setDate(DateTime.now().toDateTimeISO().toString());
+        bag.setProjects(projects);
+        bag.setFieldMonitorSchedules(fieldMonitorSchedules);
+        bag.setProjectPositions(projectPositions);
+        bag.setPhotos(photos);
+        bag.setVideos(videos);
+        bag.setUsers(users);
+
+        LOGGER.info(E.RED_APPLE+" Project data found: photos: " + bag.getPhotos().size() + " videos: " + bag.getVideos().size()
+        + " schedules: " + bag.getFieldMonitorSchedules().size());
+
+        return bag;
+    }
+    public DataBag getOrganizationData(String organizationId)  {
+        DataBag bag = new DataBag();
+        List<Project> projects = projectRepository.findByOrganizationId(organizationId);
+        List<Photo> photos = getOrganizationPhotos(organizationId);
+        List<Video> videos = getOrganizationVideos(organizationId);
+        List<ProjectPosition> projectPositions = getOrganizationProjectPositions(organizationId);
+        List<FieldMonitorSchedule> fieldMonitorSchedules = getOrgFieldMonitorSchedules(organizationId);
+        List<User> users = getOrganizationUsers(organizationId);
+
+        bag.setDate(DateTime.now().toDateTimeISO().toString());
+        bag.setProjects(projects);
+        bag.setFieldMonitorSchedules(fieldMonitorSchedules);
+        bag.setProjectPositions(projectPositions);
+        bag.setPhotos(photos);
+        bag.setVideos(videos);
+        bag.setUsers(users);
+
+        LOGGER.info(E.RED_APPLE+" Organization data found: photos: " + bag.getPhotos().size() + " videos: " + bag.getVideos().size()
+                + " schedules: " + bag.getFieldMonitorSchedules().size());
+
+        return bag;
+    }
+
+        public List<Photo> getUserProjectPhotos(String userId)  {
 
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getUserProjectPhotos ...userId: " + userId));
         List<Photo> mList = photoRepository.findByUserId(userId);

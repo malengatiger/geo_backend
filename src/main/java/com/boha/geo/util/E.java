@@ -64,7 +64,7 @@ public class E {
             OK = "\uD83D\uDC4D\uD83C\uDFFD ",       // 👍🏽
             NOT_OK = "\uD83D\uDC4E\uD83C\uDFFD ",   // 👎🏽
             FIRE = "\uD83D\uDD25 ",                 // 🔥
-            PIG = "\uD83D\uDC37 ",                  // 🐷
+            PIG = "\uD83D\uDC37",                  // 🐷
             FLOWER_RED = "\uD83C\uDF3A ",           // 🌺
             CAT = "\uD83D\uDC31 ",                  // 🐱
             FLOWER_PINK = "\uD83C\uDF38 ",      // 🌸
@@ -84,7 +84,7 @@ public class E {
             CRYING = "\uD83D\uDE2A ",           // 😪
             BURGER = "\uD83C\uDF54 ",           // 🍔
             ICE_CREAM = "\uD83C\uDF66 ",        // 🍦
-            DICE = "\uD83C\uDFB2 ",             // 🎲
+            DICE = "\uD83C\uDFB2",             // 🎲
             CHIPS = "\uD83C\uDF5F ",            // 🍟
             CROISSANT = "\uD83E\uDD50 ",        // 🥐
             CHICKEN = "\uD83D\uDC13 ",          // 🐓

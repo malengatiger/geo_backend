@@ -4,6 +4,8 @@ import com.boha.geo.monitor.data.*;
 import com.boha.geo.monitor.services.DataService;
 import com.boha.geo.monitor.services.ListService;
 import com.boha.geo.repos.*;
+import com.boha.geo.services.MongoService;
+import com.boha.geo.services.UserService;
 import com.boha.geo.util.E;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.CollectionReference;
@@ -15,11 +17,6 @@ import com.google.firebase.auth.ListUsersPage;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.IndexOptions;
-import com.mongodb.client.model.Indexes;
-import org.bson.Document;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,14 +31,37 @@ public class MongoGenerator {
     private static final Gson G = new GsonBuilder().setPrettyPrinting().create();
     private static final String xx = E.COFFEE+E.COFFEE+E.COFFEE;
 
-    public MongoGenerator() {
+    public MongoGenerator(UserService userService, MongoService mongoService, CountryRepository countryRepository, CityRepository cityRepository,
+                          UserRepository userRepository, CommunityRepository communityRepository, DataService dataService, ListService listService, MongoClient mongoClient,
+                          OrganizationRepository organizationRepository,
+                          ProjectRepository projectRepository, ProjectPositionRepository projectPositionRepository,
+                          FieldMonitorScheduleRepository fieldMonitorScheduleRepository) {
+        this.userService = userService;
+        this.mongoService = mongoService;
+        this.countryRepository = countryRepository;
+        this.cityRepository = cityRepository;
+        this.userRepository = userRepository;
+        this.communityRepository = communityRepository;
+        this.dataService = dataService;
+        this.listService = listService;
+        this.mongoClient = mongoClient;
+        this.organizationRepository = organizationRepository;
+        this.projectRepository = projectRepository;
+        this.projectPositionRepository = projectPositionRepository;
+        this.fieldMonitorScheduleRepository = fieldMonitorScheduleRepository;
         LOGGER.info(xx+ " MongoGenerator is up and good ");
     }
 
-    @Autowired
-    private CountryRepository countryRepository;
-    @Autowired
-    private CityRepository cityRepository;
+
+    private final UserService userService;
+    private final MongoService mongoService;
+    private final CountryRepository countryRepository;
+    private final CityRepository cityRepository;
+    private final UserRepository userRepository;
+
+    private final CommunityRepository communityRepository;
+
+    private final DataService dataService;
 
     private static final double latitudeSandton = -26.10499958, longitudeSandton = 28.052499;
     private static final double latitudeHarties = -25.739830374, longitudeHarties = 27.892996428;
@@ -54,12 +74,38 @@ public class MongoGenerator {
     private static final double latitudeZA = -28.4792625, longitudeZA = 24.6727135;
     private static final double latitudeZIM = -19.0169211, longitudeZIM = 29.1528018;
 
-
-
     public void generate(int numberOfOrgs) throws Exception {
-        LOGGER.info(E.DICE + E.DICE + " -------- Generating countries .... ");
+        LOGGER.info(E.DICE + E.DICE +E.DICE
+                + " -------- Generation starting .... ");
+        try {
+            List<Country> countries = countryRepository.findAll();
+            if (countries.isEmpty()) {
+                addCountries();
+            }
 
+            LOGGER.info(E.DICE + E.DICE + E.DICE
+                    + " -------- Delete users, generate "+numberOfOrgs+" organizations and communities ... ");
+
+            deleteAuthUsers();
+            generateOrganizations(numberOfOrgs);
+            generateCommunities();
+
+            mongoService.initializeIndexes();
+
+        } catch (Exception e) {
+            LOGGER.severe(E.RED_DOT+E.RED_DOT+ "We have a problem: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
+
+        LOGGER.info(E.DICE + E.DICE + E.DICE + E.DICE +
+                " ........ Generation completed!! "
+                + E.RED_APPLE);
+    }
+
+    private void addCountries() {
         List<Country> countries = new ArrayList<>();
+
         List<Double> cords = new ArrayList<>();
         cords.add(longitudeZA);
         cords.add(latitudeZA);
@@ -70,18 +116,20 @@ public class MongoGenerator {
         c1.setCountryCode("ZA");
         c1.setCountryId(UUID.randomUUID().toString());
 
-        cords.clear();
-        cords.add(longitudeZIM);
-        cords.add(latitudeZIM);
+        List<Double> cords2 = new ArrayList<>();
+        cords2.add(longitudeZIM);
+        cords2.add(latitudeZIM);
 
         Country c2 = new Country();
         c2.setName("Zimbabwe");
-        c2.setPosition(new Position("Point", cords));
+        c2.setPosition(new Position("Point", cords2));
         c2.setCountryCode("ZIM");
         c2.setCountryId(UUID.randomUUID().toString());
-
-        Country southAfrica = countryRepository.insert(c2);
+        Country southAfrica = countryRepository.insert(c1);
         Country zimbabwe = countryRepository.insert(c2);
+
+        LOGGER.info(E.DICE + E.DICE + E.DICE
+                + " -------- countries added .... ");
 
         countries.add(southAfrica);
         countries.add(zimbabwe);
@@ -90,99 +138,13 @@ public class MongoGenerator {
             LOGGER.info(E.DICE + E.DICE + " -------- Country: "
                     + country.getName() + " " + E.RED_APPLE);
         }
-
-        deleteAuthUsers();
-        generateOrganizations(numberOfOrgs);
-        generateCommunities();
-
-        LOGGER.info(E.DICE + E.DICE + E.DICE + E.DICE +
-                " ........ Generation completed!! "
-                + E.RED_APPLE);
     }
 
-    @Autowired
-    private ListService listService;
+    private final ListService listService;
 
-    @Autowired
-    MongoClient mongoClient;
+    private final MongoClient mongoClient;
 
-    private void createUniqueCityIndex() {
-        LOGGER.info(E.FOOTBALL + E.FOOTBALL + "Creating unique index to catch name duplication within province");
-        MongoDatabase db = mongoClient.getDatabase("geo");
-        MongoCollection<Document> dbCollection = db.getCollection("city");
 
-        String result = dbCollection.createIndex(Indexes.ascending("name", "provinceName"), new IndexOptions().unique(true));
-
-        LOGGER.info(E.LEAF + E.LEAF + E.LEAF + E.LEAF +
-                " City unique index : city name + provinceName - should be created on city collection: " +
-                E.RED_APPLE + result);
-    }
-
-    private void createCityIndexes() {
-        //add index
-        MongoDatabase db = mongoClient.getDatabase("geo");
-        MongoCollection<Document> dbCollection = db.getCollection("city");
-        String result = dbCollection.createIndex(Indexes.geo2dsphere("position"));
-        LOGGER.info(E.LEAF + E.LEAF + E.LEAF + E.LEAF +
-                " City 2dSphere index should be created on city collection: " +
-                E.RED_APPLE + result);
-        String result2 = dbCollection.createIndex(Indexes.ascending("name"));
-        LOGGER.info(E.LEAF + E.LEAF + E.LEAF + E.LEAF +
-                " City name index should be created on city collection: " +
-                E.RED_APPLE + result2);
-        String result3 = dbCollection.createIndex(Indexes.ascending("cityId"));
-        LOGGER.info(E.LEAF + E.LEAF + E.LEAF + E.LEAF +
-                " City cityId index should be created on city collection: " +
-                E.RED_APPLE + result3);
-    }
-
-    private void createProjectPositionIndexes() {
-        //add index
-        MongoDatabase db = mongoClient.getDatabase("geo");
-        MongoCollection<Document> dbCollection = db.getCollection("projectPositions");
-        String result = dbCollection.createIndex(Indexes.geo2dsphere("position"));
-        LOGGER.info(E.LEAF + E.LEAF + E.LEAF + E.LEAF +
-                " projectPosition 2dSphere index should be created on projectPosition collection: " +
-                E.RED_APPLE + result);
-
-        String result2 = dbCollection.createIndex(Indexes.ascending("projectId"));
-        LOGGER.info(E.LEAF + E.LEAF + E.LEAF + E.LEAF +
-                " projectId index should be created on projectPosition collection: " +
-                E.RED_APPLE + result2);
-
-    }
-
-    private void createPhotoIndexes() {
-        //add index
-        MongoDatabase db = mongoClient.getDatabase("geo");
-        MongoCollection<Document> dbCollection = db.getCollection("photo");
-        String result = dbCollection.createIndex(Indexes.geo2dsphere("projectPosition"));
-        LOGGER.info(E.LEAF + E.LEAF + E.LEAF + E.LEAF +
-                " photo 2dSphere index should be created on photo collection: " +
-                E.RED_APPLE + result);
-
-        String result2 = dbCollection.createIndex(Indexes.ascending("projectId"));
-        LOGGER.info(E.LEAF + E.LEAF + E.LEAF + E.LEAF +
-                " projectId index should be created on photo collection: " +
-                E.RED_APPLE + result2);
-
-    }
-
-    private void createVideoIndexes() {
-        //add index
-        MongoDatabase db = mongoClient.getDatabase("geo");
-        MongoCollection<Document> dbCollection = db.getCollection("video");
-        String result = dbCollection.createIndex(Indexes.geo2dsphere("projectPosition"));
-        LOGGER.info(E.LEAF + E.LEAF + E.LEAF + E.LEAF +
-                " photo 2dSphere index should be created on video collection: " +
-                E.RED_APPLE + result);
-
-        String result2 = dbCollection.createIndex(Indexes.ascending("projectId"));
-        LOGGER.info(E.LEAF + E.LEAF + E.LEAF + E.LEAF +
-                " projectId index should be created on video collection: " +
-                E.RED_APPLE + result2);
-
-    }
 
     private static final int BATCH_SIZE = 600;
 
@@ -225,101 +187,23 @@ public class MongoGenerator {
     }
 
 
-    @Autowired
-    OrganizationRepository organizationRepository;
-    @Autowired
-    ProjectRepository projectRepository;
+    private final OrganizationRepository organizationRepository;
+    private final ProjectRepository projectRepository;
 
-    @Autowired
-    ProjectPositionRepository projectPositionRepository;
+    private final ProjectPositionRepository projectPositionRepository;
 
-    private void createOrganizationIndexes() {
-        //add index
-        MongoDatabase db = mongoClient.getDatabase("geo");
-        MongoCollection<Document> dbCollection = db.getCollection("organization");
-
-        String result2 = dbCollection.createIndex(Indexes.ascending("name"),
-                new IndexOptions().unique(true));
-        LOGGER.info(E.LEAF + E.LEAF + E.LEAF + E.LEAF +
-                " Org unique name index should be created on org collection: " +
-                E.RED_APPLE + result2);
-
-    }
-
-    private void createProjectIndexes() {
-        //add index
-        MongoDatabase db = mongoClient.getDatabase("geo");
-        MongoCollection<Document> dbCollection = db.getCollection("projects");
-
-        String result2 = dbCollection.createIndex(Indexes.ascending("organizationId", "name"),
-                new IndexOptions().unique(true));
-        LOGGER.info(E.LEAF + E.LEAF + E.LEAF + E.LEAF +
-                " Project unique name index should be created on Project collection: " +
-                E.RED_APPLE + result2);
-
-    }
-
-    private void createUserIndexes() {
-        //add index
-        MongoDatabase db = mongoClient.getDatabase("geo");
-        MongoCollection<Document> dbCollection = db.getCollection("users");
-
-        String result2 = dbCollection.createIndex(Indexes.ascending("email"),
-                new IndexOptions().unique(true));
-        LOGGER.info(E.LEAF + E.LEAF + E.LEAF + E.LEAF +
-                " user unique email index should be created on user collection: " +
-                E.RED_APPLE + result2);
-
-        String result = dbCollection.createIndex(Indexes.ascending("cellphone"));
-        LOGGER.info(E.LEAF + E.LEAF + E.LEAF + E.LEAF +
-                " user cellphone index should be created on user collection: " +
-                E.RED_APPLE + result);
-    }
-
-    private void createCommunityIndexes() {
-        //add index
-        MongoDatabase db = mongoClient.getDatabase("geo");
-        MongoCollection<Document> dbCollection = db.getCollection("communities");
-
-        String result2 = dbCollection.createIndex(Indexes.ascending("name", "countryId"),
-                new IndexOptions().unique(true));
-        LOGGER.info(E.LEAF + E.LEAF + E.LEAF + E.LEAF +
-                " user unique name index should be created on community collection: " +
-                E.RED_APPLE + result2);
-
-        String result = dbCollection.createIndex(Indexes.ascending("countryId"));
-        LOGGER.info(E.LEAF + E.LEAF + E.LEAF + E.LEAF +
-                " user countryId index should be created on community collection: " +
-                E.RED_APPLE + result);
-    }
-    private void createGeofenceIndexes() {
-        //add index
-        MongoDatabase db = mongoClient.getDatabase("geo");
-        MongoCollection<Document> dbCollection = db.getCollection("geofenceEvents");
-
-        String result2 = dbCollection.createIndex(Indexes.ascending("projectId"),
-                new IndexOptions().unique(false));
-        LOGGER.info(E.LEAF + E.LEAF + E.LEAF + E.LEAF +
-                " projectId index should be created on geofenceEvents collection: " +
-                E.RED_APPLE + result2);
-
-        String result = dbCollection.createIndex(Indexes.ascending("userId"));
-        LOGGER.info(E.LEAF + E.LEAF + E.LEAF + E.LEAF +
-                " userId index should be created on geofenceEvents collection: " +
-                E.RED_APPLE + result);
-
-        String result3 = dbCollection.createIndex(Indexes.geo2dsphere("position"));
-        LOGGER.info(E.LEAF + E.LEAF + E.LEAF + E.LEAF +
-                " position 2dSphere index should be created on geofenceEvents collection: " +
-                E.RED_APPLE + result3);
-    }
     private void generateOrganizations(int numberOfOrgs) throws Exception {
-        setFirstNames();
-        setLastNames();
+
+        firstNames = userService.getFirstNames();
+        lastNames = userService.getLastNames();
+
+        addFirstNames();
+        addLastNames();
+
         setOrgNames();
         setCommunityNames();
         setProjectNames();
-        createOrganizationIndexes();
+
         List<Country> countries = countryRepository.findAll();
         List<Organization> organizations = new ArrayList<>();
         //Generate orgs for South Africa
@@ -350,6 +234,7 @@ public class MongoGenerator {
         }
 
         LOGGER.info(E.LEAF + E.LEAF + "Organizations generated: " + organizations.size());
+
         generateProjects();
         generateUsers(true);
         generateFieldMonitorSchedules();
@@ -408,12 +293,6 @@ public class MongoGenerator {
         List<Organization> organizations = organizationRepository.findAll();
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS + E.RAIN_DROPS.concat(" Generating projects ...")));
 
-        createProjectIndexes();
-        createProjectPositionIndexes();
-        createPhotoIndexes();
-        createVideoIndexes();
-        createGeofenceIndexes();
-
         for (ProjectLocation loc : projectLocations) {
             //assign this project location to a random organization
             int index = random.nextInt(organizations.size() - 1);
@@ -462,14 +341,7 @@ public class MongoGenerator {
 
     }
 
-    @Autowired
-    UserRepository userRepository;
 
-    @Autowired
-    CommunityRepository communityRepository;
-
-    @Autowired
-    DataService dataService;
 
     private String getRandomCellphone() {
 
@@ -487,15 +359,15 @@ public class MongoGenerator {
 
     private void generateUsers(boolean eraseExistingUsers) throws Exception {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS + E.RAIN_DROPS.concat(" Generating Users ...")));
-        List<Organization> organizations = (List<Organization>) organizationRepository.findAll();
+        List<Organization> organizations = organizationRepository.findAll();
         if (eraseExistingUsers) {
             deleteAuthUsers();
         }
-        setFirstNames();
-        setLastNames();
+        addFirstNames();
+        addLastNames();
         setCommunityNames();
         setOrgNames();
-        createUserIndexes();
+
         int cnt = 0;
 
         for (Organization organization : organizations) {
@@ -559,7 +431,6 @@ public class MongoGenerator {
 
     private void generateCommunities() throws Exception {
 
-        createCommunityIndexes();
         List<Country> countries = countryRepository.findAll();
         Country country = null;
         for (Country country1 : countries) {
@@ -599,8 +470,8 @@ public class MongoGenerator {
         return x == 0 ? 100000 : x * 20000;
     }
 
-    private final List<String> firstNames = new ArrayList<>();
-    private final List<String> lastNames = new ArrayList<>();
+    private List<String> firstNames = new ArrayList<>();
+    private List<String> lastNames = new ArrayList<>();
     private final List<String> organizationNames = new ArrayList<>();
     private final List<String> communities = new ArrayList<>();
     private final List<String> projectNames = new ArrayList<>();
@@ -646,7 +517,7 @@ public class MongoGenerator {
 
     }
 
-    private void setFirstNames() {
+    private void addFirstNames() {
         firstNames.add("Mmaphefo");
         firstNames.add("Nomonde");
         firstNames.add("Nolwazi");
@@ -689,7 +560,7 @@ public class MongoGenerator {
 
     }
 
-    private void setLastNames() {
+    private void addLastNames() {
         lastNames.add("Maluleke");
         lastNames.add("Baloyi");
         lastNames.add("Mthembu");
@@ -741,7 +612,7 @@ public class MongoGenerator {
         ListUsersPage page = future.get();
         while (page != null) {
             for (ExportedUserRecord user : page.getValues()) {
-                LOGGER.info(E.PIG.concat(E.PIG) + "Auth User: " + user.getDisplayName());
+                LOGGER.info(E.PIG.concat(E.PIG) + "Auth User display name: " + user.getDisplayName());
                 mList.add(user);
             }
             page = page.getNextPage();
@@ -755,12 +626,14 @@ public class MongoGenerator {
                 .concat(" DELETING ALL AUTH USERS from Firebase .... ").concat(E.RED_DOT)));
         List<ExportedUserRecord> list = getAuthUsers();
         for (ExportedUserRecord exportedUserRecord : list) {
-            if (!exportedUserRecord.getEmail().equalsIgnoreCase("aubrey@gmail.com")) {
-                FirebaseAuth.getInstance().deleteUser(exportedUserRecord.getUid());
-                if (exportedUserRecord.getDisplayName() != null) {
-                    LOGGER.info(E.OK.concat(E.RED_APPLE) + "Successfully deleted user: "
-                            .concat(exportedUserRecord.getDisplayName()));
+            if (exportedUserRecord.getEmail() != null) {
+                if (!exportedUserRecord.getEmail().equalsIgnoreCase("aubrey@gmail.com")) {
+                    FirebaseAuth.getInstance().deleteUser(exportedUserRecord.getUid());
+                        LOGGER.info(E.RED_DOT.concat(E.RED_DOT) + " Successfully deleted user ");
                 }
+            } else {
+                FirebaseAuth.getInstance().deleteUser(exportedUserRecord.getUid());
+                LOGGER.info(E.RED_DOT.concat(E.RED_DOT) + " Successfully deleted user ");
             }
         }
     }

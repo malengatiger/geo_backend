@@ -48,7 +48,7 @@ public class UserService {
     private final List<String> lastNames = new ArrayList<>();
     private final List<String> middleInitials = new ArrayList<>();
 
-    private void setLastNames() {
+    public List<String> getLastNames() {
         String mSurnames = storageService.downloadObject(surnamesFile);
         JSONArray arr = new JSONArray(mSurnames);
         for (int i = 0; i < arr.length(); i++) {
@@ -59,6 +59,7 @@ public class UserService {
         }
         logger.info(E.LEAF + E.LEAF +
                 " Number of LastNames: " + lastNames.size());
+        return lastNames;
     }
 
     private String processName(String name) {
@@ -69,7 +70,7 @@ public class UserService {
         return capFirst + lowRest;
     }
 
-    private void setFirstNames() {
+    public List<String> getFirstNames() {
         String mFirstNames = storageService.downloadObject(firstNamesFile);
         JSONArray arr = new JSONArray(mFirstNames);
         for (int i = 0; i < arr.length(); i++) {
@@ -81,7 +82,7 @@ public class UserService {
         logger.info(E.LEAF + E.LEAF +
                 " Number of FirstNames: " + firstNames.size());
 
-
+        return firstNames;
     }
 
     private void setMiddleInitials() {
@@ -123,8 +124,8 @@ public class UserService {
         userTotal = 0;
         int maxPerCityCount = 1000;
         if (lastNames.size() == 0) {
-            setLastNames();
-            setFirstNames();
+            getLastNames();
+            getFirstNames();
             setMiddleInitials();
         }
 
