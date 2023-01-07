@@ -606,6 +606,20 @@ public class ListController {
         }
 
     }
+    @GetMapping("/getUserFieldMonitorSchedules")
+    public ResponseEntity<Object> getUserFieldMonitorSchedules(String userId) {
+        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
+                .concat("getProjectFieldMonitorSchedules: " + userId));
+        try {
+            return ResponseEntity.ok(listService.getUserFieldMonitorSchedules(userId));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "getProjectFieldMonitorSchedules failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+
+    }
 
     @GetMapping("/getMonitorFieldMonitorSchedules")
     public ResponseEntity<Object> getMonitorFieldMonitorSchedules(String userId)

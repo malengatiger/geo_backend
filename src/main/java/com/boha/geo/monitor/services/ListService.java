@@ -85,6 +85,15 @@ public class ListService {
         LOGGER.info(E.LEAF.concat(E.LEAF).concat("getProjectFieldMonitorSchedules found: " + m.size()));
         return m;
     }
+    public List<FieldMonitorSchedule> getUserFieldMonitorSchedules(String userId)  {
+        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS).concat("getUserFieldMonitorSchedules: "
+                .concat(E.FLOWER_YELLOW)));
+
+        List<FieldMonitorSchedule> m = fieldMonitorScheduleRepository.findByUserId(userId);
+
+        LOGGER.info(E.LEAF.concat(E.LEAF).concat("getUserFieldMonitorSchedules found: " + m.size()));
+        return m;
+    }
     public List<FieldMonitorSchedule> getOrgFieldMonitorSchedules(String organizationId)  {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS).concat("getOrgFieldMonitorSchedules: "
                 .concat(E.FLOWER_YELLOW)));

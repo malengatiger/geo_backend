@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class FieldMonitorSchedule {
     private String adminId, projectId, fieldMonitorScheduleId,
             date, organizationId, fieldMonitorId, fieldMonitorName;
-    private String projectName, organizationName;
+    private String projectName, organizationName, userId;
     private int perDay, perWeek, perMonth;
 
 

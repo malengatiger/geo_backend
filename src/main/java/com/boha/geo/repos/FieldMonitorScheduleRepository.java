@@ -9,6 +9,8 @@ import java.util.List;
 public interface FieldMonitorScheduleRepository extends MongoRepository<FieldMonitorSchedule, String> {
 
     List<FieldMonitorSchedule> findByProjectId(String projectId);
+
+    List<FieldMonitorSchedule> findByUserId(String userId);
     List<FieldMonitorSchedule> findByOrganizationId(String organizationId);
     List<FieldMonitorSchedule> findByFieldMonitorId(String userId);
     List<FieldMonitorSchedule> findByAdminId(String userId);
