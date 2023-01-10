@@ -3,18 +3,17 @@ package com.boha.geo.controllers;
 import com.boha.geo.GeoApplication;
 import com.boha.geo.models.CityPlace;
 import com.boha.geo.monitor.data.City;
-import com.boha.geo.services.CityService;
-import com.boha.geo.services.MongoService;
-import com.boha.geo.services.PlacesService;
-import com.boha.geo.services.UserService;
+import com.boha.geo.monitor.data.Photo;
+import com.boha.geo.monitor.data.UploadBag;
+import com.boha.geo.services.*;
 import com.boha.geo.util.E;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import lombok.Data;
+import org.joda.time.DateTime;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -31,13 +30,15 @@ public class MainController {
     final MongoService mongoService;
     final UserService userService;
     final CityService cityService;
+    final StorageService storageService;
 
     public MainController(PlacesService placesService, MongoService mongoService,
-                          UserService userService, CityService cityService) {
+                          UserService userService, CityService cityService, StorageService storageService) {
         this.placesService = placesService;
         this.mongoService = mongoService;
         this.userService = userService;
         this.cityService = cityService;
+        this.storageService = storageService;
 
         logger.info(xx+" MainController constructed and services injected");
     }
@@ -166,6 +167,44 @@ public class MainController {
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
+        }
+    }
+
+    @GetMapping("/testUploadPhoto")
+    private ResponseEntity<Object> testUploadPhoto() {
+        try {
+            String url = storageService.testUploadPhoto();
+            if (url == null) {
+                logger.severe("The result is fucking NULL? WTF??");
+                throw new RuntimeException("Result of call is null");
+            }
+            TestBag testBag = new TestBag(url,  DateTime.now().toDateTimeISO().toString());
+            logger.info(E.BLUE_HEART + E.BLUE_HEART +
+                    " MainController Returning testUploadPhoto result: " + url + " from cloud storage");
+            return ResponseEntity.ok(testBag);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+    @PostMapping("/uploadBag")
+    private ResponseEntity<Object> uploadBag(@RequestBody UploadBag bag) {
+        try {
+            Photo photo = storageService.uploadBag(bag);
+            logger.info(E.BLUE_HEART + E.BLUE_HEART +
+                    " MainController returning uploadBag photo: " + gson.toJson(photo) + " " + E.RED_APPLE);
+            return ResponseEntity.ok(photo);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @Data
+    public static class TestBag {
+        private String url, date;
+
+        public TestBag(String url, String date) {
+            this.url = url;
+            this.date = date;
         }
     }
 
