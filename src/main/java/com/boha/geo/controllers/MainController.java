@@ -3,8 +3,10 @@ package com.boha.geo.controllers;
 import com.boha.geo.GeoApplication;
 import com.boha.geo.models.CityPlace;
 import com.boha.geo.monitor.data.City;
+import com.boha.geo.monitor.data.Organization;
 import com.boha.geo.monitor.data.Photo;
 import com.boha.geo.monitor.data.UploadBag;
+import com.boha.geo.repos.OrganizationRepository;
 import com.boha.geo.services.*;
 import com.boha.geo.util.E;
 import com.google.gson.Gson;
@@ -32,13 +34,16 @@ public class MainController {
     final CityService cityService;
     final StorageService storageService;
 
+    final OrganizationRepository organizationRepository;
+
     public MainController(PlacesService placesService, MongoService mongoService,
-                          UserService userService, CityService cityService, StorageService storageService) {
+                          UserService userService, CityService cityService, StorageService storageService, OrganizationRepository organizationRepository) {
         this.placesService = placesService;
         this.mongoService = mongoService;
         this.userService = userService;
         this.cityService = cityService;
         this.storageService = storageService;
+        this.organizationRepository = organizationRepository;
 
         logger.info(xx+" MainController constructed and services injected");
     }
@@ -182,6 +187,17 @@ public class MainController {
             logger.info(E.BLUE_HEART + E.BLUE_HEART +
                     " MainController Returning testUploadPhoto result: " + url + " from cloud storage");
             return ResponseEntity.ok(testBag);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+    @GetMapping("/findOrganizationById")
+    private ResponseEntity<Object> findOrganizationById(@RequestParam String organizationId) {
+        try {
+            Organization organization = organizationRepository.findByOrganizationId(organizationId);
+            logger.info(E.BLUE_HEART + E.BLUE_HEART +
+                    " MainController Returning organization result: ");
+            return ResponseEntity.ok(organization);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }

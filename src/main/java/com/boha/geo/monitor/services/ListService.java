@@ -36,6 +36,9 @@ public class ListService {
     CityRepository cityRepository;
     @Autowired
     OrganizationRepository organizationRepository;
+
+    @Autowired
+    ProjectPolygonRepository projectPolygonRepository;
     @Autowired
     ProjectRepository projectRepository;
     @Autowired
@@ -411,20 +414,24 @@ public class ListService {
         LOGGER.info(E.LEAF.concat(E.LEAF).concat("ProjectPositions found: " + m.size()));
         return m;
     }
+    public List<ProjectPolygon> getProjectPolygons(String projectId)  {
+        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS).concat("getProjectPolygons: "
+                .concat(E.FLOWER_YELLOW)));
+
+        List<ProjectPolygon> m = projectPolygonRepository.findByProjectId(projectId);
+
+        LOGGER.info(E.LEAF.concat(E.LEAF).concat("ProjectPolygons found: " + m.size()));
+        return m;
+    }
+
     public List<ProjectPosition> getOrganizationProjectPositions(String organizationId)  {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS).concat("getOrganizationProjectPositions: "
                 .concat(E.FLOWER_YELLOW)));
 
-        List<Project> projects = projectRepository.findByOrganizationId(organizationId);
-        List<ProjectPosition> mList = new ArrayList<>();
-        for (Project project : projects) {
-            List<ProjectPosition> m = projectPositionRepository.findByProjectId(project.getProjectId());
-            mList.addAll(m);
-        }
+        List<ProjectPosition> mList = projectPositionRepository.findByOrganizationId(organizationId);
 
-
-
-        LOGGER.info(E.LEAF.concat(E.LEAF).concat("OrgProjectPositions found: " + mList.size()));
+        LOGGER.info(E.LEAF.concat(E.LEAF).concat(" OrgProjectPositions found: " + mList.size()
+                + " for organizationId: " + organizationId));
         return mList;
     }
     public List<GeofenceEvent> getGeofenceEventsByUser(String userId)  {

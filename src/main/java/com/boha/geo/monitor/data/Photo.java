@@ -3,10 +3,11 @@ package com.boha.geo.monitor.data;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+@Data
 @Document(collection = "photos")
 public class Photo {
     private String _partitionKey;
-    private String projectId, projectPositionId;
+    private String projectId, projectPositionId, projectPolygonId;
     private String projectName;
     private String photoId;
     private String organizationId;
@@ -21,139 +22,4 @@ public class Photo {
     private int height, width;
     private int landscape;
 
-    public String get_partitionKey() {
-        return _partitionKey;
-    }
-
-    public void set_partitionKey(String _partitionKey) {
-        this._partitionKey = _partitionKey;
-    }
-
-    public String getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(String projectId) {
-        this.projectId = projectId;
-    }
-
-    public String getProjectPositionId() {
-        return projectPositionId;
-    }
-
-    public void setProjectPositionId(String projectPositionId) {
-        this.projectPositionId = projectPositionId;
-    }
-
-    public String getProjectName() {
-        return projectName;
-    }
-
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
-    }
-
-    public String getPhotoId() {
-        return photoId;
-    }
-
-    public void setPhotoId(String photoId) {
-        this.photoId = photoId;
-    }
-
-    public String getOrganizationId() {
-        return organizationId;
-    }
-
-    public void setOrganizationId(String organizationId) {
-        this.organizationId = organizationId;
-    }
-
-    public Position getProjectPosition() {
-        return projectPosition;
-    }
-
-    public void setProjectPosition(Position projectPosition) {
-        this.projectPosition = projectPosition;
-    }
-
-    public double getDistanceFromProjectPosition() {
-        return distanceFromProjectPosition;
-    }
-
-    public void setDistanceFromProjectPosition(double distanceFromProjectPosition) {
-        this.distanceFromProjectPosition = distanceFromProjectPosition;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getThumbnailUrl() {
-        return thumbnailUrl;
-    }
-
-    public void setThumbnailUrl(String thumbnailUrl) {
-        this.thumbnailUrl = thumbnailUrl;
-    }
-
-    public String getCaption() {
-        return caption;
-    }
-
-    public void setCaption(String caption) {
-        this.caption = caption;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getCreated() {
-        return created;
-    }
-
-    public void setCreated(String created) {
-        this.created = created;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public int getLandscape() {
-        return landscape;
-    }
-
-    public void setLandscape(int landscape) {
-        this.landscape = landscape;
-    }
 }

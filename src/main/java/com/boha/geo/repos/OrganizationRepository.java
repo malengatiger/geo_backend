@@ -9,5 +9,6 @@ import java.util.List;
 public interface OrganizationRepository extends MongoRepository<Organization, String> {
 
     List<Organization> findByCountryId(String countryId);
+    Organization findByOrganizationId(String organizationId);
 
 }

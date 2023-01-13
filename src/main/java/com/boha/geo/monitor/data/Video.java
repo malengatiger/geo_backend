@@ -9,7 +9,7 @@ public class Video {
     private String  _partitionKey;
     @Id
     private String  _id;
-    private String  projectId, projectPositionId;
+    private String  projectId, projectPositionId, projectPolygonId;
     private String  projectName;
     private String  videoId;
     private String  organizationId;

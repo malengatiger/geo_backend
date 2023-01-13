@@ -173,6 +173,20 @@ public class DataController {
         }
 
     }
+    @PostMapping("/addProjectPolygon")
+    public ResponseEntity<Object> addProjectPolygon(@RequestBody ProjectPolygon projectPolygon)
+            throws Exception {
+        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS).concat("Adding Project Position: "));
+        try {
+            return ResponseEntity.ok(dataService.addProjectPolygon(projectPolygon));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "addProjectPolygon failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+
+    }
 
     @PostMapping("/addGeofenceEvent")
     public ResponseEntity<Object> addGeofenceEvent(@RequestBody GeofenceEvent geofenceEvent)

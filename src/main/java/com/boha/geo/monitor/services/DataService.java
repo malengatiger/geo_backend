@@ -34,6 +34,9 @@ public class DataService {
     final Environment env;
     final GeofenceEventRepository geofenceEventRepository;
     final ProjectRepository projectRepository;
+
+    final ProjectPolygonRepository projectPolygonRepository;
+
     final CityRepository cityRepository;
     final PhotoRepository photoRepository;
     final VideoRepository videoRepository;
@@ -51,7 +54,7 @@ public class DataService {
 
     public DataService(Environment env, GeofenceEventRepository geofenceEventRepository,
                        ProjectRepository projectRepository,
-                       CityRepository cityRepository,
+                       ProjectPolygonRepository projectPolygonRepository, CityRepository cityRepository,
                        PhotoRepository photoRepository,
                        VideoRepository videoRepository,
                        UserRepository userRepository,
@@ -66,6 +69,7 @@ public class DataService {
         this.env = env;
         this.geofenceEventRepository = geofenceEventRepository;
         this.projectRepository = projectRepository;
+        this.projectPolygonRepository = projectPolygonRepository;
         this.cityRepository = cityRepository;
         this.photoRepository = photoRepository;
         this.videoRepository = videoRepository;
@@ -203,6 +207,17 @@ public class DataService {
         ProjectPosition m = projectPositionRepository.save(projectPosition);
         LOGGER.info(E.YELLOW_BIRD + E.YELLOW_BIRD +
                 "ProjectPosition added to: " + m.getProjectName()
+                + " " + E.RAIN);
+
+        return m;
+    }
+    public ProjectPolygon addProjectPolygon(ProjectPolygon projectPolygon) throws Exception {
+        LOGGER.info(E.RAIN.concat(E.RAIN).concat("addProjectPolygon: "
+                .concat(E.YELLOW)));
+
+        ProjectPolygon m = projectPolygonRepository.save(projectPolygon);
+        LOGGER.info(E.YELLOW_BIRD + E.YELLOW_BIRD +
+                "ProjectPolygon added to: " + m.getProjectName()
                 + " " + E.RAIN);
 
         return m;

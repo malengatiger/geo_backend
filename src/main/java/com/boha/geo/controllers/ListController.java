@@ -359,6 +359,20 @@ public class ListController {
         }
     }
 
+    @GetMapping("/getProjectPolygons")
+    public ResponseEntity<Object> getProjectPolygons(String projectId) {
+        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
+                .concat("getProjectPositions: " + projectId));
+        try {
+            return ResponseEntity.ok(listService.getProjectPolygons(projectId));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "getProjectPolygons failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+    }
+
     @GetMapping("/getOrganizationProjectPositions")
     public ResponseEntity<Object> getOrganizationProjectPositions(String organizationId) {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)

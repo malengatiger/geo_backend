@@ -319,6 +319,7 @@ public class MongoGenerator {
             pPos.setProjectId(p0.getProjectId());
             pPos.setProjectName(p0.getName());
             pPos.setCaption("Project Position Caption");
+            pPos.setOrganizationId(organization.getOrganizationId());
             pPos.setProjectPositionId(UUID.randomUUID().toString());
             
             pPos.setPosition(pos);
