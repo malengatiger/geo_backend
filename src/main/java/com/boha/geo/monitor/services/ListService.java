@@ -179,6 +179,7 @@ public class ListService {
         List<Photo> photos = getUserProjectPhotos(userId);
         List<Video> videos = getUserProjectVideos(userId);
         List<ProjectPosition> projectPositions = getOrganizationProjectPositions(user.getOrganizationId());
+        List<ProjectPolygon> projectPolygons = getOrganizationProjectPolygons(user.getOrganizationId());
         List<FieldMonitorSchedule> fieldMonitorSchedules = getOrgFieldMonitorSchedules(user.getOrganizationId());
         List<User> users = getOrganizationUsers(user.getOrganizationId());
 
@@ -186,6 +187,7 @@ public class ListService {
         bag.setProjects(projects);
         bag.setFieldMonitorSchedules(fieldMonitorSchedules);
         bag.setProjectPositions(projectPositions);
+        bag.setProjectPolygons(projectPolygons);
         bag.setPhotos(photos);
         bag.setVideos(videos);
         bag.setUsers(users);
@@ -205,6 +207,7 @@ public class ListService {
         List<Photo> photos = getProjectPhotos(projectId);
         List<Video> videos = getProjectVideos(projectId);
         List<ProjectPosition> projectPositions = getProjectPositions(projectId);
+        List<ProjectPolygon> projectPolygons = getProjectPolygons(projectId);
         List<FieldMonitorSchedule> fieldMonitorSchedules = getProjectFieldMonitorSchedules(projectId);
         List<User> users = getOrganizationUsers(project.getOrganizationId());
 
@@ -212,12 +215,13 @@ public class ListService {
         bag.setProjects(projects);
         bag.setFieldMonitorSchedules(fieldMonitorSchedules);
         bag.setProjectPositions(projectPositions);
+        bag.setProjectPolygons(projectPolygons);
         bag.setPhotos(photos);
         bag.setVideos(videos);
         bag.setUsers(users);
 
         LOGGER.info(E.RED_APPLE+" Project data found: photos: " + bag.getPhotos().size() + " videos: " + bag.getVideos().size()
-        + " schedules: " + bag.getFieldMonitorSchedules().size());
+        + " schedules: " + bag.getFieldMonitorSchedules().size() + " polygons: " + bag.getProjectPolygons().size());
 
         return bag;
     }
@@ -228,18 +232,21 @@ public class ListService {
         List<Video> videos = getOrganizationVideos(organizationId);
         List<ProjectPosition> projectPositions = getOrganizationProjectPositions(organizationId);
         List<FieldMonitorSchedule> fieldMonitorSchedules = getOrgFieldMonitorSchedules(organizationId);
+        List<ProjectPolygon> polygons = getOrganizationProjectPolygons(organizationId);
+
         List<User> users = getOrganizationUsers(organizationId);
 
         bag.setDate(DateTime.now().toDateTimeISO().toString());
         bag.setProjects(projects);
         bag.setFieldMonitorSchedules(fieldMonitorSchedules);
         bag.setProjectPositions(projectPositions);
+        bag.setProjectPolygons(polygons);
         bag.setPhotos(photos);
         bag.setVideos(videos);
         bag.setUsers(users);
 
         LOGGER.info(E.RED_APPLE+" Organization data found: photos: " + bag.getPhotos().size() + " videos: " + bag.getVideos().size()
-                + " schedules: " + bag.getFieldMonitorSchedules().size());
+                + " schedules: " + bag.getFieldMonitorSchedules().size() + " polygons: " + bag.getProjectPolygons().size());
 
         return bag;
     }
@@ -431,6 +438,16 @@ public class ListService {
         List<ProjectPosition> mList = projectPositionRepository.findByOrganizationId(organizationId);
 
         LOGGER.info(E.LEAF.concat(E.LEAF).concat(" OrgProjectPositions found: " + mList.size()
+                + " for organizationId: " + organizationId));
+        return mList;
+    }
+    public List<ProjectPolygon> getOrganizationProjectPolygons(String organizationId)  {
+        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS).concat("getOrganizationProjectPolygons: "
+                .concat(E.FLOWER_YELLOW)));
+
+        List<ProjectPolygon> mList = projectPolygonRepository.findByOrganizationId(organizationId);
+
+        LOGGER.info(E.LEAF.concat(E.LEAF).concat(" OrgProjectPolygons found: " + mList.size()
                 + " for organizationId: " + organizationId));
         return mList;
     }
