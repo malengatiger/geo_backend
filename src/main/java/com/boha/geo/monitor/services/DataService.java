@@ -298,12 +298,15 @@ public class DataService {
         return org;
     }
 
-    public String createUser(User user) throws Exception {
+    public User createUser(User user) throws Exception {
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+
         UserRecord.CreateRequest createRequest = new UserRecord.CreateRequest();
-        createRequest.setEmail(user.getEmail());
+        createRequest.setPhoneNumber(user.getCellphone());
         createRequest.setDisplayName(user.getName());
         createRequest.setPassword(user.getPassword());
+        createRequest.setEmail(user.getEmail());
+
         ApiFuture<UserRecord> userRecord = firebaseAuth.createUserAsync(createRequest);
         String uid = userRecord.get().getUid();
         user.setUserId(uid);
@@ -313,8 +316,6 @@ public class DataService {
                         .concat(" \uD83E\uDDE1 ").concat(user.getEmail())
                         .concat(" \uD83E\uDDE1 ").concat(uid)));
 
-
-        addUser(user);
-        return uid;
+        return addUser(user);
     }
 }

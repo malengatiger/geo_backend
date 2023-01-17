@@ -181,7 +181,7 @@ public class MongoService {
         MongoCollection<Document> dbCollection = db.getCollection("users");
 
         String result2 = dbCollection.createIndex(Indexes.ascending("email"),
-                new IndexOptions().unique(true));
+                new IndexOptions().unique(false));
         logger.info(mm +
                 " user unique email index on users collection: " +
                 E.RED_APPLE + result2);

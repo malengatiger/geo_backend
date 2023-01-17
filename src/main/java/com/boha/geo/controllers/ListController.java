@@ -34,7 +34,7 @@ public class ListController {
 
     @GetMapping("/hello")
     public String hello() throws Exception {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS).concat("saying HELLO! the backend application .... : ".concat(E.FLOWER_YELLOW)));
+        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS).concat("saying PING! the backend application .... : ".concat(E.FLOWER_YELLOW)));
         return E.HAND2 + E.HAND2 + "PROJECT MONITOR SERVICES PLATFORM says Hi, Nigga! "
                 + E.RED_APPLE.concat(new DateTime().toDateTimeISO().toString());
     }
@@ -278,6 +278,21 @@ public class ListController {
             List<User> users = listService.getUsers();
             LOGGER.info(E.DOLPHIN.concat(E.DOLPHIN) + " Users found: " + users.size());
             return ResponseEntity.ok(users);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "getUsers failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+    }
+
+    @GetMapping("/getUserById")
+    public ResponseEntity<Object> getUserById(@RequestParam String userId) {
+        LOGGER.info(E.DICE.concat(E.DICE).concat(" getUserById ..."));
+        try {
+            User user = listService.getUserById(userId);
+            LOGGER.info(E.DOLPHIN.concat(E.DOLPHIN) + " Users found " );
+            return ResponseEntity.ok(user);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,

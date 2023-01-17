@@ -1,9 +1,13 @@
 package com.boha.geo.services;
 
+import com.boha.geo.monitor.data.User;
+import com.boha.geo.monitor.services.DataService;
 import com.boha.geo.util.E;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.UserRecord;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -14,15 +18,17 @@ import java.util.logging.Logger;
  */
 @Service
 public class FirebaseService {
+    final DataService dataService;
     private static final Logger LOGGER = Logger.getLogger(FirebaseService.class.getSimpleName());
 
-    public FirebaseService() {
+    public FirebaseService(DataService dataService) {
+        this.dataService = dataService;
         LOGGER.info(E.AMP+E.AMP+E.AMP + " FirebaseService constructed");
     }
 //    @Autowired
 //    private Environment environment;
     private FirebaseApp app;
-    public FirebaseApp initializeFirebase() {
+    public void initializeFirebase() {
         LOGGER.info(E.AMP+E.AMP+E.AMP+ " .... initializing Firebase ....");
         FirebaseOptions options;
         String projectId = System.getenv().get("PROJECT_ID");
@@ -46,6 +52,6 @@ public class FirebaseService {
                 " Firebase has been initialized: "
                 + app.getOptions().getDatabaseUrl()
                 + " " + E.RED_APPLE);
-        return app;
     }
+
 }

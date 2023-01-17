@@ -24,6 +24,12 @@ public class SecretMgr {
     private String placesAPIKeyName;
     @Value("${secretsVersion}")
     private String secretsVersion;
+
+    @Value("${mongoSecretsName}")
+    private String mongoSecretsName;
+
+    @Value("${mongoSecretsVersion}")
+    private String mongoSecretsVersion;
     @Autowired
     private Environment environment;
     void setProjectId() {
@@ -71,6 +77,49 @@ public class SecretMgr {
 
         } catch (Exception e) {
             LOGGER.severe("Problem with secrtes: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return payload;
+    }
+    public String getMongoString()
+            throws Exception {
+        setProjectId();
+        // Initialize client that will be used to send requests. This client only needs to be created
+        // once, and can be reused for multiple requests. After completing all of your requests, call
+        // the "close" method on the client to safely clean up any remaining background resources.
+        LOGGER.info(E.RED_APPLE+E.RED_APPLE+E.RED_APPLE+E.RED_APPLE
+                +" SecretMgr: getMongoString: projectId: " + projectId);
+        String payload = null;
+        try (SecretManagerServiceClient client = SecretManagerServiceClient.create()) {
+            SecretVersionName secretVersionName = SecretVersionName.of(projectId,
+                    mongoSecretsName, mongoSecretsVersion);
+            // Access the secret version.
+            AccessSecretVersionResponse response = client.accessSecretVersion(secretVersionName);
+
+            // Verify checksum. The used library is available in Java 9+.
+            // If using Java 8, you may use the following:
+            // https://github.com/google/guava/blob/e62d6a0456420d295089a9c319b7593a3eae4a83/guava/src/com/google/common/hash/Hashing.java#L395
+            byte[] data = response.getPayload().getData().toByteArray();
+            Checksum checksum = new CRC32C();
+            checksum.update(data, 0, data.length);
+            if (response.getPayload().getDataCrc32C() != checksum.getValue()) {
+                LOGGER.info("Data corruption detected.");
+                throw new Exception("Data corruption detected");
+            }
+
+            // Print the secret payload.
+            //
+            // WARNING: Do not print the secret in a production environment - this
+            // snippet is showing how to access the secret material.
+            payload = response.getPayload().getData().toStringUtf8();
+            String check = payload.substring(0,4);
+            if (check.contains("AIza")) {
+                LOGGER.info(E.RED_DOT + E.RED_DOT + E.RED_DOT +
+                        " Secret Payload contains: " + check);
+            }
+
+        } catch (Exception e) {
+            LOGGER.severe("Problem with secrets: " + e.getMessage());
             e.printStackTrace();
         }
         return payload;

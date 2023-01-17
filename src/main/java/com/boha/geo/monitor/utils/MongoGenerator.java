@@ -125,6 +125,7 @@ public class MongoGenerator {
         c2.setPosition(new Position("Point", cords2));
         c2.setCountryCode("ZIM");
         c2.setCountryId(UUID.randomUUID().toString());
+
         Country southAfrica = countryRepository.insert(c1);
         Country zimbabwe = countryRepository.insert(c2);
 
@@ -342,8 +343,6 @@ public class MongoGenerator {
 
     }
 
-
-
     private String getRandomCellphone() {
 
         return String.valueOf(random.nextInt(9)) +
@@ -396,26 +395,25 @@ public class MongoGenerator {
     private void buildUser(Organization org, String userName, String prefix, String userType) throws Exception {
 
         String email = buildEmail(prefix);
-        User u = new User();
-        u.setName(getRandomFirstName() + " " + getRandomLastName());
-        u.setOrganizationId(org.getOrganizationId());
-        u.setOrganizationName(org.getName());
-        u.setCellphone(getRandomCellphone());
-        u.setEmail(email);
-        u.setCreated(new DateTime().toDateTimeISO().toString());
-        u.setUserType(userType);
-        u.setName(userName);
-        u.setUserId(UUID.randomUUID().toString());
-        u.setPassword("pass123");
+        User mUser = new User();
+        mUser.setName(getRandomFirstName() + " " + getRandomLastName());
+        mUser.setOrganizationId(org.getOrganizationId());
+        mUser.setOrganizationName(org.getName());
+        mUser.setCellphone(getRandomCellphone());
+        mUser.setEmail(email);
+        mUser.setCreated(new DateTime().toDateTimeISO().toString());
+        mUser.setUserType(userType);
+        mUser.setName(userName);
+        mUser.setUserId(UUID.randomUUID().toString());
+        mUser.setPassword("pass123");
 
-        String uid = dataService.createUser(u);
-        u.setUserId(uid);
+        User u = dataService.createUser(mUser);
+        u.setUserId(u.getUserId());
         u.setPassword(null);
-        User result2 = userRepository.save(u);
 
         LOGGER.info(E.FERN + E.FERN +
                 " User saved on MongoDB and Firebase auth: "
-                + G.toJson(result2) + E.FERN + E.FERN + u.getName());
+                + G.toJson(u) + E.FERN + E.FERN + u.getName());
 
     }
 

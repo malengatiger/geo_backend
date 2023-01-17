@@ -59,6 +59,14 @@ public class MonitorAuthenticationFilter extends OncePerRequestFilter {
             doFilter(httpServletRequest, httpServletResponse, filterChain);
             return;
         }
+        //allow getCountries
+        if (httpServletRequest.getRequestURI().contains("getCountries")) {
+            LOGGER.info("" + E.AMP + E.AMP + E.AMP + E.AMP + " contextPath: " + httpServletRequest.getContextPath()
+                    + E.AMP + " requestURI: " + httpServletRequest.getRequestURI() + "\n\n");
+
+            doFilter(httpServletRequest, httpServletResponse, filterChain);
+            return;
+        }
         LOGGER.info(E.ANGRY + E.ANGRY + "this request IS subject to authentication: "
                 + E.HAND2 + url);
         String m = httpServletRequest.getHeader("Authorization");

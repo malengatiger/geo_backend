@@ -2,10 +2,10 @@ package com.boha.geo.controllers;
 
 import com.boha.geo.monitor.data.*;
 import com.boha.geo.monitor.services.DataService;
-import com.boha.geo.monitor.services.ListService;
 import com.boha.geo.monitor.services.MessageService;
 import com.boha.geo.monitor.services.MongoDataService;
 import com.boha.geo.monitor.utils.MongoGenerator;
+import com.boha.geo.services.RegistrationService;
 import com.boha.geo.util.E;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import org.joda.time.DateTime;
@@ -22,10 +22,11 @@ public class DataController {
     private static final Logger LOGGER = Logger.getLogger(DataController.class.getSimpleName());
 
     public DataController(DataService dataService, MongoGenerator mongoGenerator,
-                          MessageService messageService, MongoDataService mongoDataService) {
+                          MessageService messageService, RegistrationService registrationService, MongoDataService mongoDataService) {
         this.dataService = dataService;
         this.mongoGenerator = mongoGenerator;
         this.messageService = messageService;
+        this.registrationService = registrationService;
         this.mongoDataService = mongoDataService;
 
         LOGGER.info(E.PANDA.concat(E.PANDA) +
@@ -42,6 +43,8 @@ public class DataController {
    
     private final MessageService messageService;
 
+    private final RegistrationService registrationService;
+
 
     @GetMapping("/ping")
     public String ping() throws Exception {
@@ -49,16 +52,32 @@ public class DataController {
         return E.HAND2 + E.HAND2 + "PROJECT MONITOR SERVICES PLATFORM pinged at ".concat(new DateTime().toDateTimeISO().toString());
     }
 
-    @PostMapping("/addOrganization")
-    public ResponseEntity<Object> addOrganization(@RequestBody Organization organization) throws Exception {
+    @PostMapping("/registerOrganization")
+    public ResponseEntity<Object> registerOrganization(@RequestBody OrganizationRegistrationBag orgBag) throws Exception {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
-                .concat(".... Adding Organization: ".concat(organization.getName())));
+                .concat(".... Adding Organization: ".concat(orgBag.getOrganization().getName())));
         try {
-            return ResponseEntity.ok(dataService.addOrganization(organization));
+            return ResponseEntity.ok(registrationService.registerOrganization(orgBag));
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,
                             "addOrganization failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+
+    }
+    @PostMapping("/createUser")
+    public ResponseEntity<Object> createUser(@RequestBody User user) throws Exception {
+        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
+                .concat(".... Creating User: ".concat(user.getName())));
+        try {
+            return ResponseEntity.ok(dataService.createUser(user));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "createUser failed: " + e.getMessage(),
                             new DateTime().toDateTimeISO().toString()));
         }
 

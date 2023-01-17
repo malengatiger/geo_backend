@@ -227,7 +227,7 @@ public class ListService {
     }
     public DataBag getOrganizationData(String organizationId)  {
         DataBag bag = new DataBag();
-        List<Project> projects = projectRepository.findByOrganizationId(organizationId);
+        List<Project> projects = getOrganizationProjects(organizationId);
         List<Photo> photos = getOrganizationPhotos(organizationId);
         List<Video> videos = getOrganizationVideos(organizationId);
         List<ProjectPosition> projectPositions = getOrganizationProjectPositions(organizationId);
@@ -521,6 +521,14 @@ public class ListService {
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getUsers ... found: " + mList.size()));
 
         return mList;
+    }
+    public User getUserById(String userId)  {
+
+        LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getUserById ..."));
+        User user = userRepository.findByUserId(userId);
+        LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getUserById ... found: "));
+
+        return user;
     }
 
     public List<City> getCities()  {

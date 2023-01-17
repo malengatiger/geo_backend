@@ -31,35 +31,45 @@ public class MongoConfig {
     private static final Gson G = new GsonBuilder().setPrettyPrinting().create();
     private static String mm = E.AMP + E.AMP + E.AMP;
 
-    @Value("${spring.data.mongodb.uri.one}")
-    private String mongoPrefix;
+    final SecretMgr secretMgr;
 
     @Value("${mongoString}")
     private String mongoString;
 
-    @Value("${spring.data.mongodb.uri.two}")
-    private String mongoSuffix;
+    @Value("${spring.profiles.active}")
+    private String profile;
 
-    @Value("${spring.data.mongodb.password}")
-    private String password;
+
+
+    public MongoConfig(SecretMgr secretMgr) {
+        this.secretMgr = secretMgr;
+    }
 
     @Bean
     public MongoClient mongo() {
+        LOGGER.info(E.RAIN+E.RAIN+E.RAIN+E.RAIN+
+                " MongoClient prep, profile: " + profile);
         String uri;
-        if (mongoString != null) {
+        if (profile.equalsIgnoreCase("dev")) {
             LOGGER.info(E.RAIN+E.RAIN+E.RAIN+E.RAIN+
                     " Using local MongoDB Server with " + mongoString);
             uri = mongoString;
         } else {
-            String encodedPassword = URLEncoder.encode(password, StandardCharsets.UTF_8);
-            uri = mongoPrefix + encodedPassword + mongoSuffix;
+            try {
+                uri = secretMgr.getMongoString();
+                LOGGER.info(E.RAIN+E.RAIN+E.RAIN+E.RAIN+
+                        " Using MongoDB Atlas Server with " + uri);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
-        LOGGER.info(mm + "MongoDB Connection string: " + E.RED_APPLE + " with encoded password: " + uri);
-//        String enc = URLEncoder.encode(mongoString, StandardCharsets.UTF_8);
-//        LOGGER.info(mm + "MongoDB Connection string: " + E.RED_APPLE + "encoded:" + mongoString);
+
+        LOGGER.info(mm + "MongoDB Connection string: " + E.RED_APPLE
+                + " with encoded password: " + uri);
 
         ConnectionString connectionString = new ConnectionString(uri);
-        LOGGER.info(mm + "MongoDB Connection userName: " + E.RED_APPLE + " = " + connectionString.getUsername());
+        LOGGER.info(mm + "MongoDB Connection userName: " + E.RED_APPLE + " = "
+                + connectionString.getUsername());
 
         CodecRegistry pojoCodecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),
                 fromProviders(PojoCodecProvider.builder().automatic(true).build()));
