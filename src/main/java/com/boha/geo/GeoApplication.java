@@ -63,7 +63,6 @@ public class GeoApplication implements ApplicationListener<ApplicationReadyEvent
 
 			firebaseService.initializeFirebase();
 			mongoService.printOrganizations();
-			mongoService.initializeIndexes();
 
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage());

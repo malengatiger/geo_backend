@@ -45,9 +45,11 @@ public class MongoService {
         this.resourceLoader = resourceLoader;
         this.userRepository = userRepository;
         this.organizationRepository = organizationRepository;
-        logger.info(xx + " MongoService constructed, will set database and initializeIndexes " + E.BELL+E.BELL);
+        logger.info(xx + " MongoService constructed, will set database and initializeIndexes ........... " + E.BELL+E.BELL);
         setDatabase();
         initializeIndexes();
+        logger.info(xx + " MongoService has completed setup of database and indexes ........... " + E.BELL+E.BELL);
+
     }
     private final MongoClient mongoClient;
     private final ResourceLoader resourceLoader;
