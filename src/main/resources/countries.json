@@ -1,0 +1,37 @@
+[{
+  "countryId": "63c7cb00134e27a8b2eea5b8",
+  "name": "South Africa",
+  "countryCode": "ZA",
+  "position": {
+    "type": "Point",
+    "coordinates": [27.655,-25.856]
+  }
+},
+{
+  "countryId": "98c7cb00134e27a8b2eea5b2",
+  "name": "Zimbabwe",
+  "countryCode": "ZW",
+  "position": {
+    "type": "Point",
+    "coordinates": [30.0655,-20.006]
+  }
+},
+  {
+    "countryId": "58c7cb00134e27a8b2eea5e3",
+    "name": "Namibia",
+    "countryCode": "NA",
+    "position": {
+      "type": "Point",
+      "coordinates": [17.07655,-22.0856]
+    }
+  },
+  {
+    "countryId": "66c7cb00134e27a8b2eea5b7",
+    "name": "Mozambique",
+    "countryCode": "MZ",
+    "position": {
+      "type": "Point",
+      "coordinates": [35.03655,-18.25856]
+    }
+  }
+]

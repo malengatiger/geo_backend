@@ -22,6 +22,7 @@ import java.util.Enumeration;
 @Component
 public class MonitorAuthenticationFilter extends OncePerRequestFilter {
     private static final String xx = E.COFFEE+E.COFFEE+E.COFFEE;
+    String mm = "" + E.AMP + E.AMP + E.AMP + E.AMP;
 
     public MonitorAuthenticationFilter() {
         LOGGER.info(xx +
@@ -41,10 +42,10 @@ public class MonitorAuthenticationFilter extends OncePerRequestFilter {
 //        print(httpServletRequest);
 
         String url = httpServletRequest.getRequestURL().toString();
-        LOGGER.info(E.RED_APPLE+E.RED_APPLE+ " url: " + url);
+        LOGGER.info(mm+ " url: " + url);
         //        if (url.contains("192.168.86.230:8080") || url.contains("172.20.10.4:8080")|| url.contains("localhost:8080")) {   //this is my local machine
         if (url.contains("localhost:8080")) {   //this is my local machine
-            LOGGER.info(E.ANGRY + "this request is not subject to authentication: "
+            LOGGER.info(E.ANGRY + E.ANGRY + "this request is not subject to authentication: "
                     + E.HAND2 + url);
             String m = httpServletRequest.getHeader("Authorization");
             String s;
@@ -52,26 +53,27 @@ public class MonitorAuthenticationFilter extends OncePerRequestFilter {
                 s = E.RED_DOT + E.RED_DOT + E.RED_DOT + E.RED_DOT
                         + " ... but you do NOT have an auth key anyway!";
             } else {
-                s = E.AMP + E.AMP + E.AMP + E.AMP
-                        + " ... but you do have an auth key. " + E.RED_APPLE + " Cool!!";
+                s = mm
+                        + " ... but you do have an auth key. " + E.RED_APPLE + " Cool Beans!!";
             }
             LOGGER.info(s);
             doFilter(httpServletRequest, httpServletResponse, filterChain);
             return;
         }
         //allow getCountries
-        if (httpServletRequest.getRequestURI().contains("getCountries")) {
-            LOGGER.info("" + E.AMP + E.AMP + E.AMP + E.AMP + " contextPath: " + httpServletRequest.getContextPath()
+        if (httpServletRequest.getRequestURI().contains("getCountries") || httpServletRequest.getRequestURI().contains("addCountry")) {
+            LOGGER.info("" + mm + " contextPath: " + httpServletRequest.getContextPath()
                     + E.AMP + " requestURI: " + httpServletRequest.getRequestURI() + "\n\n");
+            LOGGER.info("" + mm + " allowing addCountry and getCountries without authentication, is this OK?");
 
             doFilter(httpServletRequest, httpServletResponse, filterChain);
             return;
         }
-        LOGGER.info(E.ANGRY + E.ANGRY + "this request IS subject to authentication: "
+        LOGGER.info(mm + "this request IS subject to authentication: "
                 + E.HAND2 + url);
         String m = httpServletRequest.getHeader("Authorization");
         if (m == null) {
-            String msg = "\uD83D\uDC7F \uD83D\uDC7F \uD83D\uDC7F " +
+            String msg = mm +
                     "Authorization Header is missing. Needs JWT token! \uD83C\uDF4E "
                     + httpServletRequest.getQueryString() + " \uD83C\uDF4E \uD83C\uDF4E";
             LOGGER.info(msg);
@@ -84,7 +86,7 @@ public class MonitorAuthenticationFilter extends OncePerRequestFilter {
             dataService.initializeFirebase();
             ApiFuture<FirebaseToken> future = FirebaseAuth.getInstance().verifyIdTokenAsync(token, true);
             FirebaseToken mToken = future.get();
-            LOGGER.info("\uD83D\uDE21 \uD83D\uDE21 \uD83D\uDE21 \uD83D\uDE21 Authentication executed, uid: "
+            LOGGER.info(mm+" Authentication executed, uid: "
                     + mToken.getUid() + " \uD83D\uDE21 email: " + mToken.getEmail()
                     + "  \uD83C\uDF38" +
                     " \uD83C\uDF4E request authenticated OK!! \uD83C\uDF4E");
