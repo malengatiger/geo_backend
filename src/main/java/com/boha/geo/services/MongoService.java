@@ -129,7 +129,10 @@ public class MongoService {
     public void initializeIndexes() {
         try {
             createCityIndexes();
+
             createProjectPositionIndexes();
+            createProjectPolygonIndexes();
+
             createPhotoIndexes();
             createVideoIndexes();
 
@@ -300,6 +303,25 @@ public class MongoService {
         String result3 = dbCollection.createIndex(Indexes.ascending("organizationId"));
         logger.info(mm +
                 " organizationId index on projectPositions collection: " +
+                E.RED_APPLE + result3);
+
+    }
+    private void createProjectPolygonIndexes() {
+        //add index
+        MongoCollection<Document> dbCollection = db.getCollection("projectPolygons");
+        String result = dbCollection.createIndex(Indexes.geo2dsphere("positions.coordinates"));
+        logger.info(mm +
+                " positions 2dSphere index on projectPolygons collection: " +
+                E.RED_APPLE + result);
+
+        String result2 = dbCollection.createIndex(Indexes.ascending("projectId"));
+        logger.info(mm +
+                " projectId index on projectPolygons collection: " +
+                E.RED_APPLE + result2);
+
+        String result3 = dbCollection.createIndex(Indexes.ascending("organizationId"));
+        logger.info(mm +
+                " organizationId index on projectPolygons collection: " +
                 E.RED_APPLE + result3);
 
     }

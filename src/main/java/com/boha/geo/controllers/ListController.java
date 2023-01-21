@@ -6,6 +6,9 @@ import com.boha.geo.monitor.services.MongoDataService;
 import com.boha.geo.util.E;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import io.github.bucket4j.Bandwidth;
+import io.github.bucket4j.Bucket;
+import io.github.bucket4j.Refill;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +18,7 @@ import org.springframework.data.geo.Point;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Duration;
 import java.util.List;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -23,10 +27,14 @@ import java.util.List;
 public class ListController {
     public static final Logger LOGGER = LoggerFactory.getLogger(ListController.class.getSimpleName());
     private static final Gson G = new GsonBuilder().setPrettyPrinting().create();
-
+    Bucket bucket;
     public ListController(ListService listService, MongoDataService mongoDataService) {
         this.listService = listService;
         this.mongoDataService = mongoDataService;
+        Bandwidth limit = Bandwidth.classic(10, Refill.greedy(10, Duration.ofMinutes(1)));
+        this.bucket = Bucket.builder()
+                .addLimit(limit)
+                .build();
         LOGGER.info(E.DICE.concat(E.DICE.concat(" ListController ready and able ".concat(E.RED_APPLE))));
     }
 
@@ -166,7 +174,13 @@ public class ListController {
             List<Country> countries = listService.getCountries();
             LOGGER.info(E.DOLPHIN.concat(E.DOLPHIN)
                     + "ListController: Countries found: \uD83D\uDC24 " + countries.size());
-            return ResponseEntity.ok(countries);
+            if (bucket.tryConsume(1)) {
+                return ResponseEntity.ok(countries);
+            } else {
+                LOGGER.error(E.RED_DOT +E.RED_DOT +E.RED_DOT +
+                        "Rate limiter got you!");
+                throw new Exception("Too many fucking requests");
+            }
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,
@@ -551,7 +565,15 @@ public class ListController {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
                 .concat("getOrganizationData: " + organizationId));
         try {
-            return ResponseEntity.ok(listService.getOrganizationData(organizationId));
+            long start = System.currentTimeMillis();
+            DataBag bag = listService.getOrganizationData(organizationId);
+            long end = System.currentTimeMillis();
+            Double m = Double.valueOf("" + (end-start));
+            Double ms = 1000.0;
+            double diff = m / ms;
+            LOGGER.info(E.RED_DOT + " getOrganizationData: Time elapsed: " + diff + " seconds "+E.RED_DOT);
+
+            return ResponseEntity.ok(bag);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,

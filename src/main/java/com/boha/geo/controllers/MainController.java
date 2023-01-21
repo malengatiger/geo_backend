@@ -11,12 +11,16 @@ import com.boha.geo.services.*;
 import com.boha.geo.util.E;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import io.github.bucket4j.Bandwidth;
+import io.github.bucket4j.Bucket;
+import io.github.bucket4j.Refill;
 import lombok.Data;
 import org.joda.time.DateTime;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -36,6 +40,7 @@ public class MainController {
 
     final OrganizationRepository organizationRepository;
 
+    Bucket bucket;
     public MainController(PlacesService placesService, MongoService mongoService,
                           UserService userService, CityService cityService, StorageService storageService, OrganizationRepository organizationRepository) {
         this.placesService = placesService;
@@ -44,6 +49,11 @@ public class MainController {
         this.cityService = cityService;
         this.storageService = storageService;
         this.organizationRepository = organizationRepository;
+
+        Bandwidth limit = Bandwidth.classic(50, Refill.greedy(50, Duration.ofMinutes(1)));
+        this.bucket = Bucket.builder()
+                .addLimit(limit)
+                .build();
 
         logger.info(xx+" MainController constructed and services injected");
     }

@@ -1,5 +1,6 @@
 package com.boha.geo.util;
 
+import com.boha.geo.controllers.ListController;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mongodb.ConnectionString;
@@ -11,15 +12,17 @@ import com.mongodb.client.MongoCollection;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
+
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+
+
 
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
@@ -27,7 +30,7 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 @EnableCaching
 @Configuration
 public class MongoConfig {
-    private static final Logger LOGGER = Logger.getLogger(MongoConfig.class.getSimpleName());
+    public static final Logger LOGGER = LoggerFactory.getLogger(MongoConfig.class.getSimpleName());
     private static final Gson G = new GsonBuilder().setPrettyPrinting().create();
     private static String mm = E.AMP + E.AMP + E.AMP;
 
@@ -39,6 +42,10 @@ public class MongoConfig {
     @Value("${spring.profiles.active}")
     private String profile;
 
+    @Value("${spring.data.mongodb.database}")
+    private String databaseName;
+
+
 
 
     public MongoConfig(SecretMgr secretMgr) {
@@ -49,6 +56,9 @@ public class MongoConfig {
     public MongoClient mongo() {
         LOGGER.info(E.RAIN+E.RAIN+E.RAIN+E.RAIN+
                 " MongoClient prep, profile: " + profile);
+
+        String mString = "";
+
         String uri;
         if (profile.equalsIgnoreCase("dev")) {
             LOGGER.info(E.RAIN+E.RAIN+E.RAIN+E.RAIN+
@@ -56,19 +66,24 @@ public class MongoConfig {
             uri = mongoString;
         } else {
             try {
+
                 uri = secretMgr.getMongoString();
+                int index = uri.indexOf("@");
+                if (index > -1) {
+                    mString = uri.substring(index);
+                }
                 LOGGER.info(E.RAIN+E.RAIN+E.RAIN+E.RAIN+
-                        " Using MongoDB Atlas Server with " + uri);
+                        " Using MongoDB Atlas Server with " + E.BLUE_DOT + " " + mString);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
 
-        LOGGER.info(mm + "MongoDB Connection string: " + E.RED_APPLE
-                + " with encoded password: " + uri);
+
+        LOGGER.info(mm + "MongoDB Connection string: " + E.RED_APPLE + mString);
 
         ConnectionString connectionString = new ConnectionString(uri);
-        LOGGER.info(mm + "MongoDB Connection userName: " + E.RED_APPLE + " = "
+        LOGGER.info(mm + "MongoDB Connection userName: " + E.RED_APPLE + " : "
                 + connectionString.getUsername());
 
         CodecRegistry pojoCodecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),
@@ -80,7 +95,9 @@ public class MongoConfig {
                 .build();
 
         LOGGER.info(mm + "MongoClientSettings have been set with pojoCodecRegistry");
+
         MongoClient client = MongoClients.create(settings);
+
         LOGGER.info(mm + " " + client.listDatabases().iterator().getServerAddress() + " MongoClientSettings have been set with pojoCodecRegistry");
         for (Document document : client.listDatabases()) {
             LOGGER.info(mm + "Database Document: " + document.toJson() + E.RAIN);
@@ -88,7 +105,7 @@ public class MongoConfig {
         LOGGER.info(mm + " ClusterDescription: "
                 + client.getClusterDescription().getShortDescription() + mm);
         LOGGER.info(mm + " Database Name: "
-                + client.getDatabase("geo").getName() + " " + mm);
+                + client.getDatabase(databaseName).getName() + " " + mm);
 
 
         return client;
@@ -98,19 +115,19 @@ public class MongoConfig {
 
     @Bean
     public MongoTemplate mongoTemplate() throws Exception {
-        MongoTemplate t = new MongoTemplate(mongo(), "geo");
+        MongoTemplate t = new MongoTemplate(mongo(), databaseName);
         LOGGER.info(mm + " Geo DB Collections " + mm);
         for (String collectionName : t.getCollectionNames()) {
             LOGGER.info(mm + " Collection: "
                     + collectionName + " " + E.BLUE_DOT);
-            MongoCollection<org.bson.Document> col = t.getCollection(collectionName);
+            MongoCollection<org.bson.Document> mongoCollection = t.getCollection(collectionName);
 
             LOGGER.info(mm + " Number of Documents: "
-                    + col.countDocuments() + " " + E.BLUE_DOT);
-            ListIndexesIterable<org.bson.Document> iter = col.listIndexes();
+                    + mongoCollection.countDocuments() + " " + E.BLUE_DOT);
+            ListIndexesIterable<org.bson.Document> iter = mongoCollection.listIndexes();
             for (org.bson.Document doc : iter) {
                 LOGGER.info(bb + "index: "
-                        + doc.toJson() + "" + E.BLUE_DOT);
+                        + doc.toJson() + " " + E.BLUE_DOT);
             }
         }
 

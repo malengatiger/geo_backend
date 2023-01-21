@@ -8,10 +8,15 @@ import com.boha.geo.monitor.utils.MongoGenerator;
 import com.boha.geo.services.RegistrationService;
 import com.boha.geo.util.E;
 import com.google.firebase.messaging.FirebaseMessagingException;
+import io.github.bucket4j.Bandwidth;
+import io.github.bucket4j.Bucket;
+import io.github.bucket4j.Bucket4j;
+import io.github.bucket4j.Refill;
 import org.joda.time.DateTime;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Duration;
 import java.util.logging.Logger;
 
 
@@ -29,12 +34,17 @@ public class DataController {
         this.registrationService = registrationService;
         this.mongoDataService = mongoDataService;
 
+        Bandwidth limit = Bandwidth.classic(50, Refill.greedy(50, Duration.ofMinutes(1)));
+        this.bucket = Bucket.builder()
+                .addLimit(limit)
+                .build();
+
         LOGGER.info(E.PANDA.concat(E.PANDA) +
                 "DataController ready to write data, services injected "
                         .concat(E.PANDA.concat(E.PANDA)));
     }
 
-   
+    Bucket bucket;
     private final DataService dataService;
 
    
