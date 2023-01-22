@@ -13,18 +13,19 @@ import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Bucket4j;
 import io.github.bucket4j.Refill;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
-import java.util.logging.Logger;
 
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 
 public class DataController {
-    private static final Logger LOGGER = Logger.getLogger(DataController.class.getSimpleName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(DataController.class);
 
     public DataController(DataService dataService, MongoGenerator mongoGenerator,
                           MessageService messageService, RegistrationService registrationService, MongoDataService mongoDataService) {
@@ -263,6 +264,22 @@ public class DataController {
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,
                             "addVideo failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+
+    }
+    @PostMapping("/addAudio")
+    public ResponseEntity<Object> addAudio(@RequestBody Audio audio) throws Exception {
+        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
+                .concat("Adding Audio ... " + audio.getProjectName()));
+        try {
+            String result = dataService.addAudio(audio);
+            LOGGER.info(E.LEAF + E.LEAF + result);
+            return ResponseEntity.ok(audio);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "addAudio failed: " + e.getMessage(),
                             new DateTime().toDateTimeISO().toString()));
         }
 

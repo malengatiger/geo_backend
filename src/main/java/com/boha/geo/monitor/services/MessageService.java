@@ -33,6 +33,17 @@ public class MessageService {
                 + topic+ E.RED_APPLE);
         return response;
     }
+    public String sendMessage(Audio audio) throws FirebaseMessagingException {
+        String topic = "audios_" + audio.getOrganizationId();
+        Message message = Message.builder()
+                .putData("audio", G.toJson(audio))
+                .setTopic(topic)
+                .build();
+        String response = FirebaseMessaging.getInstance().send(message);
+        LOGGER.info(E.RED_APPLE + E.RED_APPLE + "Successfully sent audio message to FCM topic: "
+                + topic+ E.RED_APPLE);
+        return response;
+    }
     public String sendMessage(Video video) throws FirebaseMessagingException {
         String topic = "videos_" + video.getOrganizationId();
         Message message = Message.builder()

@@ -53,6 +53,9 @@ public class ListService {
     PhotoRepository photoRepository;
     @Autowired
     VideoRepository videoRepository;
+
+    @Autowired
+    AudioRepository audioRepository;
     @Autowired
     ConditionRepository conditionRepository;
 
@@ -206,6 +209,7 @@ public class ListService {
 
         List<Photo> photos = getProjectPhotos(projectId);
         List<Video> videos = getProjectVideos(projectId);
+        List<Audio> audios = getProjectAudios(projectId);
         List<ProjectPosition> projectPositions = getProjectPositions(projectId);
         List<ProjectPolygon> projectPolygons = getProjectPolygons(projectId);
         List<FieldMonitorSchedule> fieldMonitorSchedules = getProjectFieldMonitorSchedules(projectId);
@@ -218,6 +222,7 @@ public class ListService {
         bag.setProjectPolygons(projectPolygons);
         bag.setPhotos(photos);
         bag.setVideos(videos);
+        bag.setAudios(audios);
         bag.setUsers(users);
 
         LOGGER.info(E.RED_APPLE+" Project data found: photos: " + bag.getPhotos().size() + " videos: " + bag.getVideos().size()
@@ -230,6 +235,8 @@ public class ListService {
         List<Project> projects = getOrganizationProjects(organizationId);
         List<Photo> photos = getOrganizationPhotos(organizationId);
         List<Video> videos = getOrganizationVideos(organizationId);
+        List<Audio> audios = getOrganizationAudios(organizationId);
+
         List<ProjectPosition> projectPositions = getOrganizationProjectPositions(organizationId);
         List<FieldMonitorSchedule> fieldMonitorSchedules = getOrgFieldMonitorSchedules(organizationId);
         List<ProjectPolygon> polygons = getOrganizationProjectPolygons(organizationId);
@@ -243,6 +250,7 @@ public class ListService {
         bag.setProjectPolygons(polygons);
         bag.setPhotos(photos);
         bag.setVideos(videos);
+        bag.setAudios(audios);
         bag.setUsers(users);
 
         LOGGER.info(E.RED_APPLE+" Organization data found: photos: " + bag.getPhotos().size() + " videos: " + bag.getVideos().size()
@@ -273,6 +281,14 @@ public class ListService {
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getProjectVideos ..."));
         List<Video> mList = videoRepository.findByProjectId(projectId);
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getProjectVideos ... found: " + mList.size()));
+
+        return mList;
+    }
+    public List<Audio> getProjectAudios(String projectId)  {
+
+        LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getProjectAudios ..."));
+        List<Audio> mList = audioRepository.findByProjectId(projectId);
+        LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getProjectAudios ... found: " + mList.size()));
 
         return mList;
     }
@@ -511,6 +527,13 @@ public class ListService {
 
         List<Video> mList = videoRepository.findByOrganizationId(organizationId);
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getOrganizationVideos ... found: " + mList.size()));
+
+        return mList;
+    }
+    public List<Audio> getOrganizationAudios(String organizationId)  {
+
+        List<Audio> mList = audioRepository.findByOrganizationId(organizationId);
+        LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getOrganizationAudios ... found: " + mList.size()));
 
         return mList;
     }

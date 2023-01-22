@@ -33,6 +33,8 @@ public class DataService {
     private static final String databaseUrl = "https://monitor-2021.firebaseio.com";
     final Environment env;
     final GeofenceEventRepository geofenceEventRepository;
+
+    final AudioRepository audioRepository;
     final ProjectRepository projectRepository;
 
     final ProjectPolygonRepository projectPolygonRepository;
@@ -53,7 +55,7 @@ public class DataService {
 
 
     public DataService(Environment env, GeofenceEventRepository geofenceEventRepository,
-                       ProjectRepository projectRepository,
+                       AudioRepository audioRepository, ProjectRepository projectRepository,
                        ProjectPolygonRepository projectPolygonRepository, CityRepository cityRepository,
                        PhotoRepository photoRepository,
                        VideoRepository videoRepository,
@@ -68,6 +70,7 @@ public class DataService {
                        FieldMonitorScheduleRepository fieldMonitorScheduleRepository) {
         this.env = env;
         this.geofenceEventRepository = geofenceEventRepository;
+        this.audioRepository = audioRepository;
         this.projectRepository = projectRepository;
         this.projectPolygonRepository = projectPolygonRepository;
         this.cityRepository = cityRepository;
@@ -176,6 +179,12 @@ public class DataService {
         videoRepository.save(video);
         LOGGER.info(E.LEAF.concat(E.LEAF).concat("Video added: " + video.getVideoId()));
         return messageService.sendMessage(video);
+    }
+    public String addAudio(Audio audio) throws Exception {
+
+        audioRepository.save(audio);
+        LOGGER.info(E.LEAF.concat(E.LEAF).concat("Video added: " + audio.getAudioId()));
+        return messageService.sendMessage(audio);
     }
 
     public String addCondition(Condition condition) throws Exception {
