@@ -21,6 +21,7 @@ public class Audio {
     private String  userId;
     private String  userName;
     private String  created;
+    private int  durationInSeconds = 0;
 
 
 }
