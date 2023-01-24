@@ -269,6 +269,17 @@ public class ListController {
                             new DateTime().toDateTimeISO().toString()));
         }
     }
+    @GetMapping("/getOrganizationAudios")
+    public ResponseEntity<Object> getOrganizationAudios(@RequestParam String organizationId) {
+        try {
+            return ResponseEntity.ok(listService.getOrganizationAudios(organizationId));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "getOrganizationVideos failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+    }
 
     @GetMapping("/findProjectsByOrganization")
     public ResponseEntity<Object> findProjectsByOrganization(@RequestParam String organizationId) {
