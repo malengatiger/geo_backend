@@ -316,12 +316,15 @@ public class ListController {
         LOGGER.info(E.DICE.concat(E.DICE).concat(" getUserById ..."));
         try {
             User user = listService.getUserById(userId);
-            LOGGER.info(E.DOLPHIN.concat(E.DOLPHIN) + " Users found " );
+            if (user == null) {
+                throw new Exception("User is not active; meaning this user is kaput!");
+            }
+            LOGGER.info(E.DOLPHIN.concat(E.DOLPHIN) + " User found: " + user.getName());
             return ResponseEntity.ok(user);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,
-                            "getUsers failed: " + e.getMessage(),
+                            "getUserById failed: " + e.getMessage(),
                             new DateTime().toDateTimeISO().toString()));
         }
     }

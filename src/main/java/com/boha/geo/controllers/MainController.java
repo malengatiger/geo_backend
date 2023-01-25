@@ -2,10 +2,12 @@ package com.boha.geo.controllers;
 
 import com.boha.geo.GeoApplication;
 import com.boha.geo.models.CityPlace;
+import com.boha.geo.models.KillResponse;
 import com.boha.geo.monitor.data.City;
 import com.boha.geo.monitor.data.Organization;
 import com.boha.geo.monitor.data.Photo;
 import com.boha.geo.monitor.data.UploadBag;
+import com.boha.geo.monitor.services.MessageService;
 import com.boha.geo.repos.OrganizationRepository;
 import com.boha.geo.services.*;
 import com.boha.geo.util.E;
@@ -38,16 +40,19 @@ public class MainController {
     final CityService cityService;
     final StorageService storageService;
 
+    final MessageService messageService;
+
     final OrganizationRepository organizationRepository;
 
     Bucket bucket;
     public MainController(PlacesService placesService, MongoService mongoService,
-                          UserService userService, CityService cityService, StorageService storageService, OrganizationRepository organizationRepository) {
+                          UserService userService, CityService cityService, StorageService storageService, MessageService messageService, OrganizationRepository organizationRepository) {
         this.placesService = placesService;
         this.mongoService = mongoService;
         this.userService = userService;
         this.cityService = cityService;
         this.storageService = storageService;
+        this.messageService = messageService;
         this.organizationRepository = organizationRepository;
 
         Bandwidth limit = Bandwidth.classic(50, Refill.greedy(50, Duration.ofMinutes(1)));
@@ -66,7 +71,18 @@ public class MainController {
                     " MainController Returning, " + users + " users");
             return ResponseEntity.ok(users);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+    @GetMapping("/killUser")
+    private ResponseEntity<Object> killUser(@RequestParam String userId, @RequestParam String killerId) {
+        try {
+            KillResponse killMessage = messageService.sendKillMessage(userId,killerId);
+            logger.info(E.BLUE_HEART + E.BLUE_HEART + E.CHECK +
+                    " MainController Returning, killMessage sent to " + killMessage.getUser().getName() + ", he be dead soon! ");
+            return ResponseEntity.ok(killMessage);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
     @GetMapping("/getPlacesNear")

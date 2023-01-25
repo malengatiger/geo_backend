@@ -510,11 +510,16 @@ public class ListService {
     }
 
     public List<User> getOrganizationUsers(String organizationId)  {
-
+        List<User> filteredList = new ArrayList<>();
         List<User> mList = userRepository.findByOrganizationId(organizationId);
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getOrganizationUsers ... found: " + mList.size()));
-
-        return mList;
+        for (User user : mList) {
+            if (user.getActive() == 0) {
+                filteredList.add(user);
+            }
+        }
+        LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getOrganizationUsers ... found after filtering for inactive users: " + filteredList.size()));
+        return filteredList;
     }
     public List<Photo> getOrganizationPhotos(String organizationId)  {
 
@@ -540,7 +545,7 @@ public class ListService {
     public List<User> getUsers()  {
 
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getUsers ..."));
-        List<User> mList = (List<User>) userRepository.findAll();
+        List<User> mList = userRepository.findAll();
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getUsers ... found: " + mList.size()));
 
         return mList;
@@ -549,7 +554,10 @@ public class ListService {
 
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getUserById ..."));
         User user = userRepository.findByUserId(userId);
-        LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getUserById ... found: "));
+        LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getUserById ... found, active: " + user.getActive()));
+        if (user.getActive() > 0) {
+            return null;
+        }
 
         return user;
     }

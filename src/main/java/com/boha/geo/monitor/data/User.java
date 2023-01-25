@@ -19,6 +19,8 @@ public class User {
     String userType;
     String password;
     Position position;
+    int active = 0;
+    String updated;
 
 
 }
