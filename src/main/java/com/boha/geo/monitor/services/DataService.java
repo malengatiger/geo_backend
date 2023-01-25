@@ -154,6 +154,7 @@ public class DataService {
     }
 
     public User addUser(User user) throws FirebaseMessagingException {
+
         User mUser = userRepository.save(user);
         String result = messageService.sendMessage(user);
         LOGGER.info(E.LEAF.concat(E.LEAF).concat("User added to database: "
@@ -326,5 +327,25 @@ public class DataService {
                         .concat(" \uD83E\uDDE1 ").concat(uid)));
 
         return addUser(user);
+    }
+
+    public int updateAuthedUser(User user) throws Exception {
+        try {
+            UserRecord.UpdateRequest request = new UserRecord.UpdateRequest(user.getUserId())
+                    .setEmail(user.getEmail())
+                    .setPhoneNumber(user.getCellphone())
+                    .setEmailVerified(false)
+                    .setPassword(user.getPassword())
+                    .setDisplayName(user.getName())
+                    .setDisabled(false);
+
+            UserRecord userRecord = FirebaseAuth.getInstance().updateUser(request);
+            LOGGER.info(E.RED_DOT + E.RED_DOT + " Successfully updated user: " + userRecord.getUid());
+            return 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+           throw new Exception("User auth update failed: " + e.getMessage());
+        }
+
     }
 }

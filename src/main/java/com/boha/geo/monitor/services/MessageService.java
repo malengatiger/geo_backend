@@ -196,9 +196,17 @@ public class MessageService {
     }
 
 
-    public void deleteAuthUser(String userId) throws Exception {
+    public int deleteAuthUser(String userId) throws Exception {
         LOGGER.info(E.WARNING.concat(E.WARNING.concat(E.WARNING)
                 .concat(" DELETING AUTH USER from Firebase .... ").concat(E.RED_DOT)));
-        FirebaseAuth.getInstance().deleteUser(userId);
+        try {
+            FirebaseAuth.getInstance().deleteUser(userId);
+            return 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 9;
+        }
+
+
     }
 }

@@ -343,7 +343,21 @@ public class DataController {
         }
 
     }
-
+    @PostMapping("/deleteAuthUser")
+    public ResponseEntity<Object> deleteAuthUser(@RequestBody String userId) throws FirebaseMessagingException {
+        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
+                .concat(".... Deleting Firebase auth User: ".concat(userId)));
+        try {
+            int result = messageService.deleteAuthUser(userId);
+            UserDeleteResponse m = new UserDeleteResponse(result,"User deleted from Firebase Auth");
+            return ResponseEntity.ok(m);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "deleteAuthUser failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+    }
     @PostMapping("/updateUser")
     public ResponseEntity<Object> updateUser(@RequestBody User user) throws Exception {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
@@ -357,6 +371,32 @@ public class DataController {
                             new DateTime().toDateTimeISO().toString()));
         }
 
+    }
+    @PostMapping("/updateAuthedUser")
+    public ResponseEntity<Object> updateAuthedUser(@RequestBody User user) throws Exception {
+        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
+                .concat("Updating authed User: ".concat(user.getName())));
+        try {
+            int res = dataService.updateAuthedUser(user);
+            UserDeleteResponse r = new UserDeleteResponse(res,"User auth updated");
+            return ResponseEntity.ok(r);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "updateAuthedUser failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+
+    }
+
+    static class UserDeleteResponse {
+        public int returnCode;
+        public String message;
+
+        public UserDeleteResponse(int returnCode, String message) {
+            this.returnCode = returnCode;
+            this.message = message;
+        }
     }
 
 }
