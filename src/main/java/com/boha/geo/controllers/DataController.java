@@ -388,6 +388,19 @@ public class DataController {
         }
 
     }
+    @PostMapping("/addRating")
+    public ResponseEntity<Object> addRating(@RequestBody Rating rating) throws Exception {
+
+        try {
+            return ResponseEntity.ok(dataService.addRating(rating));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "addRating failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+
+    }
 
     static class UserDeleteResponse {
         public int returnCode;

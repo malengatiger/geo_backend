@@ -39,6 +39,8 @@ public class DataService {
     final Environment env;
     final GeofenceEventRepository geofenceEventRepository;
 
+    final RatingRepository ratingRepository;
+
     final MongoTemplate mongoTemplate;
 
     final AudioRepository audioRepository;
@@ -62,7 +64,7 @@ public class DataService {
 
 
     public DataService(Environment env, GeofenceEventRepository geofenceEventRepository,
-                       MongoTemplate mongoTemplate, AudioRepository audioRepository, ProjectRepository projectRepository,
+                       RatingRepository ratingRepository, MongoTemplate mongoTemplate, AudioRepository audioRepository, ProjectRepository projectRepository,
                        ProjectPolygonRepository projectPolygonRepository, CityRepository cityRepository,
                        PhotoRepository photoRepository,
                        VideoRepository videoRepository,
@@ -77,6 +79,7 @@ public class DataService {
                        FieldMonitorScheduleRepository fieldMonitorScheduleRepository) {
         this.env = env;
         this.geofenceEventRepository = geofenceEventRepository;
+        this.ratingRepository = ratingRepository;
         this.mongoTemplate = mongoTemplate;
         this.audioRepository = audioRepository;
         this.projectRepository = projectRepository;
@@ -194,6 +197,15 @@ public class DataService {
         return mUser;
     }
 
+    public Rating addRating(Rating rating) throws Exception {
+        if (rating.getRatingId() == null) {
+            rating.setRatingId(UUID.randomUUID().toString());
+        }
+        Rating res = ratingRepository.insert(rating);
+        LOGGER.info(E.LEAF.concat(E.LEAF).concat("Rating added to Mongo, ratingCode: " + rating.getRatingCode()));
+        return res;
+    }
+
     public String addPhoto(Photo photo) throws Exception {
         if (photo.getPhotoId() == null) {
             photo.setPhotoId(UUID.randomUUID().toString());
@@ -202,6 +214,7 @@ public class DataService {
         LOGGER.info(E.LEAF.concat(E.LEAF).concat("Photo added to Mongo, : " + photo.getUrl()));
         return messageService.sendMessage(photo);
     }
+
 
     public String addVideo(Video video) throws Exception {
         if (video.getVideoId() == null) {
