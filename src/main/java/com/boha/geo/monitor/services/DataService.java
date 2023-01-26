@@ -16,10 +16,15 @@ import com.google.firebase.auth.UserRecord;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.mongodb.client.result.UpdateResult;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
@@ -33,6 +38,8 @@ public class DataService {
     private static final String databaseUrl = "https://monitor-2021.firebaseio.com";
     final Environment env;
     final GeofenceEventRepository geofenceEventRepository;
+
+    final MongoTemplate mongoTemplate;
 
     final AudioRepository audioRepository;
     final ProjectRepository projectRepository;
@@ -55,7 +62,7 @@ public class DataService {
 
 
     public DataService(Environment env, GeofenceEventRepository geofenceEventRepository,
-                       AudioRepository audioRepository, ProjectRepository projectRepository,
+                       MongoTemplate mongoTemplate, AudioRepository audioRepository, ProjectRepository projectRepository,
                        ProjectPolygonRepository projectPolygonRepository, CityRepository cityRepository,
                        PhotoRepository photoRepository,
                        VideoRepository videoRepository,
@@ -70,6 +77,7 @@ public class DataService {
                        FieldMonitorScheduleRepository fieldMonitorScheduleRepository) {
         this.env = env;
         this.geofenceEventRepository = geofenceEventRepository;
+        this.mongoTemplate = mongoTemplate;
         this.audioRepository = audioRepository;
         this.projectRepository = projectRepository;
         this.projectPolygonRepository = projectPolygonRepository;
@@ -144,12 +152,34 @@ public class DataService {
 //        return GeoHash.geoHashStringWithCharacterPrecision(latitude, longitude, 12);
 //    }
 
-    public User updateUser(User user) {
-        userRepository.deleteByUserId(user.getUserId());
-        userRepository.save(user);
+    public User updateUser(User user) throws Exception {
+
         LOGGER.info(E.LEAF.concat(E.LEAF).concat("User updated on database: "
                 + user.getName() + " id: "
                 + user.getUserId() + " " + user.getFcmRegistration()));
+
+        LOGGER.info(E.RED_APPLE+E.RED_APPLE + " update user and set the active flag to 9 ");
+        Query query = new Query();
+        query.addCriteria(Criteria.where("userId").is(user.getUserId()));
+        query.fields().include("userId");
+
+        Update update = new Update();
+        update.set("name", user.getName());
+        update.set("cellphone", user.getCellphone());
+        update.set("email", user.getEmail());
+        update.set("fcmRegistration", user.getFcmRegistration());
+        update.set("updated", DateTime.now().toDateTimeISO().toString());
+
+        UpdateResult result = mongoTemplate.updateFirst(query, update, User.class);
+        user.setPassword(UUID.randomUUID().toString());
+        updateAuthedUser(user);
+
+        LOGGER.info(E.RED_APPLE+E.RED_APPLE + " user has been modified: " + result.getModifiedCount());
+
+        LOGGER.info(E.LEAF.concat(E.LEAF).concat("User updated on database: "
+                + user.getName() + " id: "
+                + user.getUserId() + " " + user.getFcmRegistration()));
+
         return user;
     }
 
@@ -326,6 +356,7 @@ public class DataService {
                         .concat(" \uD83E\uDDE1 ").concat(user.getEmail())
                         .concat(" \uD83E\uDDE1 ").concat(uid)));
 
+        user.setPassword(null);
         return addUser(user);
     }
 

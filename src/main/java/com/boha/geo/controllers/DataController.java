@@ -66,7 +66,7 @@ public class DataController {
     @PostMapping("/registerOrganization")
     public ResponseEntity<Object> registerOrganization(@RequestBody OrganizationRegistrationBag orgBag) throws Exception {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
-                .concat(".... Adding Organization: ".concat(orgBag.getOrganization().getName())));
+                .concat(".... Registering new Organization: ".concat(orgBag.getOrganization().getName())));
         try {
             return ResponseEntity.ok(registrationService.registerOrganization(orgBag));
         } catch (Exception e) {
