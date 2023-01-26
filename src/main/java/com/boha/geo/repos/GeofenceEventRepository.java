@@ -9,6 +9,8 @@ import java.util.List;
 public interface GeofenceEventRepository extends MongoRepository<GeofenceEvent, String> {
 
     List<GeofenceEvent> findByProjectPositionId(String projectPositionId);
-    List<GeofenceEvent> findByUserId(String userId);
+    List<GeofenceEvent> findByOrganizationId(String organizationId);
+
+    List<GeofenceEvent> findByProjectId(String projectId);
 
 }

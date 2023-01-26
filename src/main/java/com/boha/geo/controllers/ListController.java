@@ -345,7 +345,7 @@ public class ListController {
     }
 
     @GetMapping("/findCitiesByLocation")
-    public ResponseEntity<Object> findCitiesByLocation(double latitude, double longitude, double radiusInKM) {
+    public ResponseEntity<Object> findCitiesByLocation(@RequestParam double latitude, @RequestParam double longitude, @RequestParam double radiusInKM) {
         LOGGER.info(E.DICE.concat(E.DICE).concat(" findCitiesByLocation: ... radiusInKM: " + radiusInKM + " km"));
         try {
             List<City> cities = listService.findCitiesByLocation(latitude, longitude, radiusInKM);
@@ -360,10 +360,11 @@ public class ListController {
     }
 
     @GetMapping("/findProjectPositionsByLocation")
-    public ResponseEntity<Object> findProjectPositionsByLocation(double latitude, double longitude, double radiusInKM) {
-        LOGGER.info(E.DICE.concat(E.DICE).concat(" findProjectsByLocation ..."));
+    public ResponseEntity<Object> findProjectPositionsByLocation(@RequestParam String organizationId, @RequestParam double latitude,
+                                                                 @RequestParam double longitude, @RequestParam double radiusInKM) {
+        LOGGER.info(E.DICE.concat(E.DICE).concat(" findProjectPositionsByLocation ..."));
         try {
-            List<ProjectPosition> positions = listService.findProjectPositionsByLocation(latitude, longitude, radiusInKM);
+            List<ProjectPosition> positions = listService.findProjectPositionsByLocation(organizationId, latitude, longitude, radiusInKM);
             LOGGER.info(E.DOLPHIN.concat(E.DOLPHIN) + " Nearby ProjectPositions found: " + positions.size());
             return ResponseEntity.ok(positions);
         } catch (Exception e) {
@@ -430,19 +431,19 @@ public class ListController {
                             new DateTime().toDateTimeISO().toString()));
         }
     }
-    @GetMapping("/getGeofenceEventsByUser")
-    public ResponseEntity<Object> getGeofenceEventsByUser(String userId) {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
-                .concat("getGeofenceEventsByUser: " + userId));
-        try {
-            return ResponseEntity.ok(listService.getGeofenceEventsByUser(userId));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(
-                    new CustomErrorResponse(400,
-                            "getGeofenceEventsByUser failed: " + e.getMessage(),
-                            new DateTime().toDateTimeISO().toString()));
-        }
-    }
+//    @GetMapping("/getGeofenceEventsByUser")
+//    public ResponseEntity<Object> getGeofenceEventsByUser(String userId) {
+//        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
+//                .concat("getGeofenceEventsByUser: " + userId));
+//        try {
+//            return ResponseEntity.ok(listService.getGeofenceEventsByUser(userId));
+//        } catch (Exception e) {
+//            return ResponseEntity.badRequest().body(
+//                    new CustomErrorResponse(400,
+//                            "getGeofenceEventsByUser failed: " + e.getMessage(),
+//                            new DateTime().toDateTimeISO().toString()));
+//        }
+//    }
     @GetMapping("/getGeofenceEventsByProjectPosition")
     public ResponseEntity<Object> getGeofenceEventsByProjectPosition(String projectPositionId) {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)

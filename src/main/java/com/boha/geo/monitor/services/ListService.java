@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.*;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -61,6 +62,8 @@ public class ListService {
 
     @Autowired
     FieldMonitorScheduleRepository fieldMonitorScheduleRepository;
+    @Autowired
+    MongoTemplate mongoTemplate;
 
     public ListService() {
 
@@ -415,17 +418,24 @@ public class ListService {
         return cnt;
     }
 
-    public List<ProjectPosition> findProjectPositionsByLocation(double latitude, double longitude, double radiusInKM)  {
+    public List<ProjectPosition> findProjectPositionsByLocation(String organizationId, double latitude, double longitude, double radiusInKM)  {
         LOGGER.info(E.DICE.concat(E.DICE).concat(" findProjectPositionsByLocation ..."));
         Point point = new Point(longitude, latitude);
         Distance distance = new Distance(radiusInKM, Metrics.KILOMETERS);
-        List<ProjectPosition> positions = projectPositionRepository.findByPositionNear(point, distance);
-        LOGGER.info(E.DOLPHIN.concat(E.DOLPHIN).concat(E.DOLPHIN)
-                + " Nearby Projects found: " + positions.size() + " : " + E.RED_APPLE + " radius: " + radiusInKM);
 
-        LOGGER.info(E.HEART_ORANGE.concat(E.HEART_ORANGE).concat(
-                "findProjectsByLocation: Nearby ProjectPositions found: " + positions.size() + " \uD83C\uDF3F"));
-        return positions;
+        List<ProjectPosition> positions = projectPositionRepository.findByPositionNear(point, distance);
+        List<ProjectPosition> mPositions = new ArrayList<>();
+        for (ProjectPosition position : positions) {
+            if (position.getOrganizationId().equalsIgnoreCase(organizationId)) {
+                mPositions.add(position);
+            }
+        }
+
+        LOGGER.info(E.DOLPHIN.concat(E.DOLPHIN).concat(E.DOLPHIN)
+                + " Nearby Projects found: " + mPositions.size() + " : " + E.RED_APPLE + " radius: " + radiusInKM);
+
+
+        return mPositions;
     }
 
     public List<ProjectPosition> getProjectPositions(String projectId)  {
@@ -467,14 +477,14 @@ public class ListService {
                 + " for organizationId: " + organizationId));
         return mList;
     }
-    public List<GeofenceEvent> getGeofenceEventsByUser(String userId)  {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS).concat("getGeofenceEventsByUser: "
-                .concat(E.FLOWER_YELLOW)));
-
-        List<GeofenceEvent> events = geofenceEventRepository.findByUserId(userId);
-        LOGGER.info(E.LEAF.concat(E.LEAF).concat("GeofenceEvents found: " + events.size()));
-        return events;
-    }
+//    public List<GeofenceEvent> getGeofenceEventsByUser(String userId)  {
+//        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS).concat("getGeofenceEventsByUser: "
+//                .concat(E.FLOWER_YELLOW)));
+//
+//        List<GeofenceEvent> events = geofenceEventRepository.findByUserId(userId);
+//        LOGGER.info(E.LEAF.concat(E.LEAF).concat("GeofenceEvents found: " + events.size()));
+//        return events;
+//    }
     public List<GeofenceEvent> getGeofenceEventsByProjectPosition(String projectPositionId)  {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS).concat("getGeofenceEventsByProjectPosition: "
                 .concat(E.FLOWER_YELLOW)));
