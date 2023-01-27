@@ -132,6 +132,8 @@ public class MongoService {
 
             createProjectPositionIndexes();
             createProjectPolygonIndexes();
+            createGeofenceEventIndexes();
+            createRatingIndexes();
 
             createPhotoIndexes();
             createVideoIndexes();
@@ -141,7 +143,7 @@ public class MongoService {
             createProjectIndexes();
             createCommunityIndexes();
 
-            createGeofenceIndexes();
+            createAudioIndexes();
             createSchedulesIndexes();
             createUniqueCityIndex();
 
@@ -216,25 +218,29 @@ public class MongoService {
                 " user countryId index on community collection: " +
                 E.RED_APPLE + result);
     }
-    private void createGeofenceIndexes() {
+    private void createAudioIndexes() {
         //add index
-        MongoCollection<Document> dbCollection = db.getCollection("geofenceEvents");
+        MongoCollection<Document> dbCollection = db.getCollection("audios");
 
         String result2 = dbCollection.createIndex(Indexes.ascending("projectId"),
                 new IndexOptions().unique(false));
         logger.info(mm +
-                " projectId index on geofenceEvents collection: " +
+                " projectId index on audios collection: " +
                 E.RED_APPLE + result2);
 
         String result = dbCollection.createIndex(Indexes.ascending("userId"));
         logger.info(mm+
-                " userId index on geofenceEvents collection: " +
+                " userId index on audios collection: " +
                 E.RED_APPLE + result);
 
         String result3 = dbCollection.createIndex(Indexes.geo2dsphere("position"));
         logger.info(mm+
-                " position 2dSphere index on geofenceEvents collection: " +
+                " position 2dSphere index on audios collection: " +
                 E.RED_APPLE + result3);
+        String result4 = dbCollection.createIndex(Indexes.ascending("organizationId"));
+        logger.info(mm+
+                " organizationId index on audios collection: " +
+                E.RED_APPLE + result4);
     }
     private void createSchedulesIndexes() {
         //add index
@@ -303,6 +309,44 @@ public class MongoService {
         String result3 = dbCollection.createIndex(Indexes.ascending("organizationId"));
         logger.info(mm +
                 " organizationId index on projectPositions collection: " +
+                E.RED_APPLE + result3);
+
+    }
+    private void createGeofenceEventIndexes() {
+        //add index
+        MongoCollection<Document> dbCollection = db.getCollection("geofenceEvents");
+        String result = dbCollection.createIndex(Indexes.geo2dsphere("position"));
+        logger.info(mm +
+                " position 2dSphere index on geofenceEvents collection: " +
+                E.RED_APPLE + result);
+
+        String result2 = dbCollection.createIndex(Indexes.ascending("projectId"));
+        logger.info(mm +
+                " projectId index on geofenceEvents collection: " +
+                E.RED_APPLE + result2);
+
+        String result3 = dbCollection.createIndex(Indexes.ascending("organizationId"));
+        logger.info(mm +
+                " organizationId index on geofenceEvents collection: " +
+                E.RED_APPLE + result3);
+
+    }
+    private void createRatingIndexes() {
+        //add index
+        MongoCollection<Document> dbCollection = db.getCollection("ratings");
+        String result = dbCollection.createIndex(Indexes.geo2dsphere("position"));
+        logger.info(mm +
+                " position 2dSphere index on ratings collection: " +
+                E.RED_APPLE + result);
+
+        String result2 = dbCollection.createIndex(Indexes.ascending("projectId"));
+        logger.info(mm +
+                " projectId index on ratings collection: " +
+                E.RED_APPLE + result2);
+
+        String result3 = dbCollection.createIndex(Indexes.ascending("organizationId"));
+        logger.info(mm +
+                " organizationId index on ratings collection: " +
                 E.RED_APPLE + result3);
 
     }
