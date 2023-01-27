@@ -134,6 +134,7 @@ public class MongoService {
             createProjectPolygonIndexes();
             createGeofenceEventIndexes();
             createRatingIndexes();
+            createLocationResponseIndexes();
 
             createPhotoIndexes();
             createVideoIndexes();
@@ -309,6 +310,25 @@ public class MongoService {
         String result3 = dbCollection.createIndex(Indexes.ascending("organizationId"));
         logger.info(mm +
                 " organizationId index on projectPositions collection: " +
+                E.RED_APPLE + result3);
+
+    }
+    private void createLocationResponseIndexes() {
+        //add index
+        MongoCollection<Document> dbCollection = db.getCollection("locationResponses");
+        String result = dbCollection.createIndex(Indexes.geo2dsphere("position"));
+        logger.info(mm +
+                " projectPosition 2dSphere index on locationResponses collection: " +
+                E.RED_APPLE + result);
+
+        String result2 = dbCollection.createIndex(Indexes.ascending("userId"));
+        logger.info(mm +
+                " userId index on locationResponses collection: " +
+                E.RED_APPLE + result2);
+
+        String result3 = dbCollection.createIndex(Indexes.ascending("organizationId"));
+        logger.info(mm +
+                " organizationId index on locationResponses collection: " +
                 E.RED_APPLE + result3);
 
     }

@@ -2,6 +2,7 @@ package com.boha.geo.controllers;
 
 import com.boha.geo.monitor.data.*;
 import com.boha.geo.monitor.services.ListService;
+import com.boha.geo.monitor.services.MessageService;
 import com.boha.geo.monitor.services.MongoDataService;
 import com.boha.geo.util.E;
 import com.google.gson.Gson;
@@ -28,8 +29,9 @@ public class ListController {
     public static final Logger LOGGER = LoggerFactory.getLogger(ListController.class.getSimpleName());
     private static final Gson G = new GsonBuilder().setPrettyPrinting().create();
     Bucket bucket;
-    public ListController(ListService listService, MongoDataService mongoDataService) {
+    public ListController(ListService listService, MessageService messageService, MongoDataService mongoDataService) {
         this.listService = listService;
+        this.messageService = messageService;
         this.mongoDataService = mongoDataService;
         Bandwidth limit = Bandwidth.classic(10, Refill.greedy(10, Duration.ofMinutes(1)));
         this.bucket = Bucket.builder()
@@ -39,6 +41,7 @@ public class ListController {
     }
 
     private final ListService listService;
+    private final MessageService messageService;
 
     @GetMapping("/hello")
     public String hello() throws Exception {
@@ -413,6 +416,19 @@ public class ListController {
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,
                             "getProjectPolygons failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+    }
+    @PostMapping("/sendLocationRequest")
+    public ResponseEntity<Object> sendLocationRequest(@RequestBody LocationRequest locationRequest) {
+        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
+                .concat("sendLocationRequest message: " + locationRequest.getOrganizationId()));
+        try {
+            return ResponseEntity.ok(messageService.sendMessage(locationRequest));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "sendLocationRequest failed: " + e.getMessage(),
                             new DateTime().toDateTimeISO().toString()));
         }
     }

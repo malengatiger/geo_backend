@@ -45,6 +45,7 @@ public class DataService {
 
     final AudioRepository audioRepository;
     final ProjectRepository projectRepository;
+    final LocationResponseRepository locationResponseRepository;
 
     final ProjectPolygonRepository projectPolygonRepository;
 
@@ -65,7 +66,7 @@ public class DataService {
 
     public DataService(Environment env, GeofenceEventRepository geofenceEventRepository,
                        RatingRepository ratingRepository, MongoTemplate mongoTemplate, AudioRepository audioRepository, ProjectRepository projectRepository,
-                       ProjectPolygonRepository projectPolygonRepository, CityRepository cityRepository,
+                       LocationResponseRepository locationResponseRepository, ProjectPolygonRepository projectPolygonRepository, CityRepository cityRepository,
                        PhotoRepository photoRepository,
                        VideoRepository videoRepository,
                        UserRepository userRepository,
@@ -83,6 +84,7 @@ public class DataService {
         this.mongoTemplate = mongoTemplate;
         this.audioRepository = audioRepository;
         this.projectRepository = projectRepository;
+        this.locationResponseRepository = locationResponseRepository;
         this.projectPolygonRepository = projectPolygonRepository;
         this.cityRepository = cityRepository;
         this.photoRepository = photoRepository;
@@ -280,12 +282,11 @@ public class DataService {
         LOGGER.info(E.RAIN.concat(E.RAIN).concat("addGeofenceEvent: "
                 .concat(E.YELLOW)));
 
-        GeofenceEvent m = geofenceEventRepository.save(geofenceEvent);
+        GeofenceEvent m = geofenceEventRepository.insert(geofenceEvent);
         LOGGER.info(E.YELLOW_BIRD + E.YELLOW_BIRD +
                 "GeofenceEvent added to: " + m.getProjectName()
                 + " " + E.RAIN);
-
-
+         messageService.sendMessage(m);
         return m;
     }
 
@@ -294,12 +295,22 @@ public class DataService {
                 .concat(project.getName()).concat(" ")
                 .concat(E.YELLOW)));
 
-        project = projectRepository.insert(project);
+        Project m = projectRepository.insert(project);
 
         LOGGER.info(E.LEAF.concat(E.LEAF)
-                .concat("Project added: " + project.getProjectId()));
-        return messageService.sendMessage(project);
+                .concat("Project added: " + m.getProjectId()));
+        return messageService.sendMessage(m);
     }
+
+    public LocationResponse addLocationResponse(LocationResponse locationResponse) throws Exception {
+
+        LocationResponse m = locationResponseRepository.insert(locationResponse);
+
+        LOGGER.info(E.LEAF.concat(E.LEAF)
+                .concat("locationResponse added: " + locationResponse.getOrganizationName()));
+        return m;
+    }
+
 
     public Project updateProject(Project project) throws Exception {
         LOGGER.info(E.RAIN.concat(E.RAIN).concat("updateProject: "

@@ -188,6 +188,18 @@ public class DataController {
         }
 
     }
+    @PostMapping("/addLocationResponse")
+    public ResponseEntity<Object> addLocationResponse(@RequestBody LocationResponse locationResponse) throws Exception {
+        try {
+            return ResponseEntity.ok(dataService.addLocationResponse(locationResponse));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "addLocationResponse failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+
+    }
 
     @PostMapping("/addProjectPosition")
     public ResponseEntity<Object> addProjectPosition(@RequestBody ProjectPosition projectPosition)

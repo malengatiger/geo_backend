@@ -50,6 +50,17 @@ public class MessageService {
                 + topic+ E.RED_APPLE);
         return response;
     }
+    public void sendMessage(GeofenceEvent geofenceEvent) throws FirebaseMessagingException {
+        String topic = "geofenceEvents_" + geofenceEvent.getOrganizationId();
+        Message message = Message.builder()
+                .putData("geofenceEvent", G.toJson(geofenceEvent))
+                .setTopic(topic)
+                .build();
+
+        FirebaseMessaging.getInstance().send(message);
+        LOGGER.info(E.RED_APPLE + E.RED_APPLE + "Successfully sent geofenceEvent message to FCM topic: "
+                + topic+ E.RED_APPLE);
+    }
     public String sendMessage(Audio audio) throws FirebaseMessagingException {
         String topic = "audios_" + audio.getOrganizationId();
         Message message = Message.builder()
@@ -60,6 +71,18 @@ public class MessageService {
         LOGGER.info(E.RED_APPLE + E.RED_APPLE + "Successfully sent audio message to FCM topic: "
                 + topic+ E.RED_APPLE);
         return response;
+    }
+    public LocationRequest sendMessage(LocationRequest locationRequest) throws FirebaseMessagingException {
+        String topic = "locationRequest_" + locationRequest.getOrganizationId();
+        Message message = Message.builder()
+                .putData("locationRequest", G.toJson(locationRequest))
+                .setTopic(topic)
+                .build();
+        String response = FirebaseMessaging.getInstance().send(message);
+        LOGGER.info(E.RED_APPLE + E.RED_APPLE + "Successfully sent locationRequest message to FCM topic: "
+                + topic+ E.RED_APPLE + " resp: " + response);
+        locationRequest.setResponse(response);
+        return locationRequest;
     }
     public String sendMessage(Video video) throws FirebaseMessagingException {
         String topic = "videos_" + video.getOrganizationId();
