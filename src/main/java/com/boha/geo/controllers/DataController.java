@@ -201,6 +201,19 @@ public class DataController {
 
     }
 
+    @PostMapping("/addSettings")
+    public ResponseEntity<Object> addSettings(@RequestBody SettingsModel model)  throws Exception {
+        try {
+            return ResponseEntity.ok(dataService.addSettings(model));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "addSettings failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+
+    }
+
     @PostMapping("/addProjectPosition")
     public ResponseEntity<Object> addProjectPosition(@RequestBody ProjectPosition projectPosition)
             throws Exception {

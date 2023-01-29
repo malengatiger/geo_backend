@@ -488,6 +488,18 @@ public class ListController {
         }
     }
 
+    @GetMapping("/getOrganizationSettings")
+    public ResponseEntity<Object> getOrganizationSettings(String organizationId) {
+        try {
+            return ResponseEntity.ok(listService.getOrganizationSettings(organizationId));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "getOrganizationSettings failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+    }
+
     @GetMapping("/countPhotosByUser")
     public ResponseEntity<Object> countPhotosByUser(String userId) {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)

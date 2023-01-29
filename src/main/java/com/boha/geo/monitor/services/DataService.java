@@ -39,6 +39,8 @@ public class DataService {
     final Environment env;
     final GeofenceEventRepository geofenceEventRepository;
 
+    final SettingsModelRepository settingsModelRepository;
+
     final RatingRepository ratingRepository;
 
     final MongoTemplate mongoTemplate;
@@ -65,7 +67,7 @@ public class DataService {
 
 
     public DataService(Environment env, GeofenceEventRepository geofenceEventRepository,
-                       RatingRepository ratingRepository, MongoTemplate mongoTemplate, AudioRepository audioRepository, ProjectRepository projectRepository,
+                       SettingsModelRepository settingsModelRepository, RatingRepository ratingRepository, MongoTemplate mongoTemplate, AudioRepository audioRepository, ProjectRepository projectRepository,
                        LocationResponseRepository locationResponseRepository, ProjectPolygonRepository projectPolygonRepository, CityRepository cityRepository,
                        PhotoRepository photoRepository,
                        VideoRepository videoRepository,
@@ -80,6 +82,7 @@ public class DataService {
                        FieldMonitorScheduleRepository fieldMonitorScheduleRepository) {
         this.env = env;
         this.geofenceEventRepository = geofenceEventRepository;
+        this.settingsModelRepository = settingsModelRepository;
         this.ratingRepository = ratingRepository;
         this.mongoTemplate = mongoTemplate;
         this.audioRepository = audioRepository;
@@ -351,6 +354,16 @@ public class DataService {
                 .concat("Country added: " + country.getCountryId()));
         return m;
     }
+
+    public SettingsModel addSettings(SettingsModel model) throws Exception {
+
+        LOGGER.info(E.RED_DOT + " adding Settings model to db: " + G.toJson(model));
+        SettingsModel m = settingsModelRepository.insert(model);
+        LOGGER.info(E.LEAF.concat(E.LEAF)
+                .concat("SettingsModel inserted: " + G.toJson(m)));
+        return m;
+    }
+
 
     public Organization addOrganization(Organization organization) throws Exception {
         organization.setOrganizationId(UUID.randomUUID().toString());

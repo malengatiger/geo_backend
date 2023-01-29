@@ -44,6 +44,9 @@ public class ListService {
     ProjectRepository projectRepository;
     @Autowired
     CommunityRepository communityRepository;
+
+    @Autowired
+    SettingsModelRepository settingsModelRepository;
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -512,12 +515,20 @@ public class ListService {
 
     public List<Project> getOrganizationProjects(String organizationId)  {
 
-        LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getOrganizationReports ..."));
         List<Project> mList = projectRepository.findByOrganizationId(organizationId);
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getOrganizationProjects ... found: " + mList.size()));
 
         return mList;
     }
+
+    public List<SettingsModel> getOrganizationSettings(String organizationId)  {
+
+        List<SettingsModel> mList = settingsModelRepository.findByOrganizationId(organizationId);
+        LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getOrganizationSettings ... found: " + mList.size()));
+
+        return mList;
+    }
+
 
     public List<User> getOrganizationUsers(String organizationId)  {
         List<User> filteredList = new ArrayList<>();

@@ -148,6 +148,8 @@ public class MongoService {
             createSchedulesIndexes();
             createUniqueCityIndex();
 
+            createSettingsIndexes();
+
         } catch (Exception e) {
             logger.severe(E.RED_DOT+E.RED_DOT+" Index building failed: " + e.getMessage());
         }
@@ -168,6 +170,18 @@ public class MongoService {
                 E.RED_APPLE + result3);
 
     }
+    private void createSettingsIndexes() {
+        //add index
+        MongoCollection<Document> dbCollection = db.getCollection("settings");
+
+        String result3 = dbCollection.createIndex(Indexes.ascending("organizationId"));
+        String result4 = dbCollection.createIndex(Indexes.ascending("projectId"));
+        logger.info(mm +
+                " organizationId and project indexes on settings collection: " +
+                E.RED_APPLE + result3 + " " + result4);
+
+    }
+
     private void createProjectIndexes() {
         //add index
         MongoCollection<Document> dbCollection = db.getCollection("projects");
@@ -184,6 +198,7 @@ public class MongoService {
                 E.RED_APPLE + result3);
 
     }
+
     private void createUserIndexes() {
         //add index
         MongoCollection<Document> dbCollection = db.getCollection("users");
