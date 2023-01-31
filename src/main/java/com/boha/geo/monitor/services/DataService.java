@@ -266,6 +266,7 @@ public class DataService {
         LOGGER.info(E.YELLOW_BIRD + E.YELLOW_BIRD +
                 "ProjectPosition added to: " + m.getProjectName()
                 + " " + E.RAIN);
+        messageService.sendMessage(m);
 
         return m;
     }
@@ -277,6 +278,8 @@ public class DataService {
         LOGGER.info(E.YELLOW_BIRD + E.YELLOW_BIRD +
                 "ProjectPolygon added to: " + m.getProjectName()
                 + " " + E.RAIN);
+
+        messageService.sendMessage(m);
 
         return m;
     }
@@ -361,6 +364,7 @@ public class DataService {
         SettingsModel m = settingsModelRepository.insert(model);
         LOGGER.info(E.LEAF.concat(E.LEAF)
                 .concat("SettingsModel inserted: " + G.toJson(m)));
+        messageService.sendMessage(model);
         return m;
     }
 

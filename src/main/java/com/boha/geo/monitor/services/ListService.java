@@ -219,7 +219,7 @@ public class ListService {
         List<ProjectPosition> projectPositions = getProjectPositions(projectId);
         List<ProjectPolygon> projectPolygons = getProjectPolygons(projectId);
         List<FieldMonitorSchedule> fieldMonitorSchedules = getProjectFieldMonitorSchedules(projectId);
-        List<User> users = getOrganizationUsers(project.getOrganizationId());
+        List<SettingsModel> settings = getProjectSettings(projectId);
 
         bag.setDate(DateTime.now().toDateTimeISO().toString());
         bag.setProjects(projects);
@@ -229,7 +229,7 @@ public class ListService {
         bag.setPhotos(photos);
         bag.setVideos(videos);
         bag.setAudios(audios);
-        bag.setUsers(users);
+        bag.setSettings(settings);
 
         LOGGER.info(E.RED_APPLE+" Project data found: photos: " + bag.getPhotos().size() + " videos: " + bag.getVideos().size()
         + " schedules: " + bag.getFieldMonitorSchedules().size() + " polygons: " + bag.getProjectPolygons().size());
@@ -295,6 +295,14 @@ public class ListService {
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getProjectAudios ..."));
         List<Audio> mList = audioRepository.findByProjectId(projectId);
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getProjectAudios ... found: " + mList.size()));
+
+        return mList;
+    }
+    public List<SettingsModel> getProjectSettings(String projectId)  {
+
+        LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getProjectSettings ..."));
+        List<SettingsModel> mList = settingsModelRepository.findByProjectId(projectId);
+        LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getProjectSettings ... found: " + mList.size()));
 
         return mList;
     }

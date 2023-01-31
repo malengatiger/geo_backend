@@ -39,6 +39,26 @@ public class MessageService {
     }
 
 
+    public void sendMessage(ProjectPosition projectPosition) throws FirebaseMessagingException {
+        String topic = "projectPositions_" + projectPosition.getOrganizationId();
+        Message message = Message.builder()
+                .putData("projectPosition", G.toJson(projectPosition))
+                .setTopic(topic)
+                .build();
+        String response = FirebaseMessaging.getInstance().send(message);
+        LOGGER.info(E.RED_APPLE + E.RED_APPLE + "Successfully sent projectPosition message to FCM topic: "
+                + topic+ E.RED_APPLE + response);
+    }
+    public void sendMessage(ProjectPolygon projectPolygon) throws FirebaseMessagingException {
+        String topic = "projectPolygons_" + projectPolygon.getOrganizationId();
+        Message message = Message.builder()
+                .putData("projectPolygon", G.toJson(projectPolygon))
+                .setTopic(topic)
+                .build();
+        String response = FirebaseMessaging.getInstance().send(message);
+        LOGGER.info(E.RED_APPLE + E.RED_APPLE + "Successfully sent projectPolygon message to FCM topic: "
+                + topic+ E.RED_APPLE + response);
+    }
     public String sendMessage(Photo photo) throws FirebaseMessagingException {
         String topic = "photos_" + photo.getOrganizationId();
         Message message = Message.builder()
@@ -49,6 +69,17 @@ public class MessageService {
         LOGGER.info(E.RED_APPLE + E.RED_APPLE + "Successfully sent photo message to FCM topic: "
                 + topic+ E.RED_APPLE);
         return response;
+    }
+    public void sendMessage(SettingsModel settingsModel) throws FirebaseMessagingException {
+        String topic = "settings_" + settingsModel.getOrganizationId();
+        Message message = Message.builder()
+                .putData("settings", G.toJson(settingsModel))
+                .setTopic(topic)
+                .build();
+
+        String response = FirebaseMessaging.getInstance().send(message);
+        LOGGER.info(E.RED_APPLE + E.RED_APPLE + "Successfully sent settingsModel message to FCM topic: "
+                + topic+ E.RED_APPLE + response);
     }
     public void sendMessage(GeofenceEvent geofenceEvent) throws FirebaseMessagingException {
         String topic = "geofenceEvents_" + geofenceEvent.getOrganizationId();

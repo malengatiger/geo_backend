@@ -15,6 +15,7 @@ public class DataBag {
 
     private List<Project> projects;
     private List<User> users;
+    private List<SettingsModel> settings;
     private String date;
 
 }
