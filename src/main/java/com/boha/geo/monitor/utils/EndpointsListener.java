@@ -9,6 +9,10 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 @Component
 public class EndpointsListener {
 
@@ -23,11 +27,18 @@ public class EndpointsListener {
     public void handleContextRefresh(ContextRefreshedEvent event) {
         ApplicationContext applicationContext = event.getApplicationContext();
 
+        List<String> sorted = new ArrayList<>();
         applicationContext.getBean(RequestMappingHandlerMapping.class)
                 .getHandlerMethods().forEach((key, value) -> {
                     cnt++;
-            LOGGER.info("Endpoint: " + E.RED_APPLE+E.RED_APPLE + "{}", key);
+                    sorted.add(String.valueOf(key));
         });
         LOGGER.info(E.DIAMOND.concat(E.DIAMOND).concat("Total Number of Endpoints: " + cnt));
+        Collections.sort(sorted);
+        for (String s : sorted) {
+            LOGGER.info("Endpoint: " + E.RED_APPLE+E.RED_APPLE + "{}", s);
+        }
+        LOGGER.info(E.DIAMOND.concat(E.DIAMOND).concat("Total Number of Endpoints: " + sorted.size()));
+
     }
 }

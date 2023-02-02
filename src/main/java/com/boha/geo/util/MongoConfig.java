@@ -23,6 +23,9 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.slf4j.Logger;
 
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
@@ -117,18 +120,11 @@ public class MongoConfig {
     public MongoTemplate mongoTemplate() throws Exception {
         MongoTemplate t = new MongoTemplate(mongo(), databaseName);
         LOGGER.info(mm + " Geo DB Collections " + mm);
-        for (String collectionName : t.getCollectionNames()) {
+        List<String> cols = new ArrayList<>(t.getCollectionNames());
+        Collections.sort(cols);
+        for (String col : cols) {
             LOGGER.info(mm + " Collection: "
-                    + collectionName + " " + E.BLUE_DOT);
-            MongoCollection<org.bson.Document> mongoCollection = t.getCollection(collectionName);
-
-            LOGGER.info(mm + " Number of Documents: "
-                    + mongoCollection.countDocuments() + " " + E.BLUE_DOT);
-            ListIndexesIterable<org.bson.Document> iter = mongoCollection.listIndexes();
-            for (org.bson.Document doc : iter) {
-                LOGGER.info(bb + "index: "
-                        + doc.toJson() + " " + E.BLUE_DOT);
-            }
+                    + col + " " + E.BLUE_DOT);
         }
 
         return t;

@@ -37,7 +37,7 @@ public class MongoService {
     private static final Logger logger = Logger.getLogger(MongoService.class.getSimpleName());
     private static final String xx = E.COFFEE+E.COFFEE+E.COFFEE;
     @Autowired
-    private CityRepository cityRepo;
+    private final CityRepository cityRepo;
 
     public MongoService(CityRepository cityRepo, MongoClient mongoClient, ResourceLoader resourceLoader, UserRepository userRepository, OrganizationRepository organizationRepository) {
         this.cityRepo = cityRepo;

@@ -162,11 +162,10 @@ public class DataService {
 
     public User updateUser(User user) throws Exception {
 
-        LOGGER.info(E.LEAF.concat(E.LEAF).concat("User updated on database: "
-                + user.getName() + " id: "
-                + user.getUserId() + " " + user.getFcmRegistration()));
+        LOGGER.info(E.LEAF.concat(E.LEAF).concat("User to be updated on database: "
+                + G.toJson(user)));
 
-        LOGGER.info(E.RED_APPLE+E.RED_APPLE + " update user and set the active flag to 9 ");
+        LOGGER.info(E.RED_APPLE+E.RED_APPLE + " update user and set all properties ");
         Query query = new Query();
         query.addCriteria(Criteria.where("userId").is(user.getUserId()));
         query.fields().include("userId");
@@ -177,7 +176,9 @@ public class DataService {
         update.set("email", user.getEmail());
         update.set("fcmRegistration", user.getFcmRegistration());
         update.set("imageUrl", user.getImageUrl());
+        update.set("countryId", user.getCountryId());
         update.set("thumbnailUrl", user.getThumbnailUrl());
+        update.set("gender", user.getGender());
         update.set("updated", DateTime.now().toDateTimeISO().toString());
 
         UpdateResult result = mongoTemplate.updateFirst(query, update, User.class);
@@ -191,6 +192,7 @@ public class DataService {
                 + user.getName() + " id: "
                 + user.getUserId() + " " + user.getFcmRegistration()));
 
+        messageService.sendMessage(user);
         return user;
     }
 

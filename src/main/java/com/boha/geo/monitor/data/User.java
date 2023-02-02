@@ -12,7 +12,7 @@ public class User {
     String name, gender;
     String email;
     String cellphone;
-    String userId;
+    String userId, countryId;
     String organizationId;
     String organizationName;
     String created, fcmRegistration;

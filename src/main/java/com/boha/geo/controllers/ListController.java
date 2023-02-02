@@ -10,17 +10,32 @@ import com.google.gson.GsonBuilder;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Refill;
+import jakarta.servlet.http.HttpServletResponse;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.Metrics;
 import org.springframework.data.geo.Point;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.List;
+import java.util.Objects;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -29,6 +44,7 @@ public class ListController {
     public static final Logger LOGGER = LoggerFactory.getLogger(ListController.class.getSimpleName());
     private static final Gson G = new GsonBuilder().setPrettyPrinting().create();
     Bucket bucket;
+
     public ListController(ListService listService, MessageService messageService, MongoDataService mongoDataService) {
         this.listService = listService;
         this.messageService = messageService;
@@ -49,6 +65,7 @@ public class ListController {
         return E.HAND2 + E.HAND2 + "PROJECT MONITOR SERVICES PLATFORM says Hi, Nigga! "
                 + E.RED_APPLE.concat(new DateTime().toDateTimeISO().toString());
     }
+
     @PostMapping("/post")
     public String post() throws Exception {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS).concat("testing POST on the backend application .... : ".concat(E.FLOWER_YELLOW)));
@@ -138,11 +155,12 @@ public class ListController {
                             new DateTime().toDateTimeISO().toString()));
         }
     }
+
     @GetMapping("/getCitiesByLocation")
     public ResponseEntity<Object> getCitiesByLocation(double latitude, double longitude, int radiusInKM) {
         LOGGER.info(E.DICE.concat(E.DICE).concat("ListController: ...... getCitiesByLocation ..."));
         try {
-            List<City> cities = mongoDataService.getCitiesByLocation(new Point(latitude,longitude), new Distance(radiusInKM, Metrics.KILOMETERS));
+            List<City> cities = mongoDataService.getCitiesByLocation(new Point(latitude, longitude), new Distance(radiusInKM, Metrics.KILOMETERS));
             LOGGER.info(E.DOLPHIN.concat(E.DOLPHIN)
                     + "ListController: getCitiesByLocation found: \uD83D\uDC24 " + cities.size());
             return ResponseEntity.ok(cities);
@@ -180,7 +198,7 @@ public class ListController {
             if (bucket.tryConsume(1)) {
                 return ResponseEntity.ok(countries);
             } else {
-                LOGGER.error(E.RED_DOT +E.RED_DOT +E.RED_DOT +
+                LOGGER.error(E.RED_DOT + E.RED_DOT + E.RED_DOT +
                         "Rate limiter got you!");
                 throw new Exception("Too many fucking requests");
             }
@@ -272,6 +290,7 @@ public class ListController {
                             new DateTime().toDateTimeISO().toString()));
         }
     }
+
     @GetMapping("/getOrganizationAudios")
     public ResponseEntity<Object> getOrganizationAudios(@RequestParam String organizationId) {
         try {
@@ -419,6 +438,7 @@ public class ListController {
                             new DateTime().toDateTimeISO().toString()));
         }
     }
+
     @PostMapping("/sendLocationRequest")
     public ResponseEntity<Object> sendLocationRequest(@RequestBody LocationRequest locationRequest) {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
@@ -447,7 +467,8 @@ public class ListController {
                             new DateTime().toDateTimeISO().toString()));
         }
     }
-//    @GetMapping("/getGeofenceEventsByUser")
+
+    //    @GetMapping("/getGeofenceEventsByUser")
 //    public ResponseEntity<Object> getGeofenceEventsByUser(String userId) {
 //        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
 //                .concat("getGeofenceEventsByUser: " + userId));
@@ -625,6 +646,7 @@ public class ListController {
                             new DateTime().toDateTimeISO().toString()));
         }
     }
+
     @GetMapping("/findPhotoById")
     public ResponseEntity<Object> findPhotoById(@RequestParam String photoId) {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
@@ -645,6 +667,7 @@ public class ListController {
                             new DateTime().toDateTimeISO().toString()));
         }
     }
+
     @GetMapping("/findVideoById")
     public ResponseEntity<Object> findVideoById(@RequestParam String videoId) {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
@@ -665,6 +688,7 @@ public class ListController {
                             new DateTime().toDateTimeISO().toString()));
         }
     }
+
     @GetMapping("/getProjectData")
     public ResponseEntity<Object> getProjectData(@RequestParam String projectId) {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
@@ -679,6 +703,7 @@ public class ListController {
         }
 
     }
+
     @GetMapping("/getOrganizationData")
     public ResponseEntity<Object> getOrganizationData(@RequestParam String organizationId) {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
@@ -687,10 +712,10 @@ public class ListController {
             long start = System.currentTimeMillis();
             DataBag bag = listService.getOrganizationData(organizationId);
             long end = System.currentTimeMillis();
-            Double m = Double.valueOf("" + (end-start));
+            Double m = Double.valueOf("" + (end - start));
             Double ms = 1000.0;
             double diff = m / ms;
-            LOGGER.info(E.RED_DOT + " getOrganizationData: Time elapsed: " + diff + " seconds "+E.RED_DOT);
+            LOGGER.info(E.RED_DOT + " getOrganizationData: Time elapsed: " + diff + " seconds " + E.RED_DOT);
 
             return ResponseEntity.ok(bag);
         } catch (Exception e) {
@@ -701,6 +726,14 @@ public class ListController {
         }
 
     }
+
+    @GetMapping(value = "/getOrganizationDataZippedFile", produces = "application/zip")
+    public byte[] getOrganizationDataZippedFile(@RequestParam String organizationId) throws Exception {
+
+        File zippedFile = listService.getOrganizationDataZippedFile(organizationId);
+        return java.nio.file.Files.readAllBytes(zippedFile.toPath());
+    }
+
     @GetMapping("/getUserData")
     public ResponseEntity<Object> getUserData(@RequestParam String userId) {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
@@ -745,6 +778,7 @@ public class ListController {
         }
 
     }
+
     @GetMapping("/getProjectVideos")
     public ResponseEntity<Object> getProjectVideos(String projectId)
             throws Exception {
@@ -776,6 +810,7 @@ public class ListController {
         }
 
     }
+
     @GetMapping("/getUserFieldMonitorSchedules")
     public ResponseEntity<Object> getUserFieldMonitorSchedules(String userId) {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)

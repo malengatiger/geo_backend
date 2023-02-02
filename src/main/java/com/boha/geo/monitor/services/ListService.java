@@ -17,9 +17,13 @@ import org.springframework.data.geo.*;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 ;
 
@@ -246,7 +250,7 @@ public class ListService {
     public Audio findAudioById(String photoId) {
         return audioRepository.findByAudioId(photoId);
     }
-    public DataBag getOrganizationData(String organizationId)  {
+    public DataBag getOrganizationData(String organizationId) throws Exception {
         DataBag bag = new DataBag();
         List<Project> projects = getOrganizationProjects(organizationId);
         List<Photo> photos = getOrganizationPhotos(organizationId);
@@ -272,7 +276,35 @@ public class ListService {
         LOGGER.info(E.RED_APPLE+" Organization data found: photos: " + bag.getPhotos().size() + " videos: " + bag.getVideos().size()
                 + " schedules: " + bag.getFieldMonitorSchedules().size() + " polygons: " + bag.getProjectPolygons().size());
 
+//        File zipped = getOrganizationDataZippedFile(organizationId);
+//        LOGGER.info(" zipped file with org data: " + zipped.length() + " bytes");
+
         return bag;
+    }
+
+    static final String mm = "" + E.BLUE_DOT+E.BLUE_DOT+E.BLUE_DOT+ " Zipping Org data: ";
+    public File getOrganizationDataZippedFile(String organizationId) throws Exception {
+
+        DataBag bag = getOrganizationData(organizationId);
+        String json = G.toJson(bag);
+        LOGGER.info(mm+" Size of json file before zipping: " + json.length() + " bytes");
+        File dir = new File("zipDirectory");
+        if (!dir.exists()) {
+            boolean ok = dir.mkdir();
+            LOGGER.info(mm+" Zip directory has been created: path: " + dir.getAbsolutePath() + " created: " + ok);
+        }
+        File zippedFile = new File(dir,""+DateTime.now().getMillis() + ".zip");
+        ZipOutputStream out = new ZipOutputStream(new FileOutputStream(zippedFile));
+        ZipEntry e = new ZipEntry("dataBag");
+        out.putNextEntry(e);
+
+        byte[] data = json.getBytes();
+        out.write(data, 0, data.length);
+        out.closeEntry();
+
+        out.close();
+        LOGGER.info(mm+" Size of zipped json file after zipping: " + zippedFile.length() + " bytes");
+        return zippedFile;
     }
 
         public List<Photo> getUserProjectPhotos(String userId)  {
