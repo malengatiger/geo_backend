@@ -7,3 +7,5 @@ Or, if you don't want/need a background service you can just run:
 brew services stop mongodb-community@6.0
 
 brew services list
+
+db.orders.deleteMany( { "created" :  { $gt : "2023-01-31T06:48:22.162474Z" } } )

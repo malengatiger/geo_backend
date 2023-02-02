@@ -126,6 +126,7 @@ public class MessageService {
                 + topic + E.RED_APPLE);
         return response;
     }
+
     public String sendMessage(Condition condition) throws FirebaseMessagingException {
         String topic = "conditions_" + condition.getOrganizationId();
         Message message = Message.builder()

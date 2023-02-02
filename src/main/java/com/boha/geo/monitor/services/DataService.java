@@ -176,11 +176,14 @@ public class DataService {
         update.set("cellphone", user.getCellphone());
         update.set("email", user.getEmail());
         update.set("fcmRegistration", user.getFcmRegistration());
+        update.set("imageUrl", user.getImageUrl());
+        update.set("thumbnailUrl", user.getThumbnailUrl());
         update.set("updated", DateTime.now().toDateTimeISO().toString());
 
         UpdateResult result = mongoTemplate.updateFirst(query, update, User.class);
-        user.setPassword(UUID.randomUUID().toString());
-        updateAuthedUser(user);
+        if (user.getImageUrl() == null) {
+            updateAuthedUser(user);
+        }
 
         LOGGER.info(E.RED_APPLE+E.RED_APPLE + " user has been modified: " + result.getModifiedCount());
 

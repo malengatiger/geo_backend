@@ -236,6 +236,16 @@ public class ListService {
 
         return bag;
     }
+
+    public Photo findPhotoById(String photoId) {
+        return photoRepository.findByPhotoId(photoId);
+    }
+    public Video findVideoById(String photoId) {
+        return videoRepository.findByVideoId(photoId);
+    }
+    public Audio findAudioById(String photoId) {
+        return audioRepository.findByAudioId(photoId);
+    }
     public DataBag getOrganizationData(String organizationId)  {
         DataBag bag = new DataBag();
         List<Project> projects = getOrganizationProjects(organizationId);

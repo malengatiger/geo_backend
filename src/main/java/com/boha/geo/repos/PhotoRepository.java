@@ -11,4 +11,7 @@ public interface PhotoRepository extends MongoRepository<Photo, String> {
     List<Photo> findByOrganizationId(String organizationId);
     List<Photo> findByUserId(String userId);
 
+    Photo findByPhotoId(String photoId);
+
+
 }

@@ -20,7 +20,7 @@ public class User {
     String password;
     Position position;
     int active = 0;
-    String updated;
+    String updated, imageUrl, thumbnailUrl;
 
 
 }

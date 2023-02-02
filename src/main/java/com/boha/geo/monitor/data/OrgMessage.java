@@ -8,6 +8,7 @@ public class OrgMessage {
     private String organizationId, projectId, userId, message, created, fcmRegistration;
     private String projectName, adminId, adminName;
     private String frequency, result, name, orgMessageId;
+    private OrgMessage replyingTo;
 
 
 }

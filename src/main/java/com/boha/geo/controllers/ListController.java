@@ -589,6 +589,82 @@ public class ListController {
         }
 
     }
+
+    @GetMapping("/getProjectAudios")
+    public ResponseEntity<Object> getProjectAudios(String projectId) {
+        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
+                .concat("getProjectAudios: " + projectId));
+        try {
+            return ResponseEntity.ok(listService.getProjectAudios(projectId));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "getProjectAudios failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+
+    }
+
+    @GetMapping("/findAudioById")
+    public ResponseEntity<Object> findAudioById(@RequestParam String audioId) {
+        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
+                .concat("findAudioById: " + audioId));
+        try {
+            Audio p = listService.findAudioById(audioId);
+            if (p == null) {
+                return ResponseEntity.badRequest().body(
+                        new CustomErrorResponse(401,
+                                "audio not found: ",
+                                new DateTime().toDateTimeISO().toString()));
+            }
+            return ResponseEntity.ok(p);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "findAudioById failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+    }
+    @GetMapping("/findPhotoById")
+    public ResponseEntity<Object> findPhotoById(@RequestParam String photoId) {
+        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
+                .concat("findPhotoById: " + photoId));
+        try {
+            Photo p = listService.findPhotoById(photoId);
+            if (p == null) {
+                return ResponseEntity.badRequest().body(
+                        new CustomErrorResponse(401,
+                                "photo not found: ",
+                                new DateTime().toDateTimeISO().toString()));
+            }
+            return ResponseEntity.ok(p);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "findPhotoById failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+    }
+    @GetMapping("/findVideoById")
+    public ResponseEntity<Object> findVideoById(@RequestParam String videoId) {
+        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
+                .concat("findVideoById: " + videoId));
+        try {
+            Video p = listService.findVideoById(videoId);
+            if (p == null) {
+                return ResponseEntity.badRequest().body(
+                        new CustomErrorResponse(401,
+                                "video not found: ",
+                                new DateTime().toDateTimeISO().toString()));
+            }
+            return ResponseEntity.ok(p);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "findVideoById failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+    }
     @GetMapping("/getProjectData")
     public ResponseEntity<Object> getProjectData(@RequestParam String projectId) {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
