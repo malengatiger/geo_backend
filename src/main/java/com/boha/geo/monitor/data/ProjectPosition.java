@@ -12,7 +12,7 @@ public class ProjectPosition {
             organizationId;
     private Position position;
     private String projectName;
-    private String caption;
+    private String caption, name;
     private String created;
     private PlaceMark placemark;
     private List<City> nearestCities;
@@ -20,17 +20,4 @@ public class ProjectPosition {
     public ProjectPosition() {
     }
 
-    public ProjectPosition(String projectId, String projectPositionId, String organizationId,
-                           Position position, String projectName, String caption,
-                           String created, PlaceMark placemark, List<City> nearestCities) {
-        this.projectId = projectId;
-        this.projectPositionId = projectPositionId;
-        this.organizationId = organizationId;
-        this.position = position;
-        this.projectName = projectName;
-        this.caption = caption;
-        this.created = created;
-        this.placemark = placemark;
-        this.nearestCities = nearestCities;
-    }
 }

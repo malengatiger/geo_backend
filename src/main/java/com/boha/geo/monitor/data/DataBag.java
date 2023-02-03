@@ -14,6 +14,7 @@ public class DataBag {
     private List<ProjectPolygon> projectPolygons;
 
     private List<Project> projects;
+    private List<ProjectAssignment> projectAssignments;
     private List<User> users;
     private List<SettingsModel> settings;
     private String date;

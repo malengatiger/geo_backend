@@ -207,6 +207,8 @@ public class ListService {
         List<Project> projects = projectRepository.findByOrganizationId(user.getOrganizationId());
         List<Photo> photos = getUserProjectPhotos(userId);
         List<Video> videos = getUserProjectVideos(userId);
+        List<ProjectAssignment> assignments = getUserProjectAssignments(userId);
+
         List<ProjectPosition> projectPositions = getOrganizationProjectPositions(user.getOrganizationId());
         List<ProjectPolygon> projectPolygons = getOrganizationProjectPolygons(user.getOrganizationId());
         List<FieldMonitorSchedule> fieldMonitorSchedules = getOrgFieldMonitorSchedules(user.getOrganizationId());
@@ -220,6 +222,8 @@ public class ListService {
         bag.setPhotos(photos);
         bag.setVideos(videos);
         bag.setUsers(users);
+        bag.setProjectAssignments(assignments);
+
 
         LOGGER.info(E.RED_APPLE+" Project data found: photos: " + bag.getPhotos().size() + " videos: " + bag.getVideos().size()
                 + " schedules: " + bag.getFieldMonitorSchedules().size());
@@ -236,6 +240,7 @@ public class ListService {
         List<Photo> photos = getProjectPhotos(projectId);
         List<Video> videos = getProjectVideos(projectId);
         List<Audio> audios = getProjectAudios(projectId);
+        List<ProjectAssignment> assignments = getProjectAssignments(projectId);
         List<ProjectPosition> projectPositions = getProjectPositions(projectId);
         List<ProjectPolygon> projectPolygons = getProjectPolygons(projectId);
         List<FieldMonitorSchedule> fieldMonitorSchedules = getProjectFieldMonitorSchedules(projectId);
@@ -250,6 +255,7 @@ public class ListService {
         bag.setVideos(videos);
         bag.setAudios(audios);
         bag.setSettings(settings);
+        bag.setProjectAssignments(assignments);
 
         LOGGER.info(E.RED_APPLE+" Project data found: photos: " + bag.getPhotos().size() + " videos: " + bag.getVideos().size()
         + " schedules: " + bag.getFieldMonitorSchedules().size() + " polygons: " + bag.getProjectPolygons().size());
@@ -272,6 +278,7 @@ public class ListService {
         List<Photo> photos = getOrganizationPhotos(organizationId);
         List<Video> videos = getOrganizationVideos(organizationId);
         List<Audio> audios = getOrganizationAudios(organizationId);
+        List<ProjectAssignment> assignments = getOrganizationProjectAssignments(organizationId);
 
         List<ProjectPosition> projectPositions = getOrganizationProjectPositions(organizationId);
         List<FieldMonitorSchedule> fieldMonitorSchedules = getOrgFieldMonitorSchedules(organizationId);
@@ -288,6 +295,7 @@ public class ListService {
         bag.setVideos(videos);
         bag.setAudios(audios);
         bag.setUsers(users);
+        bag.setProjectAssignments(assignments);
 
         LOGGER.info(E.RED_APPLE+" Organization data found: photos: " + bag.getPhotos().size() + " videos: " + bag.getVideos().size()
                 + " schedules: " + bag.getFieldMonitorSchedules().size() + " polygons: " + bag.getProjectPolygons().size());

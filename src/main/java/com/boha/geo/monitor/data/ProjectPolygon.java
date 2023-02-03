@@ -12,7 +12,7 @@ public class ProjectPolygon {
     private String projectId, projectPolygonId,
             organizationId;
     private List<Position> positions;
-    private String projectName;
+    private String projectName, name;
     private String created;
     private List<City> nearestCities;
 
