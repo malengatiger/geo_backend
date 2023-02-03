@@ -610,11 +610,49 @@ public class ListController {
         }
 
     }
+    @GetMapping("/getProjectAssignments")
+    public ResponseEntity<Object> getProjectAssignments(String projectId) {
+
+        try {
+            return ResponseEntity.ok(listService.getProjectAssignments(projectId));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "getProjectAssignments failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+
+    }
+    @GetMapping("/getUserProjectAssignments")
+    public ResponseEntity<Object> getUserProjectAssignments(String userId) {
+
+        try {
+            return ResponseEntity.ok(listService.getUserProjectAssignments(userId));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "getUserProjectAssignments failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+
+    }
+    @GetMapping("/getOrganizationProjectAssignments")
+    public ResponseEntity<Object> getOrganizationProjectAssignments(String organizationId) {
+
+        try {
+            return ResponseEntity.ok(listService.getOrganizationProjectAssignments(organizationId));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "getOrganizationProjectAssignments failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+
+    }
 
     @GetMapping("/getProjectAudios")
     public ResponseEntity<Object> getProjectAudios(String projectId) {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
-                .concat("getProjectAudios: " + projectId));
+
         try {
             return ResponseEntity.ok(listService.getProjectAudios(projectId));
         } catch (Exception e) {
@@ -727,11 +765,25 @@ public class ListController {
 
     }
 
+    @GetMapping(value = "/getProjectDataZippedFile", produces = "application/zip")
+    public byte[] getProjectDataZippedFile(@RequestParam String projectId) throws Exception {
+
+        File zippedFile = listService.getProjectDataZippedFile(projectId);
+        byte[] bytes = java.nio.file.Files.readAllBytes(zippedFile.toPath());
+        boolean deleted = zippedFile.delete();
+
+        LOGGER.info(E.PANDA+E.PANDA + " zipped project file deleted : " + deleted);
+        return bytes;
+    }
     @GetMapping(value = "/getOrganizationDataZippedFile", produces = "application/zip")
     public byte[] getOrganizationDataZippedFile(@RequestParam String organizationId) throws Exception {
 
         File zippedFile = listService.getOrganizationDataZippedFile(organizationId);
-        return java.nio.file.Files.readAllBytes(zippedFile.toPath());
+        byte[] bytes = java.nio.file.Files.readAllBytes(zippedFile.toPath());
+        boolean deleted = zippedFile.delete();
+
+        LOGGER.info(E.PANDA+E.PANDA + " zipped organization file deleted : " + deleted);
+        return bytes;
     }
 
     @GetMapping("/getUserData")

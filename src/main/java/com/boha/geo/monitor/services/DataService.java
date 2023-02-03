@@ -53,6 +53,7 @@ public class DataService {
 
     final CityRepository cityRepository;
     final PhotoRepository photoRepository;
+    final ProjectAssignmentRepository projectAssignmentRepository;
     final VideoRepository videoRepository;
     final UserRepository userRepository;
     final CommunityRepository communityRepository;
@@ -70,7 +71,7 @@ public class DataService {
                        SettingsModelRepository settingsModelRepository, RatingRepository ratingRepository, MongoTemplate mongoTemplate, AudioRepository audioRepository, ProjectRepository projectRepository,
                        LocationResponseRepository locationResponseRepository, ProjectPolygonRepository projectPolygonRepository, CityRepository cityRepository,
                        PhotoRepository photoRepository,
-                       VideoRepository videoRepository,
+                       ProjectAssignmentRepository projectAssignmentRepository, VideoRepository videoRepository,
                        UserRepository userRepository,
                        CommunityRepository communityRepository,
                        ConditionRepository conditionRepository,
@@ -91,6 +92,7 @@ public class DataService {
         this.projectPolygonRepository = projectPolygonRepository;
         this.cityRepository = cityRepository;
         this.photoRepository = photoRepository;
+        this.projectAssignmentRepository = projectAssignmentRepository;
         this.videoRepository = videoRepository;
         this.userRepository = userRepository;
         this.communityRepository = communityRepository;
@@ -223,6 +225,16 @@ public class DataService {
         photoRepository.save(photo);
         LOGGER.info(E.LEAF.concat(E.LEAF).concat("Photo added to Mongo, : " + photo.getUrl()));
         return messageService.sendMessage(photo);
+    }
+
+    public String addProjectAssignment(ProjectAssignment projectAssignment) throws Exception {
+        if (projectAssignment.getProjectAssignmentId() == null) {
+            projectAssignment.setProjectAssignmentId(UUID.randomUUID().toString());
+        }
+        projectAssignmentRepository.insert(projectAssignment);
+        LOGGER.info(E.LEAF.concat(E.LEAF).concat("ProjectAssignment added to Mongo, user: "
+                +  projectAssignment.getUserName() + " project: " + projectAssignment.getProjectName()));
+        return messageService.sendMessage(projectAssignment);
     }
 
 

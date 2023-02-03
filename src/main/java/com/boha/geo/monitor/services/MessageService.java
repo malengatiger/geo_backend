@@ -49,6 +49,18 @@ public class MessageService {
         LOGGER.info(E.RED_APPLE + E.RED_APPLE + "Successfully sent projectPosition message to FCM topic: "
                 + topic+ E.RED_APPLE + response);
     }
+    public String sendMessage(ProjectAssignment projectAssignment) throws FirebaseMessagingException {
+        String topic = "projectAssignments_" + projectAssignment.getOrganizationId();
+        Message message = Message.builder()
+                .putData("projectAssignment", G.toJson(projectAssignment))
+                .setTopic(topic)
+                .build();
+
+        String response = FirebaseMessaging.getInstance().send(message);
+        LOGGER.info(E.RED_APPLE + E.RED_APPLE + "Successfully sent projectAssignment message to FCM topic: "
+                + topic+ E.RED_APPLE + response);
+        return response;
+    }
     public void sendMessage(ProjectPolygon projectPolygon) throws FirebaseMessagingException {
         String topic = "projectPolygons_" + projectPolygon.getOrganizationId();
         Message message = Message.builder()

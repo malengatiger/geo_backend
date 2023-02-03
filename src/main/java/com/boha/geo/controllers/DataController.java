@@ -266,7 +266,7 @@ public class DataController {
                 .concat("Adding Photo ... " + photo.getProjectName()));
         try {
             String result = dataService.addPhoto(photo);
-            LOGGER.info(E.LEAF + E.LEAF + result);
+            LOGGER.info(E.LEAF + E.LEAF + " addPhoto result: " + result);
             return ResponseEntity.ok(photo);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
@@ -276,14 +276,26 @@ public class DataController {
         }
 
     }
+    @PostMapping("/addProjectAssignment")
+    public ResponseEntity<Object> addProjectAssignment(@RequestBody ProjectAssignment projectAssignment) throws Exception {
+        try {
+            String result = dataService.addProjectAssignment(projectAssignment);
+            LOGGER.info(E.LEAF + E.LEAF + "addProjectAssignment, result: " + result);
+            return ResponseEntity.ok(projectAssignment);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "addProjectAssignment failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+
+    }
 
     @PostMapping("/addVideo")
     public ResponseEntity<Object> addVideo(@RequestBody Video video) throws Exception {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
-                .concat("Adding Video ... " + video.getProjectName()));
         try {
             String result = dataService.addVideo(video);
-            LOGGER.info(E.LEAF + E.LEAF + result);
+            LOGGER.info(E.LEAF + E.LEAF + " addVideo, result: " + result);
         return ResponseEntity.ok(video);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
@@ -295,11 +307,9 @@ public class DataController {
     }
     @PostMapping("/addAudio")
     public ResponseEntity<Object> addAudio(@RequestBody Audio audio) throws Exception {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
-                .concat("Adding Audio ... " + audio.getProjectName()));
         try {
             String result = dataService.addAudio(audio);
-            LOGGER.info(E.LEAF + E.LEAF + result);
+            LOGGER.info(E.LEAF + E.LEAF + "addAudio, result: " + result);
             return ResponseEntity.ok(audio);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
@@ -309,15 +319,6 @@ public class DataController {
         }
 
     }
-
-//    @PostMapping("/sendOzowPaymentRequest")
-//    public String sendOzowPaymentRequest(@RequestBody OzowPaymentRequest paymentRequest) throws Exception {
-//        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
-//                .concat("sendOzowPaymentRequest ... " + paymentRequest.getAmount()));
-//        String result = ozowService.sendOzowPaymentRequest(paymentRequest);
-//        LOGGER.info(E.LEAF + E.LEAF + result);
-//        return result;
-//    }
 
     @PostMapping("/addCondition")
     public ResponseEntity<Object> addCondition(@RequestBody Condition condition) throws Exception {

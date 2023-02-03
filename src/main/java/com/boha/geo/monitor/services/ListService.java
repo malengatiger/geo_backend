@@ -59,6 +59,9 @@ public class ListService {
     QuestionnaireRepository questionnaireRepository;
     @Autowired
     PhotoRepository photoRepository;
+
+    @Autowired
+    ProjectAssignmentRepository projectAssignmentRepository;
     @Autowired
     VideoRepository videoRepository;
 
@@ -185,6 +188,19 @@ public class ListService {
         return mList;
     }
 
+    public List<ProjectAssignment> getProjectAssignments(String projectId)  {
+
+        return projectAssignmentRepository.findByProjectId(projectId);
+    }
+    public List<ProjectAssignment> getUserProjectAssignments(String userId)  {
+
+        return projectAssignmentRepository.findByUserId(userId);
+    }
+    public List<ProjectAssignment> getOrganizationProjectAssignments(String organizationId)  {
+
+        return projectAssignmentRepository.findByOrganizationId(organizationId);
+    }
+
     public DataBag getUserData(String userId)  {
         DataBag bag = new DataBag();
         User user = userRepository.findByUserId(userId);
@@ -281,7 +297,6 @@ public class ListService {
 
         return bag;
     }
-
     static final String mm = "" + E.BLUE_DOT+E.BLUE_DOT+E.BLUE_DOT+ " Zipping Org data: ";
     public File getOrganizationDataZippedFile(String organizationId) throws Exception {
 
@@ -307,7 +322,32 @@ public class ListService {
         return zippedFile;
     }
 
-        public List<Photo> getUserProjectPhotos(String userId)  {
+    public File getProjectDataZippedFile(String projectId) throws Exception {
+
+        DataBag bag = getProjectData(projectId);
+        String json = G.toJson(bag);
+        LOGGER.info(mm+" Size of json file before zipping: " + json.length() + " bytes");
+
+        File dir = new File("zipDirectory");
+        if (!dir.exists()) {
+            boolean ok = dir.mkdir();
+            LOGGER.info(mm+" Zip directory has been created: path: " + dir.getAbsolutePath() + " created: " + ok);
+        }
+        File zippedFile = new File(dir,""+DateTime.now().getMillis() + ".zip");
+        ZipOutputStream out = new ZipOutputStream(new FileOutputStream(zippedFile));
+        ZipEntry e = new ZipEntry("dataBag");
+        out.putNextEntry(e);
+
+        byte[] data = json.getBytes();
+        out.write(data, 0, data.length);
+        out.closeEntry();
+
+        out.close();
+        LOGGER.info(mm+" Size of zipped json file after zipping: " + zippedFile.length() + " bytes");
+        return zippedFile;
+    }
+
+    public List<Photo> getUserProjectPhotos(String userId)  {
 
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getUserProjectPhotos ...userId: " + userId));
         List<Photo> mList = photoRepository.findByUserId(userId);
