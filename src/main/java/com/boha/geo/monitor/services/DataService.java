@@ -3,6 +3,7 @@ package com.boha.geo.monitor.services;
 
 import com.boha.geo.monitor.data.*;
 import com.boha.geo.repos.*;
+import com.boha.geo.services.MailService;
 import com.boha.geo.util.E;
 import com.google.api.core.ApiFuture;
 import com.google.api.gax.core.CredentialsProvider;
@@ -65,6 +66,7 @@ public class DataService {
     final MessageService messageService;
     final FieldMonitorScheduleRepository fieldMonitorScheduleRepository;
     private boolean isInitialized = false;
+    private final MailService mailService;
 
 
     public DataService(Environment env, GeofenceEventRepository geofenceEventRepository,
@@ -80,7 +82,7 @@ public class DataService {
                        ProjectPositionRepository projectPositionRepository,
                        OrgMessageRepository orgMessageRepository,
                        MessageService messageService,
-                       FieldMonitorScheduleRepository fieldMonitorScheduleRepository) {
+                       FieldMonitorScheduleRepository fieldMonitorScheduleRepository, MailService mailService) {
         this.env = env;
         this.geofenceEventRepository = geofenceEventRepository;
         this.settingsModelRepository = settingsModelRepository;
@@ -103,6 +105,7 @@ public class DataService {
         this.orgMessageRepository = orgMessageRepository;
         this.messageService = messageService;
         this.fieldMonitorScheduleRepository = fieldMonitorScheduleRepository;
+        this.mailService = mailService;
         LOGGER.info(xx+" DataService constructed and repos injected \uD83C\uDF4F");
     }
     private static final String xx = E.COFFEE+E.COFFEE+E.COFFEE;
@@ -195,6 +198,12 @@ public class DataService {
                 + user.getUserId() + " " + user.getFcmRegistration()));
 
         messageService.sendMessage(user);
+        String message = "Dear " + user.getName() +
+                "      ,\n\nYour account has been updated with new information. '\n" +
+                "      \nIf you have not changed anything yourself please contact your Administrator or your Supervisor.\n" +
+                "      \n\nThank you for working with GeoMonitor. \nBest Regards,\nThe GeoMonitor Team\ninfo@geomonitorapp.io\n\n";
+
+        mailService.sendHtmlEmail( user.getEmail(), message,"GeoMonitor Account Updated" );
         return user;
     }
 
@@ -415,6 +424,13 @@ public class DataService {
                         .concat(" \uD83E\uDDE1 ").concat(uid)));
 
         user.setPassword(null);
+        String message = "Dear " + user.getName() +
+                "      ,\n\nYou have been registered with GeoMonitor and the team is happy to send you the first time login password. '\n" +
+                "      \nPlease login on the web with your email and the attached password but use your cellphone number to sign in on the phone.\n" +
+                "      \n\nThank you for working with GeoMonitor. \nWelcome aboard!!\nBest Regards,\nThe GeoMonitor Team\ninfo@geomonitorapp.io\n\n";
+
+        mailService.sendHtmlEmail( user.getEmail(), message,"Welcome to GeoMonitor" );
+
         return addUser(user);
     }
 
