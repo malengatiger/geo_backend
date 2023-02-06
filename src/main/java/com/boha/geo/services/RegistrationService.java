@@ -42,13 +42,24 @@ public class RegistrationService {
 
         try {
             Organization org = organizationRepository.insert(orgBag.getOrganization());
+            SettingsModel m = dataService.addSettings(orgBag.getSettings());
+            String password = orgBag.getUser().getPassword();
+            orgBag.getUser().setPassword(null);
+            User u = dataService.addUser(orgBag.getUser());
+            u.setPassword(password);
+            dataService.updateAuthedUser(u);
+
+
             MyProjectBag bag = addSampleProject(org, orgBag.getLatitude(), orgBag.getLongitude());
+
             OrganizationRegistrationBag registrationBag = new OrganizationRegistrationBag();
             registrationBag.setOrganization(org);
-            registrationBag.setSampleProject(bag.project);
-            registrationBag.setSampleUsers(new ArrayList<>());
-            registrationBag.setSampleProjectPosition(bag.projectPosition);
+            registrationBag.setSettings(m);
+            registrationBag.setUser(u);
+            registrationBag.setProject(bag.project);
+            registrationBag.setProjectPosition(bag.projectPosition);
             registrationBag.setDate(DateTime.now().toDateTimeISO().toString());
+
 
             LOGGER.info(E.LEAF + E.LEAF + " Organization Registered: " + org.getName());
             return registrationBag;
@@ -73,7 +84,6 @@ public class RegistrationService {
         p0.setNearestCities(list);
         projectRepository.insert(p0);
         LOGGER.info(E.LEAF+E.LEAF+" Sample Organization Project added: " + p0.getName());
-
 
         ProjectPosition pPos = new ProjectPosition();
         Position position = new Position();
