@@ -47,8 +47,12 @@ public class RegistrationService {
             orgBag.getUser().setPassword(null);
             User u = dataService.addUser(orgBag.getUser());
             u.setPassword(password);
-            dataService.updateAuthedUser(u);
-
+            if (password != null) {
+                LOGGER.info(E.RED_DOT+E.RED_DOT+
+                        "... Will update the org admin Firebase auth so they can sign in by phone: "
+                + u.getCellphone() + " admin: " + u.getName() + " with " + u.getOrganizationName());
+                dataService.updateAuthedUser(u);
+            }
 
             MyProjectBag bag = addSampleProject(org, orgBag.getLatitude(), orgBag.getLongitude());
 

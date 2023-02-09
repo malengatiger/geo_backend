@@ -187,9 +187,6 @@ public class DataService {
         update.set("updated", DateTime.now().toDateTimeISO().toString());
 
         UpdateResult result = mongoTemplate.updateFirst(query, update, User.class);
-        if (user.getImageUrl() == null) {
-            updateAuthedUser(user);
-        }
 
         LOGGER.info(E.RED_APPLE+E.RED_APPLE + " user has been modified: " + result.getModifiedCount());
 
