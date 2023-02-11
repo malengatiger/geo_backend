@@ -16,6 +16,8 @@ public class ProjectPosition {
     private String created;
     private PlaceMark placemark;
     private List<City> nearestCities;
+    private String userId, userName;
+
 
     public ProjectPosition() {
     }
