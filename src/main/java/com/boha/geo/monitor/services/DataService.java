@@ -49,11 +49,14 @@ public class DataService {
     final AudioRepository audioRepository;
     final ProjectRepository projectRepository;
     final LocationResponseRepository locationResponseRepository;
+    final LocationRequestRepository locationRequestRepository;
 
     final ProjectPolygonRepository projectPolygonRepository;
 
     final CityRepository cityRepository;
     final PhotoRepository photoRepository;
+    final ActivityModelRepository activityModelRepository;
+
     final ProjectAssignmentRepository projectAssignmentRepository;
     final VideoRepository videoRepository;
     final UserRepository userRepository;
@@ -71,9 +74,9 @@ public class DataService {
 
     public DataService(Environment env, GeofenceEventRepository geofenceEventRepository,
                        SettingsModelRepository settingsModelRepository, RatingRepository ratingRepository, MongoTemplate mongoTemplate, AudioRepository audioRepository, ProjectRepository projectRepository,
-                       LocationResponseRepository locationResponseRepository, ProjectPolygonRepository projectPolygonRepository, CityRepository cityRepository,
+                       LocationResponseRepository locationResponseRepository, LocationRequestRepository locationRequestRepository, ProjectPolygonRepository projectPolygonRepository, CityRepository cityRepository,
                        PhotoRepository photoRepository,
-                       ProjectAssignmentRepository projectAssignmentRepository, VideoRepository videoRepository,
+                       ActivityModelRepository activityModelRepository, ProjectAssignmentRepository projectAssignmentRepository, VideoRepository videoRepository,
                        UserRepository userRepository,
                        CommunityRepository communityRepository,
                        ConditionRepository conditionRepository,
@@ -91,9 +94,11 @@ public class DataService {
         this.audioRepository = audioRepository;
         this.projectRepository = projectRepository;
         this.locationResponseRepository = locationResponseRepository;
+        this.locationRequestRepository = locationRequestRepository;
         this.projectPolygonRepository = projectPolygonRepository;
         this.cityRepository = cityRepository;
         this.photoRepository = photoRepository;
+        this.activityModelRepository = activityModelRepository;
         this.projectAssignmentRepository = projectAssignmentRepository;
         this.videoRepository = videoRepository;
         this.userRepository = userRepository;
@@ -161,9 +166,6 @@ public class DataService {
 
     }
 
-//    public static String getGeoHash(double latitude, double longitude) {
-//        return GeoHash.geoHashStringWithCharacterPrecision(latitude, longitude, 12);
-//    }
 
     public User updateUser(User user) throws Exception {
 
@@ -201,16 +203,44 @@ public class DataService {
                 "      \n\nThank you for working with GeoMonitor. \nBest Regards,\nThe GeoMonitor Team\ninfo@geomonitorapp.io\n\n";
 
         mailService.sendHtmlEmail( user.getEmail(), message,"GeoMonitor Account Updated" );
+
+
+        ActivityModel am = new ActivityModel();
+        am.setActivityType(ActivityType.userAddedOrModified);
+        am.setActivityModelId(UUID.randomUUID().toString());
+        am.setDate(DateTime.now().toDateTimeISO().toString());
+        am.setProjectId(null);
+        am.setUserId(user.getUserId());
+        am.setOrganizationName(user.getOrganizationName());
+        am.setOrganizationId(user.getOrganizationId());
+        am.setUserName(user.getName());
+        am.setProjectName(null);
+        am.setUser(user);
+
+        addActivityModel(am);
         return user;
     }
 
-    public User addUser(User user) throws FirebaseMessagingException {
+    public User addUser(User user) throws Exception {
 
         User mUser = userRepository.save(user);
         String result = messageService.sendMessage(user);
         LOGGER.info(E.LEAF.concat(E.LEAF).concat("User added to database: "
                 + user.getName() + " result: "
                 + result));
+
+        ActivityModel am = new ActivityModel();
+        am.setActivityType(ActivityType.userAddedOrModified);
+        am.setActivityModelId(UUID.randomUUID().toString());
+        am.setDate(DateTime.now().toDateTimeISO().toString());
+        am.setProjectId(null);
+        am.setUserId(user.getUserId());
+        am.setOrganizationName(user.getOrganizationName());
+        am.setOrganizationId(user.getOrganizationId());
+        am.setUserName(user.getName());
+        am.setProjectName(null);
+
+        addActivityModel(am);
 
         return mUser;
     }
@@ -224,13 +254,35 @@ public class DataService {
         return res;
     }
 
-    public String addPhoto(Photo photo) throws Exception {
+    public void addPhoto(Photo photo) throws Exception {
         if (photo.getPhotoId() == null) {
             photo.setPhotoId(UUID.randomUUID().toString());
         }
         photoRepository.save(photo);
         LOGGER.info(E.LEAF.concat(E.LEAF).concat("Photo added to Mongo, : " + photo.getUrl()));
-        return messageService.sendMessage(photo);
+        messageService.sendMessage(photo);
+
+        ActivityModel am = new ActivityModel();
+        am.setActivityType(ActivityType.photoAdded);
+        am.setActivityModelId(UUID.randomUUID().toString());
+        am.setDate(DateTime.now().toDateTimeISO().toString());
+        am.setProjectId(photo.getProjectId());
+        am.setUserId(photo.getUserId());
+        am.setOrganizationName(null);
+        am.setOrganizationId(photo.getOrganizationId());
+        am.setUserName(photo.getUserName());
+        am.setProjectName(photo.getProjectName());
+        am.setPhoto(photo);
+
+        addActivityModel(am);
+
+    }
+    public void addActivityModel(ActivityModel model)  throws Exception{
+
+        activityModelRepository.insert(model);
+        LOGGER.info(E.LEAF.concat(E.LEAF).concat("ActivityModel added to Mongo "));
+
+        messageService.sendMessage(model);
     }
 
     public String addProjectAssignment(ProjectAssignment projectAssignment) throws Exception {
@@ -248,7 +300,21 @@ public class DataService {
         if (video.getVideoId() == null) {
             video.setVideoId(UUID.randomUUID().toString());
         }
-        videoRepository.save(video);
+        videoRepository.insert(video);
+
+        ActivityModel am = new ActivityModel();
+        am.setActivityType(ActivityType.videoAdded);
+        am.setActivityModelId(UUID.randomUUID().toString());
+        am.setDate(DateTime.now().toDateTimeISO().toString());
+        am.setProjectId(video.getProjectId());
+        am.setUserId(video.getUserId());
+        am.setOrganizationName(null);
+        am.setOrganizationId(video.getOrganizationId());
+        am.setUserName(video.getUserName());
+        am.setProjectName(video.getProjectName());
+        am.setVideo(video);
+
+        addActivityModel(am);
         LOGGER.info(E.LEAF.concat(E.LEAF).concat("Video added: " + video.getVideoId()));
         return messageService.sendMessage(video);
     }
@@ -256,6 +322,20 @@ public class DataService {
 
         audioRepository.save(audio);
         LOGGER.info(E.LEAF.concat(E.LEAF).concat("Video added: " + audio.getAudioId()));
+
+        ActivityModel am = new ActivityModel();
+        am.setActivityType(ActivityType.audioAdded);
+        am.setActivityModelId(UUID.randomUUID().toString());
+        am.setDate(DateTime.now().toDateTimeISO().toString());
+        am.setProjectId(audio.getProjectId());
+        am.setUserId(audio.getUserId());
+        am.setOrganizationName(null);
+        am.setOrganizationId(audio.getOrganizationId());
+        am.setUserName(audio.getUserName());
+        am.setProjectName(audio.getProjectName());
+        am.setAudio(audio);
+
+        addActivityModel(am);
         return messageService.sendMessage(audio);
     }
 
@@ -270,13 +350,27 @@ public class DataService {
         LOGGER.info(E.LEAF.concat(E.LEAF).concat("OrgMessage added: " + orgMessage.getMessage()));
         String result = messageService.sendMessage(orgMessage);
         orgMessage.setResult(result);
+
+        ActivityModel am = new ActivityModel();
+        am.setActivityType(ActivityType.messageAdded);
+        am.setActivityModelId(UUID.randomUUID().toString());
+        am.setDate(DateTime.now().toDateTimeISO().toString());
+        am.setProjectId(orgMessage.getProjectId());
+        am.setUserId(orgMessage.getUserId());
+        am.setOrganizationName(null);
+        am.setOrganizationId(orgMessage.getOrganizationId());
+        am.setUserName(orgMessage.getAdminName());
+        am.setProjectName(orgMessage.getProjectName());
+       am.setOrgMessage(orgMessage);
+
+        addActivityModel(am);
         return orgMessage;
     }
 
     public FieldMonitorSchedule addFieldMonitorSchedule(FieldMonitorSchedule fieldMonitorSchedule) throws Exception {
         fieldMonitorScheduleRepository.save(fieldMonitorSchedule);
         LOGGER.info(E.LEAF.concat(E.LEAF).concat("FieldMonitorSchedule added: " + fieldMonitorSchedule.getFieldMonitorId()));
-        String resp = messageService.sendMessage(fieldMonitorSchedule);
+        messageService.sendMessage(fieldMonitorSchedule);
 
         return fieldMonitorSchedule;
     }
@@ -291,6 +385,20 @@ public class DataService {
                 + " " + E.RAIN);
         messageService.sendMessage(m);
 
+        ActivityModel am = new ActivityModel();
+        am.setActivityType(ActivityType.positionAdded);
+        am.setActivityModelId(UUID.randomUUID().toString());
+        am.setDate(DateTime.now().toDateTimeISO().toString());
+        am.setProjectId(projectPosition.getProjectId());
+        am.setUserId(projectPosition.getUserId());
+        am.setOrganizationName(null);
+        am.setOrganizationId(projectPosition.getOrganizationId());
+        am.setUserName(projectPosition.getUserName());
+        am.setProjectName(projectPosition.getProjectName());
+        am.setProjectPosition(projectPosition);
+
+        addActivityModel(am);
+
         return m;
     }
     public ProjectPolygon addProjectPolygon(ProjectPolygon projectPolygon) throws Exception {
@@ -304,6 +412,20 @@ public class DataService {
 
         messageService.sendMessage(m);
 
+        ActivityModel am = new ActivityModel();
+        am.setActivityType(ActivityType.polygonAdded);
+        am.setActivityModelId(UUID.randomUUID().toString());
+        am.setDate(DateTime.now().toDateTimeISO().toString());
+        am.setProjectId(projectPolygon.getProjectId());
+        am.setUserId(projectPolygon.getUserId());
+        am.setOrganizationName(null);
+        am.setOrganizationId(projectPolygon.getOrganizationId());
+        am.setUserName(projectPolygon.getUserName());
+        am.setProjectName(projectPolygon.getProjectName());
+        am.setProjectPolygon(projectPolygon);
+
+        addActivityModel(am);
+
         return m;
     }
 
@@ -316,6 +438,20 @@ public class DataService {
                 "GeofenceEvent added to: " + m.getProjectName()
                 + " " + E.RAIN);
          messageService.sendMessage(m);
+
+        ActivityModel am = new ActivityModel();
+        am.setActivityType(ActivityType.geofenceEventAdded);
+        am.setActivityModelId(UUID.randomUUID().toString());
+        am.setDate(DateTime.now().toDateTimeISO().toString());
+        am.setProjectId(geofenceEvent.getProjectId());
+        am.setUserId(geofenceEvent.getUser().getUserId());
+        am.setOrganizationName(null);
+        am.setOrganizationId(geofenceEvent.getOrganizationId());
+        am.setUserName(geofenceEvent.getUser().getName());
+        am.setProjectName(geofenceEvent.getProjectName());
+        am.setGeofenceEvent(geofenceEvent);
+
+        addActivityModel(am);
         return m;
     }
 
@@ -328,6 +464,19 @@ public class DataService {
 
         LOGGER.info(E.LEAF.concat(E.LEAF)
                 .concat("Project added: " + m.getProjectId()));
+        ActivityModel am = new ActivityModel();
+        am.setActivityType(ActivityType.projectAdded);
+        am.setActivityModelId(UUID.randomUUID().toString());
+        am.setDate(DateTime.now().toDateTimeISO().toString());
+        am.setProjectId(project.getProjectId());
+        am.setUserId(null);
+        am.setOrganizationName(null);
+        am.setOrganizationId(project.getOrganizationId());
+        am.setUserName(null);
+        am.setProjectName(project.getName());
+        am.setProject(project);
+
+        addActivityModel(am);
         return messageService.sendMessage(m);
     }
 
@@ -337,9 +486,44 @@ public class DataService {
 
         LOGGER.info(E.LEAF.concat(E.LEAF)
                 .concat("locationResponse added: " + locationResponse.getOrganizationName()));
+
+        ActivityModel am = new ActivityModel();
+        am.setActivityType(ActivityType.locationResponse);
+        am.setActivityModelId(UUID.randomUUID().toString());
+        am.setDate(DateTime.now().toDateTimeISO().toString());
+        am.setProjectId(null);
+        am.setUserId(locationResponse.getUserId());
+        am.setOrganizationName(null);
+        am.setOrganizationId(locationResponse.getOrganizationId());
+        am.setUserName(locationResponse.getUserName());
+        am.setProjectName(null);
+        am.setLocationResponse(locationResponse);
+        addActivityModel(am);
+        messageService.sendMessage(m);
         return m;
     }
 
+    public LocationRequest addLocationRequest(LocationRequest locationRequest) throws Exception {
+
+        LocationRequest m = locationRequestRepository.insert(locationRequest);
+
+        LOGGER.info(E.LEAF.concat(E.LEAF)
+                .concat("locationRequest added: " + locationRequest.getUserName()));
+
+        ActivityModel am = new ActivityModel();
+        am.setActivityType(ActivityType.locationRequest);
+        am.setActivityModelId(UUID.randomUUID().toString());
+        am.setDate(DateTime.now().toDateTimeISO().toString());
+        am.setProjectId(null);
+        am.setUserId(locationRequest.getUserId());
+        am.setOrganizationName(null);
+        am.setOrganizationId(locationRequest.getOrganizationId());
+        am.setUserName(locationRequest.getUserName());
+        am.setProjectName(null);
+        am.setLocationRequest(locationRequest);
+        addActivityModel(am);
+        return m;
+    }
 
     public Project updateProject(Project project) throws Exception {
         LOGGER.info(E.RAIN.concat(E.RAIN).concat("updateProject: "
@@ -388,6 +572,19 @@ public class DataService {
         LOGGER.info(E.LEAF.concat(E.LEAF)
                 .concat("SettingsModel inserted: " + G.toJson(m)));
         messageService.sendMessage(model);
+
+        ActivityModel am = new ActivityModel();
+        am.setActivityType(ActivityType.settingsChanged);
+        am.setActivityModelId(UUID.randomUUID().toString());
+        am.setDate(DateTime.now().toDateTimeISO().toString());
+        am.setProjectId(model.getProjectId());
+        am.setUserId(null);
+        am.setOrganizationName(null);
+        am.setOrganizationId(model.getOrganizationId());
+        am.setUserName(null);
+        am.setProjectName(null);
+
+        addActivityModel(am);
         return m;
     }
 
@@ -399,6 +596,7 @@ public class DataService {
         Organization org = organizationRepository.save(organization);
         LOGGER.info(E.LEAF.concat(E.LEAF)
                 .concat("Organization added: " + organization.getOrganizationId()));
+
         return org;
     }
 
@@ -427,6 +625,19 @@ public class DataService {
                 "      \n\nThank you for working with GeoMonitor. \nWelcome aboard!!\nBest Regards,\nThe GeoMonitor Team\ninfo@geomonitorapp.io\n\n";
 
         mailService.sendHtmlEmail( user.getEmail(), message,"Welcome to GeoMonitor" );
+
+        ActivityModel am = new ActivityModel();
+        am.setActivityType(ActivityType.userAddedOrModified);
+        am.setActivityModelId(UUID.randomUUID().toString());
+        am.setDate(DateTime.now().toDateTimeISO().toString());
+        am.setProjectId(null);
+        am.setUserId(user.getUserId());
+        am.setOrganizationName(user.getOrganizationName());
+        am.setOrganizationId(user.getOrganizationId());
+        am.setUserName(user.getName());
+        am.setProjectName(null);
+
+        addActivityModel(am);
 
         return addUser(user);
     }

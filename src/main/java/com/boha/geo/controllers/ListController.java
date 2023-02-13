@@ -649,6 +649,19 @@ public class ListController {
         }
 
     }
+    @GetMapping("/getOrganizationActivity")
+    public ResponseEntity<Object> getOrganizationActivity(@RequestParam String organizationId,
+                                                          @RequestParam int hours) {
+        try {
+            return ResponseEntity.ok(listService.getOrganizationActivity(organizationId, hours));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "getOrganizationActivity failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+
+    }
 
     @GetMapping("/getProjectAudios")
     public ResponseEntity<Object> getProjectAudios(String projectId) {

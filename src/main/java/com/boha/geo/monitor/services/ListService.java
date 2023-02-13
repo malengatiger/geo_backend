@@ -15,6 +15,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.*;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -199,6 +201,21 @@ public class ListService {
     public List<ProjectAssignment> getOrganizationProjectAssignments(String organizationId)  {
 
         return projectAssignmentRepository.findByOrganizationId(organizationId);
+    }
+
+    public List<ActivityModel> getOrganizationActivity(String organizationId, int hours)  {
+
+        DateTime then = DateTime.now().minusHours(hours);
+        String date = then.toDateTimeISO().toString();
+
+        Criteria criteria = new Criteria();
+        criteria = criteria.and("organizationId").is(organizationId);
+        criteria = criteria.and("date").gt(date);
+
+        Query query = new Query(criteria);
+        List<ActivityModel> activities = mongoTemplate.find(query, ActivityModel.class);
+        LOGGER.info(E.PANDA+E.PANDA+ " activities found " + activities.size() + " hours: " + hours);
+        return activities;
     }
 
     public DataBag getUserData(String userId)  {

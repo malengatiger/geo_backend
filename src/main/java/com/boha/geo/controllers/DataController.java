@@ -262,12 +262,36 @@ public class DataController {
 
     @PostMapping("/addPhoto")
     public ResponseEntity<Object> addPhoto(@RequestBody Photo photo) throws Exception {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
-                .concat("Adding Photo ... " + photo.getProjectName()));
         try {
-            String result = dataService.addPhoto(photo);
-            LOGGER.info(E.LEAF + E.LEAF + " addPhoto result: " + result);
+            dataService.addPhoto(photo);
             return ResponseEntity.ok(photo);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "addPhoto failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+
+    }
+
+    @PostMapping("/addLocationRequest")
+    public ResponseEntity<Object> addLocationRequest(@RequestBody LocationRequest request) throws Exception {
+        try {
+            LocationRequest result = dataService.addLocationRequest(request);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "addLocationRequest failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+
+    }
+    @PostMapping("/addActivityModel")
+    public ResponseEntity<Object> addActivityModel(@RequestBody ActivityModel model) throws Exception {
+        try {
+             dataService.addActivityModel(model);
+            return ResponseEntity.ok(model);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,

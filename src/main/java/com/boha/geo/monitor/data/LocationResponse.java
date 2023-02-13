@@ -10,6 +10,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class LocationResponse {
     @Id
     private String _id;
-    private String organizationId, userId, userName, date, organizationName, locationResponseId;
+    private String organizationId, userId, userName, date,
+            organizationName, locationResponseId,
+            requesterId, requesterName;
     private Position position;
 }

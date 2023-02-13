@@ -138,6 +138,7 @@ public class MongoService {
 
             createPhotoIndexes();
             createVideoIndexes();
+            createActivityIndexes();
 
             createUserIndexes();
             createOrganizationIndexes();
@@ -424,6 +425,32 @@ public class MongoService {
                 E.RED_APPLE + result3);
 
     }
+
+    private void createActivityIndexes() {
+        //add index
+        MongoCollection<Document> dbCollection = db.getCollection("activities");
+
+        String result2 = dbCollection.createIndex(Indexes.ascending("projectId"));
+        logger.info(mm +
+                " projectId index on activities collection: " +
+                E.RED_APPLE + result2);
+
+        String result3 = dbCollection.createIndex(Indexes.ascending("organizationId"));
+        logger.info(mm +
+                " organizationId index on activities collection: " +
+                E.RED_APPLE + result3);
+        String result4 = dbCollection.createIndex(Indexes.ascending("userId"));
+        logger.info(mm +
+                " organizationId index on activities collection: " +
+                E.RED_APPLE + result4);
+
+        String result5 = dbCollection.createIndex(Indexes.ascending("date"));
+        logger.info(mm +
+                " date index on activities collection: " +
+                E.RED_APPLE + result5);
+
+    }
+
 
     private MongoDatabase db;
     private void setDatabase() {

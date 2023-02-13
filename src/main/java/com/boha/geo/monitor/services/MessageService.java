@@ -88,12 +88,12 @@ admin.messaging().send({
                 .setAndroidConfig(AndroidConfig.builder()
                         .setPriority(AndroidConfig.Priority.HIGH)
                         .build())
-                .setApnsConfig(ApnsConfig.builder()
-                        .putAllHeaders(apns)
-                        .setAps(Aps.builder()
-                                .setAlert("Geo Message")
-                                .build())
-                        .build())
+//                .setApnsConfig(ApnsConfig.builder()
+//                        .putAllHeaders(apns)
+//                        .setAps(Aps.builder()
+//                                .setAlert("Geo Message")
+//                                .build())
+//                        .build())
                 .setTopic(topic)
                 .build();
     }
@@ -106,12 +106,12 @@ admin.messaging().send({
                 .setAndroidConfig(AndroidConfig.builder()
                         .setPriority(AndroidConfig.Priority.HIGH)
                         .build())
-                .setApnsConfig(ApnsConfig.builder()
-                        .putAllHeaders(apns)
-                        .setAps(Aps.builder()
-                                .setAlert("Geo Message")
-                                .build())
-                        .build())
+//                .setApnsConfig(ApnsConfig.builder()
+//                        .putAllHeaders(apns)
+//                        .setAps(Aps.builder()
+//                                .setAlert("Geo Message")
+//                                .build())
+//                        .build())
                 .setTopic(topic)
                 .build();
     }
@@ -120,7 +120,7 @@ admin.messaging().send({
         String topic = "projectPositions_" + projectPosition.getOrganizationId();
         Notification notification = Notification.builder()
                 .setBody("A project location added by " + projectPosition.getUserName())
-                .setTitle("Message from Digital Monitor")
+                .setTitle("Message from Geo")
                 .build();
         Message message = buildMessage("projectPosition", topic, G.toJson(projectPosition),notification);
         String response = FirebaseMessaging.getInstance().send(message);
@@ -142,7 +142,7 @@ admin.messaging().send({
         String topic = "projectPolygons_" + projectPolygon.getOrganizationId();
         Notification notification = Notification.builder()
                 .setBody("A project area has been added by " + projectPolygon.getUserName())
-                .setTitle("Message from Digital Monitor")
+                .setTitle("Message from Geo")
                 .build();
         Message message = buildMessage("projectPolygon",topic,G.toJson(projectPolygon),notification);
         String response = FirebaseMessaging.getInstance().send(message);
@@ -150,18 +150,28 @@ admin.messaging().send({
                 + topic + E.RED_APPLE + response);
     }
 
-    public String sendMessage(Photo photo) throws FirebaseMessagingException {
+    public void sendMessage(ActivityModel activityModel) throws FirebaseMessagingException {
+        String topic = "activities_" + activityModel.getOrganizationId();
+
+        Message message = buildMessage("activity",
+                topic, G.toJson(activityModel));
+        String response = FirebaseMessaging.getInstance().send(message);
+
+        LOGGER.info(E.RED_APPLE + E.RED_APPLE + "Successfully sent activityModel message to FCM topic: "
+                + topic + E.RED_APPLE + response);
+    }
+
+    public void sendMessage(Photo photo) throws FirebaseMessagingException {
         String topic = "photos_" + photo.getOrganizationId();
         Notification notification = Notification.builder()
                 .setBody("A photo from the field has arrived from " + photo.getUserName())
-                .setTitle("Message from Digital Monitor")
+                .setTitle("Message from Geo")
                 .build();
         Message message = buildMessage("photo", topic, G.toJson(photo), notification);
 
         String response = FirebaseMessaging.getInstance().send(message);
         LOGGER.info(E.RED_APPLE + E.RED_APPLE + "Successfully sent photo message to FCM topic: "
                 + topic + E.RED_APPLE);
-        return response;
     }
 
     public void sendMessage(SettingsModel settingsModel) throws FirebaseMessagingException {
@@ -179,7 +189,7 @@ admin.messaging().send({
 
         Notification notification = Notification.builder()
                 .setBody("A member has arrived in the field: " + geofenceEvent.getUser().getName())
-                .setTitle("Message from Digital Monitor")
+                .setTitle("Message from Geo")
                 .build();
 
         Message message = buildMessage("geofenceEvent", topic, G.toJson(geofenceEvent), notification);
@@ -194,7 +204,7 @@ admin.messaging().send({
 
         Notification notification = Notification.builder()
                 .setBody("An audio clip from the field has arrived")
-                .setTitle("Message from Digital Monitor")
+                .setTitle("Message from Geo")
                 .build();
         Message message = buildMessage("audio", topic, G.toJson(audio), notification);
 
@@ -205,14 +215,28 @@ admin.messaging().send({
     }
 
     public LocationRequest sendMessage(LocationRequest locationRequest) throws FirebaseMessagingException {
-        String topic = "locationRequest_" + locationRequest.getOrganizationId();
+        String topic = "locationRequests_" + locationRequest.getOrganizationId();
         Message message = buildMessage("locationRequest", topic, G.toJson(locationRequest));
 
         String response = FirebaseMessaging.getInstance().send(message);
         LOGGER.info(E.RED_APPLE + E.RED_APPLE + "Successfully sent locationRequest message to FCM topic: "
                 + topic + E.RED_APPLE + " resp: " + response);
-        locationRequest.setResponse(response);
         return locationRequest;
+    }
+    public void sendMessage(LocationResponse locationResponse) throws FirebaseMessagingException {
+        String topic = "locationResponses_" + locationResponse.getOrganizationId();
+
+        Notification notification = Notification.builder()
+                .setBody("A response to location request")
+                .setTitle("Message from Geo")
+                .build();
+
+        Message message = buildMessage("locationResponse", topic,
+                G.toJson(locationResponse), notification);
+
+        String response = FirebaseMessaging.getInstance().send(message);
+        LOGGER.info(E.RED_APPLE + E.RED_APPLE + "Successfully sent locationResponse message to FCM topic: "
+                + topic + E.RED_APPLE + " resp: " + response);
     }
 
     public String sendMessage(Video video) throws FirebaseMessagingException {
@@ -221,7 +245,7 @@ admin.messaging().send({
 
         Notification notification = Notification.builder()
                 .setBody("A video from the field has arrived")
-                .setTitle("Message from Digital Monitor")
+                .setTitle("Message from Geo")
                 .build();
 
         Message message = buildMessage("video", topic, G.toJson(video),notification);
@@ -256,7 +280,7 @@ admin.messaging().send({
         assert (orgMessage.getOrganizationId() != null);
         Notification notification = Notification.builder()
                 .setBody(orgMessage.getMessage())
-                .setTitle("Message from Digital Monitor")
+                .setTitle("Message from Geo")
                 .build();
         String topic = "messages_" + orgMessage.getOrganizationId();
         Message message = Message.builder()
@@ -276,7 +300,7 @@ admin.messaging().send({
 
         Notification notification = Notification.builder()
                 .setBody("A project has been added: " + project.getName())
-                .setTitle("Message from Digital Monitor")
+                .setTitle("Message from Geo")
                 .build();
         Message message = buildMessage("project", topic, G.toJson(project), notification);
 
@@ -290,7 +314,7 @@ admin.messaging().send({
         String topic = "users_" + user.getOrganizationId();
         Notification notification = Notification.builder()
                 .setBody("A member has been added or modified")
-                .setTitle("Message from Digital Monitor")
+                .setTitle("Message from Geo")
                 .build();
         Message message = buildMessage("user", topic, G.toJson(user), notification);
 
