@@ -486,6 +486,7 @@ public class DataService {
 
         LOGGER.info(E.LEAF.concat(E.LEAF)
                 .concat("locationResponse added: " + locationResponse.getOrganizationName()));
+        messageService.sendMessage(m);
 
         ActivityModel am = new ActivityModel();
         am.setActivityType(ActivityType.locationResponse);
@@ -498,8 +499,8 @@ public class DataService {
         am.setUserName(locationResponse.getUserName());
         am.setProjectName(null);
         am.setLocationResponse(locationResponse);
+
         addActivityModel(am);
-        messageService.sendMessage(m);
         return m;
     }
 
@@ -509,6 +510,7 @@ public class DataService {
 
         LOGGER.info(E.LEAF.concat(E.LEAF)
                 .concat("locationRequest added: " + locationRequest.getUserName()));
+        messageService.sendMessage(m);
 
         ActivityModel am = new ActivityModel();
         am.setActivityType(ActivityType.locationRequest);
@@ -521,6 +523,7 @@ public class DataService {
         am.setUserName(locationRequest.getUserName());
         am.setProjectName(null);
         am.setLocationRequest(locationRequest);
+
         addActivityModel(am);
         return m;
     }

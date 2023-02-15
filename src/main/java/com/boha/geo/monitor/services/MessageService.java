@@ -216,7 +216,14 @@ admin.messaging().send({
 
     public LocationRequest sendMessage(LocationRequest locationRequest) throws FirebaseMessagingException {
         String topic = "locationRequests_" + locationRequest.getOrganizationId();
-        Message message = buildMessage("locationRequest", topic, G.toJson(locationRequest));
+
+        Notification notification = Notification.builder()
+                .setBody("A request for location arrived")
+                .setTitle("Message from Geo")
+                .build();
+
+        Message message = buildMessage("locationRequest",
+                topic, G.toJson(locationRequest), notification);
 
         String response = FirebaseMessaging.getInstance().send(message);
         LOGGER.info(E.RED_APPLE + E.RED_APPLE + "Successfully sent locationRequest message to FCM topic: "

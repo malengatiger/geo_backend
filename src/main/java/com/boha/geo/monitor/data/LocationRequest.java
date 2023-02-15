@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 @Document("locationRequests")
 public class LocationRequest {
-    private String organizationId, created, requesterId, requesterName;
+    private String organizationId, created, requesterId,
+            requesterName;
     private String userId, userName, organizationName;
 }
