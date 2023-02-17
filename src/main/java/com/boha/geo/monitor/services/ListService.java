@@ -217,6 +217,35 @@ public class ListService {
         LOGGER.info(E.PANDA+E.PANDA+ " activities found " + activities.size() + " hours: " + hours);
         return activities;
     }
+    public List<ActivityModel> getProjectActivity(String projectId, int hours)  {
+
+        DateTime then = DateTime.now().minusHours(hours);
+        String date = then.toDateTimeISO().toString();
+
+        Criteria criteria = new Criteria();
+        criteria = criteria.and("projectId").is(projectId);
+        criteria = criteria.and("date").gt(date);
+
+        Query query = new Query(criteria);
+        List<ActivityModel> activities = mongoTemplate.find(query, ActivityModel.class);
+        LOGGER.info(E.PANDA+E.PANDA+ " project activities found " + activities.size() + " hours: " + hours);
+        return activities;
+    }
+
+    public List<ActivityModel> getUserActivity(String userId, int hours)  {
+
+        DateTime then = DateTime.now().minusHours(hours);
+        String date = then.toDateTimeISO().toString();
+
+        Criteria criteria = new Criteria();
+        criteria = criteria.and("userId").is(userId);
+        criteria = criteria.and("date").gt(date);
+
+        Query query = new Query(criteria);
+        List<ActivityModel> activities = mongoTemplate.find(query, ActivityModel.class);
+        LOGGER.info(E.PANDA+E.PANDA+ " user activities found " + activities.size() + " hours: " + hours);
+        return activities;
+    }
 
     public DataBag getUserData(String userId)  {
         DataBag bag = new DataBag();
@@ -242,7 +271,7 @@ public class ListService {
         bag.setProjectAssignments(assignments);
 
 
-        LOGGER.info(E.RED_APPLE+" Project data found: photos: " + bag.getPhotos().size() + " videos: " + bag.getVideos().size()
+        LOGGER.info(E.RED_APPLE+" User data found: photos: " + bag.getPhotos().size() + " videos: " + bag.getVideos().size()
                 + " schedules: " + bag.getFieldMonitorSchedules().size());
 
         return bag;
@@ -372,6 +401,32 @@ public class ListService {
         return zippedFile;
     }
 
+    public File getUserDataZippedFile(String userId) throws Exception {
+
+        DataBag bag = getUserData(userId);
+        String json = G.toJson(bag);
+        LOGGER.info(mm+" getUserDataZippedFile: Size of json file before zipping: " + json.length() + " bytes");
+
+        File dir = new File("zipDirectory");
+        if (!dir.exists()) {
+            boolean ok = dir.mkdir();
+            LOGGER.info(mm+" Zip directory has been created: path: " + dir.getAbsolutePath() + " created: " + ok);
+        }
+        File zippedFile = new File(dir,""+DateTime.now().getMillis() + ".zip");
+        ZipOutputStream out = new ZipOutputStream(new FileOutputStream(zippedFile));
+        ZipEntry e = new ZipEntry("dataBag");
+        out.putNextEntry(e);
+
+        byte[] data = json.getBytes();
+        out.write(data, 0, data.length);
+        out.closeEntry();
+
+        out.close();
+        LOGGER.info(mm+" Size of zipped json file after zipping: " + zippedFile.length() + " bytes");
+        return zippedFile;
+    }
+
+
     public List<Photo> getUserProjectPhotos(String userId)  {
 
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getUserProjectPhotos ...userId: " + userId));
@@ -382,9 +437,15 @@ public class ListService {
     }
     public List<Video> getUserProjectVideos(String userId)  {
 
-        LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getUserProjectVideos...userId: " + userId));
         List<Video> mList = videoRepository.findByUserId(userId);
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getUserProjectVideos ... found: " + mList.size()));
+
+        return mList;
+    }
+    public List<Audio> getUserProjectAudios(String userId)  {
+
+        List<Audio> mList = audioRepository.findByUserId(userId);
+        LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getUserProjectAudios ... found: " + mList.size()));
 
         return mList;
     }

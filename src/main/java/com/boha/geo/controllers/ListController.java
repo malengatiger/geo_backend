@@ -662,6 +662,32 @@ public class ListController {
         }
 
     }
+    @GetMapping("/getProjectActivity")
+    public ResponseEntity<Object> getProjectActivity(@RequestParam String projectId,
+                                                          @RequestParam int hours) {
+        try {
+            return ResponseEntity.ok(listService.getProjectActivity(projectId, hours));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "getProjectActivity failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+
+    }
+    @GetMapping("/getUserActivity")
+    public ResponseEntity<Object> getUserActivity(@RequestParam String userId,
+                                                          @RequestParam int hours) {
+        try {
+            return ResponseEntity.ok(listService.getUserActivity(userId, hours));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "getUserActivity failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+
+    }
 
     @GetMapping("/getProjectAudios")
     public ResponseEntity<Object> getProjectAudios(String projectId) {
@@ -800,17 +826,15 @@ public class ListController {
     }
 
     @GetMapping("/getUserData")
-    public ResponseEntity<Object> getUserData(@RequestParam String userId) {
+    public byte[] getUserData(@RequestParam String userId) throws Exception {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
                 .concat("getUserData: " + userId));
-        try {
-            return ResponseEntity.ok(listService.getUserData(userId));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(
-                    new CustomErrorResponse(400,
-                            "getUserData failed: " + e.getMessage(),
-                            new DateTime().toDateTimeISO().toString()));
-        }
+        File zippedFile = listService.getUserDataZippedFile(userId);
+        byte[] bytes = java.nio.file.Files.readAllBytes(zippedFile.toPath());
+        boolean deleted = zippedFile.delete();
+
+        LOGGER.info(E.PANDA+E.PANDA + " zipped user file deleted : " + deleted);
+        return bytes;
 
     }
 
@@ -839,6 +863,18 @@ public class ListController {
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,
                             "getUserProjectVideos failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+
+    }
+    @GetMapping("/getUserProjectAudios")
+    public ResponseEntity<Object> getUserProjectAudios(String userId) {
+        try {
+            return ResponseEntity.ok(listService.getUserProjectAudios(userId));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "getUserProjectAudios failed: " + e.getMessage(),
                             new DateTime().toDateTimeISO().toString()));
         }
 
