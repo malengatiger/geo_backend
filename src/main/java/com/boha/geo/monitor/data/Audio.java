@@ -20,6 +20,7 @@ public class Audio {
     private String  caption;
     private String  userId;
     private String  userName;
+    private String  userUrl;
     private String  created;
     private int  durationInSeconds = 0;
 

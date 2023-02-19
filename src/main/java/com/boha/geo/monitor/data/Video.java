@@ -21,6 +21,9 @@ public class Video {
     private String  userId;
     private String  userName;
     private String  created;
+    private String  userUrl;
+    private int durationInSeconds;
+    private double width, height;
 
 
 }

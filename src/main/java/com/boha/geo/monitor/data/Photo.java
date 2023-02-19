@@ -19,6 +19,7 @@ public class Photo {
     private String userId;
     private String userName;
     private String created;
+    private String  userUrl;
     private int height, width;
     private int landscape;
 
