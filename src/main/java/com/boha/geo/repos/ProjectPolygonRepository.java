@@ -14,4 +14,6 @@ public interface ProjectPolygonRepository extends MongoRepository<ProjectPolygon
 
     List<ProjectPolygon> findByOrganizationId(String organizationId);
 
+    ProjectPolygon findByProjectPolygonId(String projectPolygonId);
+
 }

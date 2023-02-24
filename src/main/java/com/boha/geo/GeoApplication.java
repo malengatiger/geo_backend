@@ -15,7 +15,10 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -62,10 +65,19 @@ public class GeoApplication implements ApplicationListener<ApplicationReadyEvent
 		try {
 
 			firebaseService.initializeFirebase();
-			//mongoService.printOrganizations();
 
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage());
+		}
+
+		InetAddress ip;
+		try {
+			ip = InetAddress.getLocalHost();
+			logger.info(E.PEAR + E.PEAR + E.PEAR + E.PEAR
+					+ " Current IP address : " + ip.getHostAddress());
+
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
 		}
 	}
 }

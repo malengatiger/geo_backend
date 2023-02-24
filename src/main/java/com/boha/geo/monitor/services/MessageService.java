@@ -19,6 +19,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -97,6 +98,7 @@ admin.messaging().send({
                 .setTopic(topic)
                 .build();
     }
+
     private Message buildMessage(String dataName, String topic, String payload, Notification notification) {
         return Message.builder()
                 .setNotification(notification)
@@ -116,16 +118,34 @@ admin.messaging().send({
                 .build();
     }
 
-    public void sendMessage(ProjectPosition projectPosition) throws FirebaseMessagingException {
-        String topic = "projectPositions_" + projectPosition.getOrganizationId();
-        Notification notification = Notification.builder()
-                .setBody("A project location added by " + projectPosition.getUserName())
-                .setTitle("Message from Geo")
-                .build();
-        Message message = buildMessage("projectPosition", topic, G.toJson(projectPosition),notification);
-        String response = FirebaseMessaging.getInstance().send(message);
-        LOGGER.info(E.RED_APPLE + E.RED_APPLE + "Successfully sent projectPosition message to FCM topic: "
-                + topic + E.RED_APPLE + response);
+    public void sendMessage(ProjectPosition projectPosition) {
+        try {
+            String topic = "projectPositions_" + projectPosition.getOrganizationId();
+            Notification notification = Notification.builder()
+                    .setBody("A project location added by " + projectPosition.getUserName())
+                    .setTitle("Message from Geo")
+                    .build();
+
+            ProjectPosition m = new ProjectPosition();
+            m.setPosition(projectPosition.getPosition());
+            m.setProjectName(projectPosition.getProjectName());
+            m.setOrganizationId(projectPosition.getOrganizationId());
+            m.setProjectId(projectPosition.getProjectId());
+            m.setUserId(projectPosition.getUserId());
+            m.setUserName(projectPosition.getUserName());
+            m.setCreated(projectPosition.getCreated());
+            m.setCaption(projectPosition.getCaption());
+            m.setNearestCities(null);
+
+            Message message = buildMessage("projectPosition", topic,
+                    G.toJson(m), notification);
+            String response = FirebaseMessaging.getInstance().send(message);
+            LOGGER.info(E.RED_APPLE + E.RED_APPLE + "Successfully sent projectPosition message to FCM topic: "
+                    + topic + E.RED_APPLE + " response: " + response);
+        } catch (Exception e) {
+            LOGGER.error("Failed to send projectPosition FCM message");
+            e.printStackTrace();
+        }
     }
 
     public String sendMessage(ProjectAssignment projectAssignment) throws FirebaseMessagingException {
@@ -144,7 +164,7 @@ admin.messaging().send({
                 .setBody("A project area has been added by " + projectPolygon.getUserName())
                 .setTitle("Message from Geo")
                 .build();
-        Message message = buildMessage("projectPolygon",topic,G.toJson(projectPolygon),notification);
+        Message message = buildMessage("projectPolygon", topic, G.toJson(projectPolygon), notification);
         String response = FirebaseMessaging.getInstance().send(message);
         LOGGER.info(E.RED_APPLE + E.RED_APPLE + "Successfully sent projectPolygon message to FCM topic: "
                 + topic + E.RED_APPLE + response);
@@ -230,6 +250,7 @@ admin.messaging().send({
                 + topic + E.RED_APPLE + " resp: " + response);
         return locationRequest;
     }
+
     public void sendMessage(LocationResponse locationResponse) throws FirebaseMessagingException {
         String topic = "locationResponses_" + locationResponse.getOrganizationId();
 
@@ -255,7 +276,7 @@ admin.messaging().send({
                 .setTitle("Message from Geo")
                 .build();
 
-        Message message = buildMessage("video", topic, G.toJson(video),notification);
+        Message message = buildMessage("video", topic, G.toJson(video), notification);
 
         String response = FirebaseMessaging.getInstance().send(message);
         LOGGER.info(E.RED_APPLE + E.RED_APPLE + "Successfully sent video message to FCM topic: "

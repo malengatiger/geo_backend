@@ -383,9 +383,11 @@ public class DataService {
         LOGGER.info(E.YELLOW_BIRD + E.YELLOW_BIRD +
                 "ProjectPosition added to: " + m.getProjectName()
                 + " " + E.RAIN);
+
         messageService.sendMessage(m);
 
         ActivityModel am = new ActivityModel();
+        projectPosition.setNearestCities(null);
         am.setActivityType(ActivityType.positionAdded);
         am.setActivityModelId(UUID.randomUUID().toString());
         am.setDate(DateTime.now().toDateTimeISO().toString());
@@ -399,6 +401,7 @@ public class DataService {
 
         addActivityModel(am);
 
+        m = projectPositionRepository.findByProjectPositionId(projectPosition.getProjectPositionId());
         return m;
     }
     public ProjectPolygon addProjectPolygon(ProjectPolygon projectPolygon) throws Exception {
@@ -410,9 +413,11 @@ public class DataService {
                 "ProjectPolygon added to: " + m.getProjectName()
                 + " " + E.RAIN);
 
+        m.setNearestCities(null);
         messageService.sendMessage(m);
 
         ActivityModel am = new ActivityModel();
+        projectPolygon.setNearestCities(null);
         am.setActivityType(ActivityType.polygonAdded);
         am.setActivityModelId(UUID.randomUUID().toString());
         am.setDate(DateTime.now().toDateTimeISO().toString());
@@ -425,6 +430,9 @@ public class DataService {
         am.setProjectPolygon(projectPolygon);
 
         addActivityModel(am);
+
+        m = projectPolygonRepository
+                .findByProjectPolygonId(projectPolygon.getProjectPolygonId());
 
         return m;
     }

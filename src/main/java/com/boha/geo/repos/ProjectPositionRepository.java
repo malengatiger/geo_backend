@@ -11,7 +11,7 @@ public interface ProjectPositionRepository extends MongoRepository<ProjectPositi
 
     List<ProjectPosition> findByPositionNear(Point location, Distance distance);
     List<ProjectPosition> findByProjectId(String projectId);
-
+    ProjectPosition findByProjectPositionId(String projectPositionId);
     List<ProjectPosition> findByOrganizationId(String organizationId);
 
 }
