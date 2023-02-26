@@ -14,3 +14,8 @@ https://api.open-meteo.com/v1/forecast?latitude=-25.63&longitude=27.78
 &hourly=temperature_2m,apparent_temperature,rain,showers,cloudcover,cloudcover_low,cloudcover_mid,cloudcover_high,visibility,windspeed_10m,windspeed_80m,temperature_80m,temperature_120m
 &daily=weathercode,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,sunrise,sunset,precipitation_sum,rain_sum,showers_sum,windspeed_10m_max,windgusts_10m_max,winddirection_10m_dominant,shortwave_radiation_sum,et0_fao_evapotranspiration
 &timezone=CAT
+
+//swagger link
+http://localhost:8080/geo/v1/swagger-ui/index.html
+
+https://app.swaggerhub.com/apis/GeoMonitor/open-api_definition/v0#/LocationRequest

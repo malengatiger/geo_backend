@@ -463,7 +463,7 @@ public class DataService {
         return m;
     }
 
-    public String addProject(Project project) throws Exception {
+    public Project addProject(Project project) throws Exception {
         LOGGER.info(E.RAIN.concat(E.RAIN).concat("addProject: "
                 .concat(project.getName()).concat(" ")
                 .concat(E.YELLOW)));
@@ -485,7 +485,8 @@ public class DataService {
         am.setProject(project);
 
         addActivityModel(am);
-        return messageService.sendMessage(m);
+        messageService.sendMessage(m);
+        return project;
     }
 
     public LocationResponse addLocationResponse(LocationResponse locationResponse) throws Exception {

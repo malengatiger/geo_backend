@@ -7,15 +7,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "projectCounts")
 
 public class ProjectCount {
-    /*
-    data class UserCount(var userId: String,  var photos: Int = 0, var videos: Int = 0, var projects:Int = 0) {
-}
 
-     */
     private String projectId;
     private int photos;
     private int videos;
-    private int projects;
+    private int audios;
+    private int schedules;
+    private int projectPositions;
+    private int projectPolygons;
 
     private String date, projectName, organizationId;
 

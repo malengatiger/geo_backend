@@ -61,7 +61,8 @@ public class MonitorAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
         //allow getCountries
-        if (httpServletRequest.getRequestURI().contains("getCountries") || httpServletRequest.getRequestURI().contains("addCountry")) {
+        if (httpServletRequest.getRequestURI().contains("getCountries")
+                || httpServletRequest.getRequestURI().contains("addCountry")) {
             LOGGER.info("" + mm + " contextPath: " + httpServletRequest.getContextPath()
                     + E.AMP + " requestURI: " + httpServletRequest.getRequestURI() + "\n\n");
             LOGGER.info("" + mm + " allowing addCountry and getCountries without authentication, is this OK?");
@@ -69,6 +70,16 @@ public class MonitorAuthenticationFilter extends OncePerRequestFilter {
             doFilter(httpServletRequest, httpServletResponse, filterChain);
             return;
         }
+        //allow getCountries
+        if (httpServletRequest.getRequestURI().contains("api-docs")) {
+            LOGGER.info("" + mm + " contextPath: " + httpServletRequest.getContextPath()
+                    + E.AMP + " requestURI: " + httpServletRequest.getRequestURI() + "\n\n");
+            LOGGER.info("" + mm + " allowing swagger openapi call");
+
+            doFilter(httpServletRequest, httpServletResponse, filterChain);
+            return;
+        }
+
         LOGGER.info(mm + "this request IS subject to authentication: "
                 + E.HAND2 + url);
         String m = httpServletRequest.getHeader("Authorization");

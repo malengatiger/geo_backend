@@ -10,6 +10,12 @@ import com.google.gson.GsonBuilder;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Refill;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpServletResponse;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -188,7 +194,15 @@ public class ListController {
         }
     }
 
+    @Operation(summary = "Get all countries")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Found the countries",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Country.class))}),
+
+    })
     @GetMapping("/getCountries")
+
     public ResponseEntity<Object> getCountries() throws Exception {
         LOGGER.info(E.DICE.concat(E.DICE).concat("ListController: findSettlementsByCountry ..."));
         try {
@@ -333,8 +347,16 @@ public class ListController {
         }
     }
 
+    @Operation(summary = "Get a user by their userId")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Found the user",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = User.class))}),
+
+    })
+
     @GetMapping("/getUserById")
-    public ResponseEntity<Object> getUserById(@RequestParam String userId) {
+    public ResponseEntity<?> getUserById(@Parameter(description = "userId of user to be searched") @RequestParam String userId) {
         LOGGER.info(E.DICE.concat(E.DICE).concat(" getUserById ..."));
         try {
             User user = listService.getUserById(userId);
@@ -352,10 +374,11 @@ public class ListController {
     }
 
     @GetMapping("/findProjectsByLocation")
-    public ResponseEntity<Object> findProjectsByLocation(double latitude, double longitude, double radiusInKM) {
+    public ResponseEntity<?> findProjectsByLocation(@RequestParam String organizationId, @RequestParam double latitude,
+                                                         @RequestParam double longitude, @RequestParam double radiusInKM) {
         LOGGER.info(E.DICE.concat(E.DICE).concat(" ...... findProjectsByLocation ..."));
         try {
-            List<Project> projects = listService.findProjectsByLocation(latitude, longitude, radiusInKM);
+            List<Project> projects = listService.findProjectsByLocation(organizationId,latitude, longitude, radiusInKM);
             LOGGER.info(E.DOLPHIN.concat(E.DOLPHIN) + " Nearby Projects found: " + projects.size());
             return ResponseEntity.ok(projects);
         } catch (Exception e) {
@@ -435,20 +458,6 @@ public class ListController {
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,
                             "getProjectPolygons failed: " + e.getMessage(),
-                            new DateTime().toDateTimeISO().toString()));
-        }
-    }
-
-    @PostMapping("/sendLocationRequest")
-    public ResponseEntity<Object> sendLocationRequest(@RequestBody LocationRequest locationRequest) {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
-                .concat("sendLocationRequest message: " + locationRequest.getOrganizationId()));
-        try {
-            return ResponseEntity.ok(messageService.sendMessage(locationRequest));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(
-                    new CustomErrorResponse(400,
-                            "sendLocationRequest failed: " + e.getMessage(),
                             new DateTime().toDateTimeISO().toString()));
         }
     }
@@ -566,8 +575,15 @@ public class ListController {
 
     }
 
+    @Operation(summary = "Get project counts of photos, audios, videos etc.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Found the project aggregated counts",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ProjectCount.class))}),
+
+    })
     @GetMapping("/getCountsByProject")
-    public ResponseEntity<Object> getCountsByProject(String projectId) {
+    public ResponseEntity<?> getCountsByProject(String projectId) {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
                 .concat("getCountsByProject: " + projectId));
         try {
@@ -649,6 +665,13 @@ public class ListController {
         }
 
     }
+    @Operation(summary = "retrieve Organization activity within period")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Activity list retrieved",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ActivityModel.class))}),
+
+    })
     @GetMapping("/getOrganizationActivity")
     public ResponseEntity<Object> getOrganizationActivity(@RequestParam String organizationId,
                                                           @RequestParam int hours) {
@@ -662,6 +685,13 @@ public class ListController {
         }
 
     }
+    @Operation(summary = "retrieve Project activity within period ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Activity list retrieved",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ActivityModel.class))}),
+
+    })
     @GetMapping("/getProjectActivity")
     public ResponseEntity<Object> getProjectActivity(@RequestParam String projectId,
                                                           @RequestParam int hours) {
@@ -675,6 +705,14 @@ public class ListController {
         }
 
     }
+
+    @Operation(summary = "retrieve User activity within period")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Activity list retrieved",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ActivityModel.class))}),
+
+    })
     @GetMapping("/getUserActivity")
     public ResponseEntity<Object> getUserActivity(@RequestParam String userId,
                                                           @RequestParam int hours) {
@@ -688,7 +726,13 @@ public class ListController {
         }
 
     }
+    @Operation(summary = "retrieve Project audio ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Activity list retrieved",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Audio.class))}),
 
+    })
     @GetMapping("/getProjectAudios")
     public ResponseEntity<Object> getProjectAudios(String projectId) {
 
@@ -803,6 +847,13 @@ public class ListController {
         }
 
     }
+    @Operation(summary = "Get project data from zipped file created by server")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Found the project data, returning byte array",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = DataBag.class))}),
+
+    })
 
     @GetMapping(value = "/getProjectDataZippedFile", produces = "application/zip")
     public byte[] getProjectDataZippedFile(@RequestParam String projectId) throws Exception {
@@ -814,6 +865,14 @@ public class ListController {
         LOGGER.info(E.PANDA+E.PANDA + " zipped project file deleted : " + deleted);
         return bytes;
     }
+
+    @Operation(summary = "get Organization Data from a Zipped File")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Found the data, sending byte array",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = DataBag.class))}),
+
+    })
     @GetMapping(value = "/getOrganizationDataZippedFile", produces = "application/zip")
     public byte[] getOrganizationDataZippedFile(@RequestParam String organizationId) throws Exception {
 
@@ -825,6 +884,13 @@ public class ListController {
         return bytes;
     }
 
+    @Operation(summary = "get data created byUser ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Data retrieved",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = DataBag.class))}),
+
+    })
     @GetMapping("/getUserData")
     public byte[] getUserData(@RequestParam String userId) throws Exception {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
@@ -838,6 +904,13 @@ public class ListController {
 
     }
 
+    @Operation(summary = "retrieve Project Photos created by User")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK. Photos retrieved",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Photo.class))}),
+
+    })
     @GetMapping("/getUserProjectPhotos")
     public ResponseEntity<Object> getUserProjectPhotos(String userId) {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
@@ -853,6 +926,13 @@ public class ListController {
 
     }
 
+    @Operation(summary = "retrieve Project Videos created by User")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK. Videos retrieved",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Video.class))}),
+
+    })
     @GetMapping("/getUserProjectVideos")
     public ResponseEntity<Object> getUserProjectVideos(String userId) {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
@@ -867,6 +947,14 @@ public class ListController {
         }
 
     }
+
+    @Operation(summary = "retrieve Project Audio created by User")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Audios retrieved",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Audio.class))}),
+
+    })
     @GetMapping("/getUserProjectAudios")
     public ResponseEntity<Object> getUserProjectAudios(String userId) {
         try {
@@ -880,6 +968,13 @@ public class ListController {
 
     }
 
+    @Operation(summary = "retrieve Project video created")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Audios retrieved",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Video.class))}),
+
+    })
     @GetMapping("/getProjectVideos")
     public ResponseEntity<Object> getProjectVideos(String projectId)
             throws Exception {
@@ -896,6 +991,13 @@ public class ListController {
 
     }
 
+    @Operation(summary = "retrieve Project schedules created")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Schedules retrieved",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = FieldMonitorSchedule.class))}),
+
+    })
     @GetMapping("/getProjectFieldMonitorSchedules")
     public ResponseEntity<Object> getProjectFieldMonitorSchedules(String projectId)
             throws Exception {
@@ -959,6 +1061,13 @@ public class ListController {
 
     }
 
+    @Operation(summary = "find Cities within geographic area")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Cities found",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = City.class))}),
+
+    })
     @GetMapping("/getNearbyCities")
     public ResponseEntity<Object> getNearbyCities(double latitude, double longitude, double radiusInKM) {
         try {

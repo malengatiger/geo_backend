@@ -487,7 +487,7 @@ public class ListService {
     @Autowired
     ProjectPositionRepository projectPositionRepository;
 
-    public List<Project> findProjectsByLocation(double latitude, double longitude, double radiusInKM)  {
+    public List<Project> findProjectsByLocation(String organizationId, double latitude, double longitude, double radiusInKM)  {
         LOGGER.info(E.DICE.concat(E.DICE).concat(" findProjectsByLocation ..."));
         Point point = new Point(longitude, latitude);
         Distance distance = new Distance(radiusInKM, Metrics.KILOMETERS);
@@ -498,8 +498,10 @@ public class ListService {
         for (ProjectPosition projectPosition : projects) {
             LOGGER.info(E.DOLPHIN.concat(E.DOLPHIN) + projectPosition.getProjectName() + ", "
                     + E.COFFEE);
-            Project p = projectRepository.findByProjectId(projectPosition.getProjectId());
-            fList.add(p);
+            if (projectPosition.getOrganizationId().equalsIgnoreCase(organizationId)) {
+                Project p = projectRepository.findByProjectId(projectPosition.getProjectId());
+                fList.add(p);
+            }
         }
         LOGGER.info(E.HEART_ORANGE.concat(E.HEART_ORANGE).concat(
                 "findProjectsByLocation: Nearby Projects found: " + projects.size() + " \uD83C\uDF3F"));
@@ -539,10 +541,23 @@ public class ListService {
 
         int photos = photoRepository.findByProjectId(projectId).size();
         int videos = videoRepository.findByProjectId(projectId).size();
+        int audios = audioRepository.findByProjectId(projectId).size();
+        int schedules = fieldMonitorScheduleRepository.findByProjectId(projectId).size();
+        int positions = projectPositionRepository.findByProjectId(projectId).size();
+        int polygons = projectPolygonRepository.findByProjectId(projectId).size();
+
+        Project project = projectRepository.findByProjectId(projectId);
         val pc = new ProjectCount();
         pc.setPhotos(photos);
         pc.setDate(new DateTime().toDateTimeISO().toString());
         pc.setVideos(videos);
+        pc.setProjectId(projectId);
+        pc.setOrganizationId(project.getOrganizationId());
+        pc.setAudios(audios);
+        pc.setSchedules(schedules);
+        pc.setProjectName(project.getName());
+        pc.setProjectPositions(positions);
+        pc.setProjectPolygons(polygons);
 
         LOGGER.info(E.HEART_ORANGE.concat(E.HEART_ORANGE)
                 + " getCountsByProject, \uD83C\uDF3F found: " + G.toJson(pc));
@@ -752,6 +767,7 @@ public class ListService {
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getUserById ..."));
         User user = userRepository.findByUserId(userId);
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getUserById ... found, active: " + user.getActive()));
+
         if (user.getActive() > 0) {
             return null;
         }

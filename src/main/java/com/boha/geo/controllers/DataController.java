@@ -10,8 +10,12 @@ import com.boha.geo.util.E;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
-import io.github.bucket4j.Bucket4j;
 import io.github.bucket4j.Refill;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,6 +67,13 @@ public class DataController {
         return E.HAND2 + E.HAND2 + "PROJECT MONITOR SERVICES PLATFORM pinged at ".concat(new DateTime().toDateTimeISO().toString());
     }
 
+    @Operation(summary = "register Organization")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Organization registered",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = OrganizationRegistrationBag.class))}),
+
+    })
     @PostMapping("/registerOrganization")
     public ResponseEntity<Object> registerOrganization(@RequestBody OrganizationRegistrationBag orgBag) throws Exception {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
@@ -78,6 +89,13 @@ public class DataController {
         }
 
     }
+    @Operation(summary = "register User")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Organization registered",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = User.class))}),
+
+    })
     @PostMapping("/createUser")
     public ResponseEntity<Object> createUser(@RequestBody User user) throws Exception {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
@@ -159,11 +177,18 @@ public class DataController {
    
     private final MongoDataService mongoDataService;
 
+    @Operation(summary = "add Project to Organization")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Project added to Organization",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Project.class))}),
+
+    })
     @PostMapping("/addProject")
     public ResponseEntity<Object> addProject(@RequestBody Project project) throws Exception {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS).concat("Adding Project: ".concat(project.getName())));
         try {
-            String result = dataService.addProject(project);
+            Project result = dataService.addProject(project);
             LOGGER.info(E.LEAF + E.LEAF + result);
             return ResponseEntity.ok(project);
         } catch (Exception e) {
@@ -174,7 +199,13 @@ public class DataController {
         }
 
     }
+    @Operation(summary = "update Project")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Project updated",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Project.class))}),
 
+    })
     @PostMapping("/updateProject")
     public ResponseEntity<Object> updateProject(@RequestBody Project project) throws Exception {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS).concat("Update Project: ".concat(project.getName())));
@@ -188,6 +219,35 @@ public class DataController {
         }
 
     }
+
+    @Operation(summary = "send LocationRequest to User via FCM message topic")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "LocationRequest sent",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = LocationRequest.class))}),
+
+    })
+    @PostMapping("/sendLocationRequest")
+    public ResponseEntity<Object> sendLocationRequest(@RequestBody LocationRequest locationRequest) {
+        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
+                .concat("sendLocationRequest message: " + locationRequest.getOrganizationId()));
+        try {
+            return ResponseEntity.ok(messageService.sendMessage(locationRequest));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "sendLocationRequest failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+    }
+
+    @Operation(summary = "send LocationResponse to requester via FCM message topic")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "LocationResponse sent via FCM message topic",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = LocationResponse.class))}),
+
+    })
     @PostMapping("/addLocationResponse")
     public ResponseEntity<Object> addLocationResponse(@RequestBody LocationResponse locationResponse) throws Exception {
         try {
@@ -201,6 +261,13 @@ public class DataController {
 
     }
 
+    @Operation(summary = "add organization and/or project Settings")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Settings added",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = SettingsModel.class))}),
+
+    })
     @PostMapping("/addSettings")
     public ResponseEntity<Object> addSettings(@RequestBody SettingsModel model)  throws Exception {
         try {
@@ -214,6 +281,13 @@ public class DataController {
 
     }
 
+    @Operation(summary = "add ProjectPosition")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "ProjectPosition added",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ProjectPosition.class))}),
+
+    })
     @PostMapping("/addProjectPosition")
     public ResponseEntity<Object> addProjectPosition(@RequestBody ProjectPosition projectPosition)
             throws Exception {
@@ -228,6 +302,13 @@ public class DataController {
         }
 
     }
+    @Operation(summary = "add ProjectPolygon aka area")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "ProjectPolygon added",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ProjectPolygon.class))}),
+
+    })
     @PostMapping("/addProjectPolygon")
     public ResponseEntity<Object> addProjectPolygon(@RequestBody ProjectPolygon projectPolygon)
             throws Exception {
@@ -243,6 +324,13 @@ public class DataController {
 
     }
 
+    @Operation(summary = "add GeofenceEvent")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "GeofenceEvent added",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = GeofenceEvent.class))}),
+
+    })
     @PostMapping("/addGeofenceEvent")
     public ResponseEntity<Object> addGeofenceEvent(@RequestBody GeofenceEvent geofenceEvent)
             throws Exception {
@@ -258,7 +346,13 @@ public class DataController {
 
     }
 
+    @Operation(summary = "add Photo")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Photo added",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Photo.class))}),
 
+    })
 
     @PostMapping("/addPhoto")
     public ResponseEntity<Object> addPhoto(@RequestBody Photo photo) throws Exception {
@@ -274,6 +368,13 @@ public class DataController {
 
     }
 
+    @Operation(summary = "add LocationRequest")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "LocationRequest added",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = LocationRequest.class))}),
+
+    })
     @PostMapping("/addLocationRequest")
     public ResponseEntity<Object> addLocationRequest(@RequestBody LocationRequest request) throws Exception {
         try {
@@ -287,19 +388,26 @@ public class DataController {
         }
 
     }
-    @PostMapping("/addActivityModel")
-    public ResponseEntity<Object> addActivityModel(@RequestBody ActivityModel model) throws Exception {
-        try {
-             dataService.addActivityModel(model);
-            return ResponseEntity.ok(model);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(
-                    new CustomErrorResponse(400,
-                            "addPhoto failed: " + e.getMessage(),
-                            new DateTime().toDateTimeISO().toString()));
-        }
+//    @PostMapping("/addActivityModel")
+//    public ResponseEntity<Object> addActivityModel(@RequestBody ActivityModel model) throws Exception {
+//        try {
+//             dataService.addActivityModel(model);
+//            return ResponseEntity.ok(model);
+//        } catch (Exception e) {
+//            return ResponseEntity.badRequest().body(
+//                    new CustomErrorResponse(400,
+//                            "addPhoto failed: " + e.getMessage(),
+//                            new DateTime().toDateTimeISO().toString()));
+//        }
+//
+//    }
+@Operation(summary = "add ProjectAssignment")
+@ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "ProjectAssignment added",
+                content = {@Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ProjectAssignment.class))}),
 
-    }
+})
     @PostMapping("/addProjectAssignment")
     public ResponseEntity<Object> addProjectAssignment(@RequestBody ProjectAssignment projectAssignment) throws Exception {
         try {
@@ -315,6 +423,13 @@ public class DataController {
 
     }
 
+    @Operation(summary = "add Video")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Video added",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Video.class))}),
+
+    })
     @PostMapping("/addVideo")
     public ResponseEntity<Object> addVideo(@RequestBody Video video) throws Exception {
         try {
@@ -329,6 +444,13 @@ public class DataController {
         }
 
     }
+    @Operation(summary = "add Audio")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Audio added",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Audio.class))}),
+
+    })
     @PostMapping("/addAudio")
     public ResponseEntity<Object> addAudio(@RequestBody Audio audio) throws Exception {
         try {
@@ -343,7 +465,13 @@ public class DataController {
         }
 
     }
+    @Operation(summary = "add Condition")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Condition added",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Condition.class))}),
 
+    })
     @PostMapping("/addCondition")
     public ResponseEntity<Object> addCondition(@RequestBody Condition condition) throws Exception {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
@@ -361,6 +489,13 @@ public class DataController {
 
     }
 
+    @Operation(summary = "add Message")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Message added",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = OrgMessage.class))}),
+
+    })
     @PostMapping("/sendMessage")
     public ResponseEntity<Object> sendMessage(@RequestBody OrgMessage orgMessage) throws Exception {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
@@ -378,7 +513,13 @@ public class DataController {
 
     }
 
+    @Operation(summary = "add User")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User added",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = User.class))}),
 
+    })
     @PostMapping("/addUser")
     public ResponseEntity<Object> addUser(@RequestBody User user) throws FirebaseMessagingException {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
@@ -393,6 +534,7 @@ public class DataController {
         }
 
     }
+
     @PostMapping("/deleteAuthUser")
     public ResponseEntity<Object> deleteAuthUser(@RequestBody String userId) throws FirebaseMessagingException {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
@@ -408,6 +550,14 @@ public class DataController {
                             new DateTime().toDateTimeISO().toString()));
         }
     }
+
+    @Operation(summary = "update User")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User updated",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = User.class))}),
+
+    })
     @PostMapping("/updateUser")
     public ResponseEntity<Object> updateUser(@RequestBody User user) throws Exception {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
@@ -438,6 +588,13 @@ public class DataController {
         }
 
     }
+    @Operation(summary = "add Rating")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Rating added",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Rating.class))}),
+
+    })
     @PostMapping("/addRating")
     public ResponseEntity<Object> addRating(@RequestBody Rating rating) throws Exception {
 

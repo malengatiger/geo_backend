@@ -26,7 +26,7 @@ public class KhayaController {
     @GetMapping("/")
     private String  hi() {
         LOGGER.info(E.BLUE_HEART + "Base endpoint  requested  ..." + E.BLUE_HEART);
-        return E.BLUE_HEART +  " WeatherSandboxApplication and Khaya saying hi at "
+        return E.BLUE_HEART +  " GeoBackend Application and Khaya saying hi at "
                 + new DateTime().toDateTimeISO();
     }
     @GetMapping("/getForecasts")
