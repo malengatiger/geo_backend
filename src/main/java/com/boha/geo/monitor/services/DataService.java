@@ -190,7 +190,7 @@ public class DataService {
             val polygons = projectPositionRepository.countByProject(project.getProjectId());
             val schedules = projectPositionRepository.countByProject(project.getProjectId());
             for (int i = 0; i < daysDiff; i++) {
-                val pc = createProjectCount(project, myStart.toString(), (myStart.plusDays(1)).toString());
+                val pc = createProjectSummary(project, myStart.toString(), (myStart.plusDays(1)).toString());
                 pc.setCalculatedHourly(1);
                 pc.setProjectPositions(positions);
                 pc.setProjectPolygons(polygons);
@@ -224,7 +224,7 @@ public class DataService {
             val polygons = projectPositionRepository.countByProject(project.getProjectId());
             val schedules = projectPositionRepository.countByProject(project.getProjectId());
             for (int i = 0; i < hoursDiff; i++) {
-                val pc = createProjectCount(project, myStart.toString(), (myStart.plusHours(1)).toString());
+                val pc = createProjectSummary(project, myStart.toString(), (myStart.plusHours(1)).toString());
                 pc.setCalculatedHourly(0);
                 pc.setProjectPositions(positions);
                 pc.setProjectPolygons(polygons);
@@ -239,7 +239,7 @@ public class DataService {
         return counts;
     }
 
-    public ProjectSummary createProjectCount(Project project, String startDate, String endDate) throws Exception {
+    public ProjectSummary createProjectSummary(Project project, String startDate, String endDate) throws Exception {
 
         long start = System.currentTimeMillis();
         val photos = photoRepository.countByProjectPeriod(project.getProjectId(), startDate, endDate);

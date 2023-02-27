@@ -1067,4 +1067,106 @@ public class ListController {
 
     }
 
+    @Operation(summary = "getProjectSummaries data created byUser ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Data retrieved",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ProjectSummary.class))}),
+
+    })
+    @GetMapping("/getProjectSummaries")
+    public ResponseEntity<?> getProjectSummaries(@RequestParam String projectId, @RequestParam String startDate, @RequestParam String endDate) throws Exception {
+
+        try {
+            return ResponseEntity.ok(listService.getProjectSummaries(projectId,startDate,endDate));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "getProjectSummaries failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+
+    }
+    @Operation(summary = "get Organization Summaries by period ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Data retrieved",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ProjectSummary.class))}),
+
+    })
+    @GetMapping("/getOrganizationSummaries")
+    public ResponseEntity<?> getOrganizationSummaries(@RequestParam String organizationId, @RequestParam String startDate, @RequestParam String endDate) throws Exception {
+
+        try {
+            return ResponseEntity.ok(listService.getOrganizationSummaries(organizationId,startDate,endDate));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "getOrganizationSummaries failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+
+    }
+
+    @Operation(summary = "get ProjectActivity by Period ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Data retrieved",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ActivityModel.class))}),
+
+    })
+    @GetMapping("/getProjectActivityPeriod")
+    public ResponseEntity<?> getProjectActivityPeriod(@RequestParam String projectId, @RequestParam String startDate, @RequestParam String endDate) throws Exception {
+
+        try {
+            return ResponseEntity.ok(listService.getProjectActivityPeriod(projectId,startDate,endDate));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "getProjectActivityPeriod failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+
+    }
+    @Operation(summary = "get OrganizationActivity by Period ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Data retrieved",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ActivityModel.class))}),
+
+    })
+    @GetMapping("/getOrganizationActivityPeriod")
+    public ResponseEntity<?> getOrganizationActivityPeriod(@RequestParam String organizationId, @RequestParam String startDate, @RequestParam String endDate) throws Exception {
+
+        try {
+            return ResponseEntity.ok(listService.getOrganizationActivityPeriod(organizationId,startDate,endDate));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "getOrganizationActivityPeriod failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+
+    }
+    @Operation(summary = "get OrganizationActivity by Period ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Data retrieved",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ActivityModel.class))}),
+
+    })
+    @GetMapping("/getUserActivityPeriod")
+    public ResponseEntity<?> getUserActivityPeriod(@RequestParam String userId, @RequestParam String startDate, @RequestParam String endDate) throws Exception {
+
+        try {
+            return ResponseEntity.ok(listService.getUserActivityPeriod(userId,startDate,endDate));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "getUserActivityPeriod failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+
+    }
+
 }

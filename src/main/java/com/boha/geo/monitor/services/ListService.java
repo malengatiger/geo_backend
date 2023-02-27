@@ -38,6 +38,9 @@ public class ListService {
     GeofenceEventRepository geofenceEventRepository;
 
     @Autowired
+    ActivityModelRepository activityModelRepository;
+
+    @Autowired
     ProjectSummaryRepository projectSummaryRepository;
     @Autowired
     CountryRepository countryRepository;
@@ -460,6 +463,46 @@ public class ListService {
 
         List<Video> mList = videoRepository.findByUserId(userId);
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getUserProjectVideos ... found: " + mList.size()));
+
+        return mList;
+    }
+    public List<ProjectSummary> getProjectSummaries(String projectId, String startDate, String endDate) {
+
+        List<ProjectSummary> mList = projectSummaryRepository.findByProjectInPeriod(projectId,startDate,endDate);
+        LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getProjectSummaries ... found: " + mList.size()
+                + " startDate: " + startDate + " endDate: " + endDate));
+
+        return mList;
+    }
+    public List<ActivityModel> getProjectActivityPeriod(String projectId, String startDate, String endDate) {
+
+        List<ActivityModel> mList = activityModelRepository.findByProjectPeriod(projectId,startDate,endDate);
+        LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getProjectActivityPeriod ... found: " + mList.size()
+                + " startDate: " + startDate + " endDate: " + endDate));
+
+        return mList;
+    }
+    public List<ProjectSummary> getOrganizationSummaries(String organizationId, String startDate, String endDate) {
+
+        List<ProjectSummary> mList = projectSummaryRepository.findByOrganizationInPeriod(organizationId,startDate,endDate);
+        LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getProjectSummaries ... found: " + mList.size()
+                + " startDate: " + startDate + " endDate: " + endDate));
+
+        return mList;
+    }
+    public List<ActivityModel> getOrganizationActivityPeriod(String organizationId, String startDate, String endDate) {
+
+        List<ActivityModel> mList = activityModelRepository.findByOrganizationPeriod(organizationId,startDate,endDate);
+        LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getOrganizationActivityPeriod ... found: " + mList.size()
+                + " startDate: " + startDate + " endDate: " + endDate));
+
+        return mList;
+    }
+    public List<ActivityModel> getUserActivityPeriod(String userId, String startDate, String endDate) {
+
+        List<ActivityModel> mList = activityModelRepository.findByUserPeriod(userId,startDate,endDate);
+        LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getUserActivityPeriod ... found: " + mList.size()
+                + " startDate: " + startDate + " endDate: " + endDate));
 
         return mList;
     }
