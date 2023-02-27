@@ -14,11 +14,13 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.UserRecord;
-import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mongodb.client.result.UpdateResult;
+import lombok.val;
 import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.Hours;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
@@ -29,6 +31,8 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -68,6 +72,8 @@ public class DataService {
     final OrgMessageRepository orgMessageRepository;
     final MessageService messageService;
     final FieldMonitorScheduleRepository fieldMonitorScheduleRepository;
+
+    final ProjectSummaryRepository projectSummaryRepository;
     private boolean isInitialized = false;
     private final MailService mailService;
 
@@ -85,7 +91,7 @@ public class DataService {
                        ProjectPositionRepository projectPositionRepository,
                        OrgMessageRepository orgMessageRepository,
                        MessageService messageService,
-                       FieldMonitorScheduleRepository fieldMonitorScheduleRepository, MailService mailService) {
+                       FieldMonitorScheduleRepository fieldMonitorScheduleRepository, ProjectSummaryRepository projectSummaryRepository, MailService mailService) {
         this.env = env;
         this.geofenceEventRepository = geofenceEventRepository;
         this.settingsModelRepository = settingsModelRepository;
@@ -110,6 +116,7 @@ public class DataService {
         this.orgMessageRepository = orgMessageRepository;
         this.messageService = messageService;
         this.fieldMonitorScheduleRepository = fieldMonitorScheduleRepository;
+        this.projectSummaryRepository = projectSummaryRepository;
         this.mailService = mailService;
         LOGGER.info(xx+" DataService constructed and repos injected \uD83C\uDF4F");
     }
@@ -164,6 +171,98 @@ public class DataService {
         }
 
 
+    }
+
+    public List<ProjectSummary> createDailyOrganizationSummaries(String organizationId, String fromDate, String toDate) throws Exception {
+        //todo - check if this range has been created before - maybe think of a key strategy to prevent duplicates
+        List<ProjectSummary> counts = new ArrayList<>();
+        DateTime dt = DateTime.parse(fromDate).toDateTimeISO();
+        DateTime dtStart = dt.withTimeAtStartOfDay();
+        DateTime dtTo = DateTime.parse(toDate).toDateTimeISO();
+
+
+        List<Project> projects = projectRepository.findByOrganizationId(organizationId);
+        long daysDiff = Math.abs(Days.daysBetween(dtStart, dtTo).getDays());
+
+        for (Project project : projects) {
+            DateTime myStart = DateTime.parse(dtStart.toString());
+            val positions = projectPositionRepository.countByProject(project.getProjectId());
+            val polygons = projectPositionRepository.countByProject(project.getProjectId());
+            val schedules = projectPositionRepository.countByProject(project.getProjectId());
+            for (int i = 0; i < daysDiff; i++) {
+                val pc = createProjectCount(project, myStart.toString(), (myStart.plusDays(1)).toString());
+                pc.setCalculatedHourly(1);
+                pc.setProjectPositions(positions);
+                pc.setProjectPolygons(polygons);
+                pc.setSchedules(schedules);
+                counts.add(pc);
+                myStart = myStart.plusDays(1);
+            }
+
+        }
+        projectSummaryRepository.insert(counts);
+        LOGGER.info(E.GLOBE+E.GLOBE+ " createDailyOrganizationCounts has added " + counts.size()
+                + " projectCounts, days: " + daysDiff);
+
+        return counts;
+    }
+
+    public List<ProjectSummary> createHourlyOrganizationSummaries(String organizationId, String fromDate, String toDate) throws Exception {
+        //todo - check if this range has been created before - maybe think of a key strategy to prevent duplicates
+
+        List<ProjectSummary> counts = new ArrayList<>();
+        DateTime dtFrom = DateTime.parse(fromDate).toDateTimeISO();
+        DateTime dtStart = dtFrom.withTimeAtStartOfDay();
+        DateTime dtTo = DateTime.parse(toDate).toDateTimeISO();
+
+        List<Project> projects = projectRepository.findByOrganizationId(organizationId);
+        long hoursDiff = Math.abs(Hours.hoursBetween(dtStart, dtTo).getHours());
+
+        for (Project project : projects) {
+            DateTime myStart = DateTime.parse(dtStart.toString());
+            val positions = projectPositionRepository.countByProject(project.getProjectId());
+            val polygons = projectPositionRepository.countByProject(project.getProjectId());
+            val schedules = projectPositionRepository.countByProject(project.getProjectId());
+            for (int i = 0; i < hoursDiff; i++) {
+                val pc = createProjectCount(project, myStart.toString(), (myStart.plusHours(1)).toString());
+                pc.setCalculatedHourly(0);
+                pc.setProjectPositions(positions);
+                pc.setProjectPolygons(polygons);
+                pc.setSchedules(schedules);
+                counts.add(pc);
+                myStart = myStart.plusHours(1);
+            }
+        }
+        projectSummaryRepository.insert(counts);
+        LOGGER.info(E.GLOBE+E.GLOBE+ " createHourlyOrganizationCounts has added " + counts.size()
+                + " projectCounts; hours: " + hoursDiff);
+        return counts;
+    }
+
+    public ProjectSummary createProjectCount(Project project, String startDate, String endDate) throws Exception {
+
+        long start = System.currentTimeMillis();
+        val photos = photoRepository.countByProjectPeriod(project.getProjectId(), startDate, endDate);
+        val videos = videoRepository.countByProjectPeriod(project.getProjectId(), startDate, endDate);
+        val audios = audioRepository.countByProjectPeriod(project.getProjectId(), startDate, endDate);
+
+        val pc = new ProjectSummary();
+        pc.setProjectId(project.getProjectId());
+        pc.setProjectName(project.getName());
+        pc.setOrganizationId(project.getOrganizationId());
+        pc.setOrganizationName(project.getOrganizationName());
+        pc.setDate(DateTime.now().toDateTimeISO().toString());
+        pc.setAudios(audios);
+        pc.setVideos(videos);
+        pc.setPhotos(photos);
+
+
+        long end = System.currentTimeMillis();
+        long ms = (end - start);
+        long delta = ms / 60;
+        LOGGER.info(E.PANDA + E.PANDA + E.PANDA + " project count took " + delta + " seconds");
+
+        return pc;
     }
 
 

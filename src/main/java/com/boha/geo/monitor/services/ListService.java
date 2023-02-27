@@ -1,7 +1,6 @@
 package com.boha.geo.monitor.services;
 
 
-import com.boha.geo.monitor.data.DataBag;
 import com.boha.geo.monitor.data.*;
 import com.boha.geo.repos.*;
 import com.boha.geo.util.E;
@@ -32,11 +31,14 @@ import java.util.zip.ZipOutputStream;
 @Service
 public class ListService {
     public static final Logger LOGGER = LoggerFactory.getLogger(ListService.class.getSimpleName());
-    private static final String xx = E.COFFEE+E.COFFEE+E.COFFEE;
+    private static final String xx = E.COFFEE + E.COFFEE + E.COFFEE;
 
     private static final Gson G = new GsonBuilder().setPrettyPrinting().create();
     @Autowired
     GeofenceEventRepository geofenceEventRepository;
+
+    @Autowired
+    ProjectSummaryRepository projectSummaryRepository;
     @Autowired
     CountryRepository countryRepository;
     @Autowired
@@ -97,7 +99,8 @@ public class ListService {
         }
         return user;
     }
-    public List<FieldMonitorSchedule> getProjectFieldMonitorSchedules(String projectId)  {
+
+    public List<FieldMonitorSchedule> getProjectFieldMonitorSchedules(String projectId) {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS).concat("getProjectFieldMonitorSchedules: "
                 .concat(E.FLOWER_YELLOW)));
 
@@ -106,7 +109,8 @@ public class ListService {
         LOGGER.info(E.LEAF.concat(E.LEAF).concat("getProjectFieldMonitorSchedules found: " + m.size()));
         return m;
     }
-    public List<FieldMonitorSchedule> getUserFieldMonitorSchedules(String userId)  {
+
+    public List<FieldMonitorSchedule> getUserFieldMonitorSchedules(String userId) {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS).concat("getUserFieldMonitorSchedules: "
                 .concat(E.FLOWER_YELLOW)));
 
@@ -115,7 +119,8 @@ public class ListService {
         LOGGER.info(E.LEAF.concat(E.LEAF).concat("getUserFieldMonitorSchedules found: " + m.size()));
         return m;
     }
-    public List<FieldMonitorSchedule> getOrgFieldMonitorSchedules(String organizationId)  {
+
+    public List<FieldMonitorSchedule> getOrgFieldMonitorSchedules(String organizationId) {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS).concat("getOrgFieldMonitorSchedules: "
                 .concat(E.FLOWER_YELLOW)));
 
@@ -124,7 +129,8 @@ public class ListService {
         LOGGER.info(E.LEAF.concat(E.LEAF).concat("getOrgFieldMonitorSchedules found: " + m.size()));
         return m;
     }
-    public List<FieldMonitorSchedule> getMonitorFieldMonitorSchedules(String userId)  {
+
+    public List<FieldMonitorSchedule> getMonitorFieldMonitorSchedules(String userId) {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS).concat("getMonitorFieldMonitorSchedules: "
                 .concat(E.FLOWER_YELLOW)));
 
@@ -133,7 +139,8 @@ public class ListService {
         LOGGER.info(E.LEAF.concat(E.LEAF).concat("getMonitorFieldMonitorSchedules found: " + m.size()));
         return m;
     }
-    public List<FieldMonitorSchedule> getAdminFieldMonitorSchedules(String userId)  {
+
+    public List<FieldMonitorSchedule> getAdminFieldMonitorSchedules(String userId) {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS).concat("getOrgFieldMonitorSchedules: "
                 .concat(E.FLOWER_YELLOW)));
 
@@ -143,7 +150,7 @@ public class ListService {
         return m;
     }
 
-    public List<Organization> getOrganizations()  {
+    public List<Organization> getOrganizations() {
 
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getOrganizations ..."));
         List<Organization> mList = (List<Organization>) organizationRepository.findAll();
@@ -151,7 +158,7 @@ public class ListService {
         return mList;
     }
 
-    public List<Community> getCommunities()  {
+    public List<Community> getCommunities() {
 
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getCommunities ..."));
         List<Community> mList = (List<Community>) communityRepository.findAll();
@@ -160,7 +167,7 @@ public class ListService {
         return mList;
     }
 
-    public List<Project> getProjects()  {
+    public List<Project> getProjects() {
 
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("ListService: getProjects ..."));
         List<Project> mList = (List<Project>) projectRepository.findAll();
@@ -172,7 +179,7 @@ public class ListService {
     }
 
 
-    public List<Organization> getCountryOrganizations(String countryId)  {
+    public List<Organization> getCountryOrganizations(String countryId) {
 
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getOrganizations ..."));
         List<Organization> mList = organizationRepository.findByCountryId(countryId);
@@ -181,7 +188,7 @@ public class ListService {
         return mList;
     }
 
-    public List<Photo> getProjectPhotos(String projectId)  {
+    public List<Photo> getProjectPhotos(String projectId) {
 
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getProjectPhotos ..."));
         List<Photo> mList = photoRepository.findByProjectId(projectId);
@@ -190,20 +197,22 @@ public class ListService {
         return mList;
     }
 
-    public List<ProjectAssignment> getProjectAssignments(String projectId)  {
+    public List<ProjectAssignment> getProjectAssignments(String projectId) {
 
         return projectAssignmentRepository.findByProjectId(projectId);
     }
-    public List<ProjectAssignment> getUserProjectAssignments(String userId)  {
+
+    public List<ProjectAssignment> getUserProjectAssignments(String userId) {
 
         return projectAssignmentRepository.findByUserId(userId);
     }
-    public List<ProjectAssignment> getOrganizationProjectAssignments(String organizationId)  {
+
+    public List<ProjectAssignment> getOrganizationProjectAssignments(String organizationId) {
 
         return projectAssignmentRepository.findByOrganizationId(organizationId);
     }
 
-    public List<ActivityModel> getOrganizationActivity(String organizationId, int hours)  {
+    public List<ActivityModel> getOrganizationActivity(String organizationId, int hours) {
 
         DateTime then = DateTime.now().minusHours(hours);
         String date = then.toDateTimeISO().toString();
@@ -214,10 +223,11 @@ public class ListService {
 
         Query query = new Query(criteria);
         List<ActivityModel> activities = mongoTemplate.find(query, ActivityModel.class);
-        LOGGER.info(E.PANDA+E.PANDA+ " activities found " + activities.size() + " hours: " + hours);
+        LOGGER.info(E.PANDA + E.PANDA + " activities found " + activities.size() + " hours: " + hours);
         return activities;
     }
-    public List<ActivityModel> getProjectActivity(String projectId, int hours)  {
+
+    public List<ActivityModel> getProjectActivity(String projectId, int hours) {
 
         DateTime then = DateTime.now().minusHours(hours);
         String date = then.toDateTimeISO().toString();
@@ -228,11 +238,11 @@ public class ListService {
 
         Query query = new Query(criteria);
         List<ActivityModel> activities = mongoTemplate.find(query, ActivityModel.class);
-        LOGGER.info(E.PANDA+E.PANDA+ " project activities found " + activities.size() + " hours: " + hours);
+        LOGGER.info(E.PANDA + E.PANDA + " project activities found " + activities.size() + " hours: " + hours);
         return activities;
     }
 
-    public List<ActivityModel> getUserActivity(String userId, int hours)  {
+    public List<ActivityModel> getUserActivity(String userId, int hours) {
 
         DateTime then = DateTime.now().minusHours(hours);
         String date = then.toDateTimeISO().toString();
@@ -243,11 +253,11 @@ public class ListService {
 
         Query query = new Query(criteria);
         List<ActivityModel> activities = mongoTemplate.find(query, ActivityModel.class);
-        LOGGER.info(E.PANDA+E.PANDA+ " user activities found " + activities.size() + " hours: " + hours);
+        LOGGER.info(E.PANDA + E.PANDA + " user activities found " + activities.size() + " hours: " + hours);
         return activities;
     }
 
-    public DataBag getUserData(String userId)  {
+    public DataBag getUserData(String userId) {
         DataBag bag = new DataBag();
         User user = userRepository.findByUserId(userId);
         List<Project> projects = projectRepository.findByOrganizationId(user.getOrganizationId());
@@ -271,13 +281,13 @@ public class ListService {
         bag.setProjectAssignments(assignments);
 
 
-        LOGGER.info(E.RED_APPLE+" User data found: photos: " + bag.getPhotos().size() + " videos: " + bag.getVideos().size()
+        LOGGER.info(E.RED_APPLE + " User data found: photos: " + bag.getPhotos().size() + " videos: " + bag.getVideos().size()
                 + " schedules: " + bag.getFieldMonitorSchedules().size());
 
         return bag;
     }
 
-    public DataBag getProjectData(String projectId)  {
+    public DataBag getProjectData(String projectId) {
         DataBag bag = new DataBag();
         Project project = projectRepository.findByProjectId(projectId);
         List<Project> projects = new ArrayList<>();
@@ -303,8 +313,8 @@ public class ListService {
         bag.setSettings(settings);
         bag.setProjectAssignments(assignments);
 
-        LOGGER.info(E.RED_APPLE+" Project data found: photos: " + bag.getPhotos().size() + " videos: " + bag.getVideos().size()
-        + " schedules: " + bag.getFieldMonitorSchedules().size() + " polygons: " + bag.getProjectPolygons().size());
+        LOGGER.info(E.RED_APPLE + " Project data found: photos: " + bag.getPhotos().size() + " videos: " + bag.getVideos().size()
+                + " schedules: " + bag.getFieldMonitorSchedules().size() + " polygons: " + bag.getProjectPolygons().size());
 
         return bag;
     }
@@ -312,12 +322,15 @@ public class ListService {
     public Photo findPhotoById(String photoId) {
         return photoRepository.findByPhotoId(photoId);
     }
+
     public Video findVideoById(String photoId) {
         return videoRepository.findByVideoId(photoId);
     }
+
     public Audio findAudioById(String photoId) {
         return audioRepository.findByAudioId(photoId);
     }
+
     public DataBag getOrganizationData(String organizationId) throws Exception {
         DataBag bag = new DataBag();
         List<Project> projects = getOrganizationProjects(organizationId);
@@ -343,7 +356,7 @@ public class ListService {
         bag.setUsers(users);
         bag.setProjectAssignments(assignments);
 
-        LOGGER.info(E.RED_APPLE+" Organization data found: photos: " + bag.getPhotos().size() + " videos: " + bag.getVideos().size()
+        LOGGER.info(E.RED_APPLE + " Organization data found: photos: " + bag.getPhotos().size() + " videos: " + bag.getVideos().size()
                 + " schedules: " + bag.getFieldMonitorSchedules().size() + " polygons: " + bag.getProjectPolygons().size());
 
 //        File zipped = getOrganizationDataZippedFile(organizationId);
@@ -351,18 +364,25 @@ public class ListService {
 
         return bag;
     }
-    static final String mm = "" + E.BLUE_DOT+E.BLUE_DOT+E.BLUE_DOT+ " Zipping Org data: ";
+
+    static final String mm = "" + E.BLUE_DOT + E.BLUE_DOT + E.BLUE_DOT + " Zipping Org data: ";
+
     public File getOrganizationDataZippedFile(String organizationId) throws Exception {
+
+        //todo - remove after test
+        String date = DateTime.now().toDateTimeISO().minusDays(10).toString();
+        long photoCount = photoRepository.countByTimeAndOrganization(organizationId, date);
+        LOGGER.info(mm + " photo count from query: " + photoCount);
 
         DataBag bag = getOrganizationData(organizationId);
         String json = G.toJson(bag);
-        LOGGER.info(mm+" Size of json file before zipping: " + json.length() + " bytes");
+        LOGGER.info(mm + " Size of json file before zipping: " + json.length() + " bytes");
         File dir = new File("zipDirectory");
         if (!dir.exists()) {
             boolean ok = dir.mkdir();
-            LOGGER.info(mm+" Zip directory has been created: path: " + dir.getAbsolutePath() + " created: " + ok);
+            LOGGER.info(mm + " Zip directory has been created: path: " + dir.getAbsolutePath() + " created: " + ok);
         }
-        File zippedFile = new File(dir,""+DateTime.now().getMillis() + ".zip");
+        File zippedFile = new File(dir, "" + DateTime.now().getMillis() + ".zip");
         ZipOutputStream out = new ZipOutputStream(new FileOutputStream(zippedFile));
         ZipEntry e = new ZipEntry("dataBag");
         out.putNextEntry(e);
@@ -372,7 +392,7 @@ public class ListService {
         out.closeEntry();
 
         out.close();
-        LOGGER.info(mm+" Size of zipped json file after zipping: " + zippedFile.length() + " bytes");
+        LOGGER.info(mm + " Size of zipped json file after zipping: " + zippedFile.length() + " bytes");
         return zippedFile;
     }
 
@@ -380,14 +400,14 @@ public class ListService {
 
         DataBag bag = getProjectData(projectId);
         String json = G.toJson(bag);
-        LOGGER.info(mm+" Size of json file before zipping: " + json.length() + " bytes");
+        LOGGER.info(mm + " Size of json file before zipping: " + json.length() + " bytes");
 
         File dir = new File("zipDirectory");
         if (!dir.exists()) {
             boolean ok = dir.mkdir();
-            LOGGER.info(mm+" Zip directory has been created: path: " + dir.getAbsolutePath() + " created: " + ok);
+            LOGGER.info(mm + " Zip directory has been created: path: " + dir.getAbsolutePath() + " created: " + ok);
         }
-        File zippedFile = new File(dir,""+DateTime.now().getMillis() + ".zip");
+        File zippedFile = new File(dir, "" + DateTime.now().getMillis() + ".zip");
         ZipOutputStream out = new ZipOutputStream(new FileOutputStream(zippedFile));
         ZipEntry e = new ZipEntry("dataBag");
         out.putNextEntry(e);
@@ -397,7 +417,7 @@ public class ListService {
         out.closeEntry();
 
         out.close();
-        LOGGER.info(mm+" Size of zipped json file after zipping: " + zippedFile.length() + " bytes");
+        LOGGER.info(mm + " Size of zipped json file after zipping: " + zippedFile.length() + " bytes");
         return zippedFile;
     }
 
@@ -405,14 +425,14 @@ public class ListService {
 
         DataBag bag = getUserData(userId);
         String json = G.toJson(bag);
-        LOGGER.info(mm+" getUserDataZippedFile: Size of json file before zipping: " + json.length() + " bytes");
+        LOGGER.info(mm + " getUserDataZippedFile: Size of json file before zipping: " + json.length() + " bytes");
 
         File dir = new File("zipDirectory");
         if (!dir.exists()) {
             boolean ok = dir.mkdir();
-            LOGGER.info(mm+" Zip directory has been created: path: " + dir.getAbsolutePath() + " created: " + ok);
+            LOGGER.info(mm + " Zip directory has been created: path: " + dir.getAbsolutePath() + " created: " + ok);
         }
-        File zippedFile = new File(dir,""+DateTime.now().getMillis() + ".zip");
+        File zippedFile = new File(dir, "" + DateTime.now().getMillis() + ".zip");
         ZipOutputStream out = new ZipOutputStream(new FileOutputStream(zippedFile));
         ZipEntry e = new ZipEntry("dataBag");
         out.putNextEntry(e);
@@ -422,12 +442,12 @@ public class ListService {
         out.closeEntry();
 
         out.close();
-        LOGGER.info(mm+" Size of zipped json file after zipping: " + zippedFile.length() + " bytes");
+        LOGGER.info(mm + " Size of zipped json file after zipping: " + zippedFile.length() + " bytes");
         return zippedFile;
     }
 
 
-    public List<Photo> getUserProjectPhotos(String userId)  {
+    public List<Photo> getUserProjectPhotos(String userId) {
 
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getUserProjectPhotos ...userId: " + userId));
         List<Photo> mList = photoRepository.findByUserId(userId);
@@ -435,14 +455,16 @@ public class ListService {
 
         return mList;
     }
-    public List<Video> getUserProjectVideos(String userId)  {
+
+    public List<Video> getUserProjectVideos(String userId) {
 
         List<Video> mList = videoRepository.findByUserId(userId);
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getUserProjectVideos ... found: " + mList.size()));
 
         return mList;
     }
-    public List<Audio> getUserProjectAudios(String userId)  {
+
+    public List<Audio> getUserProjectAudios(String userId) {
 
         List<Audio> mList = audioRepository.findByUserId(userId);
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getUserProjectAudios ... found: " + mList.size()));
@@ -450,7 +472,7 @@ public class ListService {
         return mList;
     }
 
-    public List<Video> getProjectVideos(String projectId)  {
+    public List<Video> getProjectVideos(String projectId) {
 
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getProjectVideos ..."));
         List<Video> mList = videoRepository.findByProjectId(projectId);
@@ -458,7 +480,8 @@ public class ListService {
 
         return mList;
     }
-    public List<Audio> getProjectAudios(String projectId)  {
+
+    public List<Audio> getProjectAudios(String projectId) {
 
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getProjectAudios ..."));
         List<Audio> mList = audioRepository.findByProjectId(projectId);
@@ -466,7 +489,8 @@ public class ListService {
 
         return mList;
     }
-    public List<SettingsModel> getProjectSettings(String projectId)  {
+
+    public List<SettingsModel> getProjectSettings(String projectId) {
 
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getProjectSettings ..."));
         List<SettingsModel> mList = settingsModelRepository.findByProjectId(projectId);
@@ -475,7 +499,7 @@ public class ListService {
         return mList;
     }
 
-    public List<Condition> getProjectConditions(String projectId)  {
+    public List<Condition> getProjectConditions(String projectId) {
 
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getProjectConditions ..."));
         List<Condition> mList = conditionRepository.findByProjectId(projectId);
@@ -487,7 +511,7 @@ public class ListService {
     @Autowired
     ProjectPositionRepository projectPositionRepository;
 
-    public List<Project> findProjectsByLocation(String organizationId, double latitude, double longitude, double radiusInKM)  {
+    public List<Project> findProjectsByLocation(String organizationId, double latitude, double longitude, double radiusInKM) {
         LOGGER.info(E.DICE.concat(E.DICE).concat(" findProjectsByLocation ..."));
         Point point = new Point(longitude, latitude);
         Distance distance = new Distance(radiusInKM, Metrics.KILOMETERS);
@@ -508,14 +532,14 @@ public class ListService {
         return fList;
     }
 
-    public List<City> findCitiesByLocation(double latitude, double longitude, double radiusInKM)  {
+    public List<City> findCitiesByLocation(double latitude, double longitude, double radiusInKM) {
         LOGGER.info(E.DICE.concat(E.DICE).concat(" findCitiesByLocation ... radiusInKM: " + radiusInKM));
         Point point = new Point(longitude, latitude);
         Distance distance = new Distance(radiusInKM, Metrics.KILOMETERS);
         GeoResults<City> cities = cityRepository.findByCityLocationNear(point, distance);
         LOGGER.info(E.DOLPHIN.concat(E.DOLPHIN).concat(E.DOLPHIN)
-                + " Nearby Cities found: "+ E.RED_APPLE + E.RED_APPLE + cities.getContent().size() + " : "
-                + E.RED_APPLE+ E.RED_APPLE + " radiusInKM: " + radiusInKM);
+                + " Nearby Cities found: " + E.RED_APPLE + E.RED_APPLE + cities.getContent().size() + " : "
+                + E.RED_APPLE + E.RED_APPLE + " radiusInKM: " + radiusInKM);
 
         LOGGER.info(E.DOLPHIN.concat(E.DOLPHIN + E.RED_APPLE + E.RED_APPLE)
                 + "Total cities found: " + cities.getContent().size());
@@ -537,7 +561,7 @@ public class ListService {
         return cnt;
     }
 
-    public ProjectCount getCountsByProject(String projectId) {
+    public ProjectSummary getCountsByProject(String projectId) {
 
         int photos = photoRepository.findByProjectId(projectId).size();
         int videos = videoRepository.findByProjectId(projectId).size();
@@ -547,7 +571,7 @@ public class ListService {
         int polygons = projectPolygonRepository.findByProjectId(projectId).size();
 
         Project project = projectRepository.findByProjectId(projectId);
-        val pc = new ProjectCount();
+        val pc = new ProjectSummary();
         pc.setPhotos(photos);
         pc.setDate(new DateTime().toDateTimeISO().toString());
         pc.setVideos(videos);
@@ -563,12 +587,13 @@ public class ListService {
                 + " getCountsByProject, \uD83C\uDF3F found: " + G.toJson(pc));
         return pc;
     }
+
     public UserCount getCountsByUser(String userId) {
 
         List<Photo> photos = photoRepository.findByUserId(userId);
         List<Video> videos = videoRepository.findByUserId(userId);
 
-        HashMap<String,String> map = new HashMap<>();
+        HashMap<String, String> map = new HashMap<>();
         for (Photo photo : photos) {
             map.put(photo.getProjectId(), photo.getProjectId());
         }
@@ -612,7 +637,7 @@ public class ListService {
         return cnt;
     }
 
-    public List<ProjectPosition> findProjectPositionsByLocation(String organizationId, double latitude, double longitude, double radiusInKM)  {
+    public List<ProjectPosition> findProjectPositionsByLocation(String organizationId, double latitude, double longitude, double radiusInKM) {
         LOGGER.info(E.DICE.concat(E.DICE).concat(" findProjectPositionsByLocation ..."));
         Point point = new Point(longitude, latitude);
         Distance distance = new Distance(radiusInKM, Metrics.KILOMETERS);
@@ -632,7 +657,7 @@ public class ListService {
         return mPositions;
     }
 
-    public List<ProjectPosition> getProjectPositions(String projectId)  {
+    public List<ProjectPosition> getProjectPositions(String projectId) {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS).concat("getProjectPositions: "
                 .concat(E.FLOWER_YELLOW)));
 
@@ -641,7 +666,8 @@ public class ListService {
         LOGGER.info(E.LEAF.concat(E.LEAF).concat("ProjectPositions found: " + m.size()));
         return m;
     }
-    public List<ProjectPolygon> getProjectPolygons(String projectId)  {
+
+    public List<ProjectPolygon> getProjectPolygons(String projectId) {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS).concat("getProjectPolygons: "
                 .concat(E.FLOWER_YELLOW)));
 
@@ -651,7 +677,7 @@ public class ListService {
         return m;
     }
 
-    public List<ProjectPosition> getOrganizationProjectPositions(String organizationId)  {
+    public List<ProjectPosition> getOrganizationProjectPositions(String organizationId) {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS).concat("getOrganizationProjectPositions: "
                 .concat(E.FLOWER_YELLOW)));
 
@@ -661,7 +687,8 @@ public class ListService {
                 + " for organizationId: " + organizationId));
         return mList;
     }
-    public List<ProjectPolygon> getOrganizationProjectPolygons(String organizationId)  {
+
+    public List<ProjectPolygon> getOrganizationProjectPolygons(String organizationId) {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS).concat("getOrganizationProjectPolygons: "
                 .concat(E.FLOWER_YELLOW)));
 
@@ -671,7 +698,8 @@ public class ListService {
                 + " for organizationId: " + organizationId));
         return mList;
     }
-//    public List<GeofenceEvent> getGeofenceEventsByUser(String userId)  {
+
+    //    public List<GeofenceEvent> getGeofenceEventsByUser(String userId)  {
 //        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS).concat("getGeofenceEventsByUser: "
 //                .concat(E.FLOWER_YELLOW)));
 //
@@ -679,7 +707,7 @@ public class ListService {
 //        LOGGER.info(E.LEAF.concat(E.LEAF).concat("GeofenceEvents found: " + events.size()));
 //        return events;
 //    }
-    public List<GeofenceEvent> getGeofenceEventsByProjectPosition(String projectPositionId)  {
+    public List<GeofenceEvent> getGeofenceEventsByProjectPosition(String projectPositionId) {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS).concat("getGeofenceEventsByProjectPosition: "
                 .concat(E.FLOWER_YELLOW)));
 
@@ -688,7 +716,7 @@ public class ListService {
         return events;
     }
 
-    public List<City> getNearbyCities(double latitude, double longitude, double radiusInKM)  {
+    public List<City> getNearbyCities(double latitude, double longitude, double radiusInKM) {
 
         LOGGER.info(E.DICE.concat(E.DICE).concat(" getNearbyCities ..."));
         Point point = new Point(longitude, latitude);
@@ -704,7 +732,7 @@ public class ListService {
         return mList;
     }
 
-    public List<Project> getOrganizationProjects(String organizationId)  {
+    public List<Project> getOrganizationProjects(String organizationId) {
 
         List<Project> mList = projectRepository.findByOrganizationId(organizationId);
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getOrganizationProjects ... found: " + mList.size()));
@@ -712,7 +740,7 @@ public class ListService {
         return mList;
     }
 
-    public List<SettingsModel> getOrganizationSettings(String organizationId)  {
+    public List<SettingsModel> getOrganizationSettings(String organizationId) {
 
         List<SettingsModel> mList = settingsModelRepository.findByOrganizationId(organizationId);
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getOrganizationSettings ... found: " + mList.size()));
@@ -721,7 +749,7 @@ public class ListService {
     }
 
 
-    public List<User> getOrganizationUsers(String organizationId)  {
+    public List<User> getOrganizationUsers(String organizationId) {
         List<User> filteredList = new ArrayList<>();
         List<User> mList = userRepository.findByOrganizationId(organizationId);
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getOrganizationUsers ... found: " + mList.size()));
@@ -733,28 +761,32 @@ public class ListService {
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getOrganizationUsers ... found after filtering for inactive users: " + filteredList.size()));
         return filteredList;
     }
-    public List<Photo> getOrganizationPhotos(String organizationId)  {
+
+    public List<Photo> getOrganizationPhotos(String organizationId) {
 
         List<Photo> mList = photoRepository.findByOrganizationId(organizationId);
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getOrganizationPhotos ... found: " + mList.size()));
 
         return mList;
     }
-    public List<Video> getOrganizationVideos(String organizationId)  {
+
+    public List<Video> getOrganizationVideos(String organizationId) {
 
         List<Video> mList = videoRepository.findByOrganizationId(organizationId);
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getOrganizationVideos ... found: " + mList.size()));
 
         return mList;
     }
-    public List<Audio> getOrganizationAudios(String organizationId)  {
+
+    public List<Audio> getOrganizationAudios(String organizationId) {
 
         List<Audio> mList = audioRepository.findByOrganizationId(organizationId);
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getOrganizationAudios ... found: " + mList.size()));
 
         return mList;
     }
-    public List<User> getUsers()  {
+
+    public List<User> getUsers() {
 
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getUsers ..."));
         List<User> mList = userRepository.findAll();
@@ -762,7 +794,8 @@ public class ListService {
 
         return mList;
     }
-    public User getUserById(String userId)  {
+
+    public User getUserById(String userId) {
 
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getUserById ..."));
         User user = userRepository.findByUserId(userId);
@@ -775,7 +808,7 @@ public class ListService {
         return user;
     }
 
-    public List<City> getCities()  {
+    public List<City> getCities() {
 
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getCities ..."));
 
@@ -785,7 +818,7 @@ public class ListService {
         return mList;
     }
 
-    public List<Community> findCommunitiesByCountry(String countryId)  {
+    public List<Community> findCommunitiesByCountry(String countryId) {
 
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("findCommunitiesByCountry ..."));
 
@@ -795,20 +828,20 @@ public class ListService {
         return mList;
     }
 
-    public List<Questionnaire> getQuestionnairesByOrganization(String organizationId)  {
+    public List<Questionnaire> getQuestionnairesByOrganization(String organizationId) {
 
         List<Questionnaire> list = questionnaireRepository.findByOrganizationId(organizationId);
         return list;
     }
 
-    public List<Project> findProjectsByOrganization(String organizationId)  {
+    public List<Project> findProjectsByOrganization(String organizationId) {
 
         List<Project> list = projectRepository.findByOrganizationId(organizationId);
         return list;
     }
 
     //
-    public List<Country> getCountries()  {
+    public List<Country> getCountries() {
 
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getCountries ..."));
 

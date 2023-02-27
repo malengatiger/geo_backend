@@ -609,6 +609,49 @@ public class DataController {
 
     }
 
+    @Operation(summary = "create Daily ProjectSummaries for Organization")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK. Daily ProjectSummaries added or retrieved",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ProjectSummary.class))}),
+
+    })
+    @GetMapping("/createDailyOrganizationSummaries")
+    public ResponseEntity<?> createDailyOrganizationCounts(@RequestParam String organizationId,
+                                                                @RequestParam String fromDate, @RequestParam String toDate) throws Exception {
+
+        try {
+            return ResponseEntity.ok(dataService.createDailyOrganizationSummaries(organizationId,fromDate,toDate));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "createDailyOrganizationSummaries failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+
+    }
+    @Operation(summary = "create Hourly ProjectSummaries for Organization")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK. Hourly ProjectSummaries added or retrieved",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ProjectSummary.class))}),
+
+    })
+    @GetMapping("/createHourlyOrganizationSummaries")
+    public ResponseEntity<?> createHourlyOrganizationSummaries(@RequestParam String organizationId,
+                                                           @RequestParam String fromDate, @RequestParam String toDate) throws Exception {
+        try {
+            return ResponseEntity.ok(dataService.createHourlyOrganizationSummaries(organizationId,fromDate,toDate));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "createHourlyOrganizationSummaries failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+
+    }
+
+
     static class UserDeleteResponse {
         public int returnCode;
         public String message;

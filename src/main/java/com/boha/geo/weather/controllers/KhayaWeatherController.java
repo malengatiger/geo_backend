@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.logging.Logger;
 
 @RestController
-public class KhayaController {
-    private static final Logger LOGGER = Logger.getLogger(KhayaController.class.getSimpleName());
+public class KhayaWeatherController {
+    private static final Logger LOGGER = Logger.getLogger(KhayaWeatherController.class.getSimpleName());
 
     private final WeatherService weatherService;
 
-    public KhayaController(WeatherService weatherService) {
+    public KhayaWeatherController(WeatherService weatherService) {
         this.weatherService = weatherService;
         LOGGER.info(E.BLUE_DOT + E.BLUE_DOT + " KhayaController constructed, WeatherService injected. ");
 

@@ -117,6 +117,7 @@ public class GeoApplication implements ApplicationListener<ApplicationReadyEvent
 				"while also providing the flexibility to adapt to the needs of different types of projects and organizations.";
 
 		String m = desc + "\n\n" + gpt + "\n\n" + gpt1;
+
         return new OpenAPI().info(new Info()
                 .title("Geo Monitor API")
                 .version(appVersion)

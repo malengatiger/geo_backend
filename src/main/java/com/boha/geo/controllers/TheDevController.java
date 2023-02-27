@@ -5,8 +5,6 @@ import com.boha.geo.models.CityPlace;
 import com.boha.geo.models.KillResponse;
 import com.boha.geo.monitor.data.City;
 import com.boha.geo.monitor.data.Organization;
-import com.boha.geo.monitor.data.Photo;
-import com.boha.geo.monitor.data.UploadBag;
 import com.boha.geo.monitor.services.MessageService;
 import com.boha.geo.repos.OrganizationRepository;
 import com.boha.geo.services.*;
@@ -27,12 +25,11 @@ import java.util.List;
 import java.util.logging.Logger;
 
 @RestController
-public class MainController {
+public class TheDevController {
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private static final Logger logger = Logger.getLogger(GeoApplication.class.getSimpleName());
     private static final String alien = E.AMP+E.AMP+E.AMP;
     private static final String xx = E.COFFEE+E.COFFEE+E.COFFEE;
-
 
     final PlacesService placesService;
     final MongoService mongoService;
@@ -45,8 +42,8 @@ public class MainController {
     final OrganizationRepository organizationRepository;
 
     Bucket bucket;
-    public MainController(PlacesService placesService, MongoService mongoService,
-                          UserService userService, CityService cityService, StorageService storageService, MessageService messageService, OrganizationRepository organizationRepository) {
+    public TheDevController(PlacesService placesService, MongoService mongoService,
+                            UserService userService, CityService cityService, StorageService storageService, MessageService messageService, OrganizationRepository organizationRepository) {
         this.placesService = placesService;
         this.mongoService = mongoService;
         this.userService = userService;
@@ -228,17 +225,7 @@ public class MainController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
-    @PostMapping("/uploadBag")
-    private ResponseEntity<Object> uploadBag(@RequestBody UploadBag bag) {
-        try {
-            Photo photo = storageService.uploadBag(bag);
-            logger.info(E.BLUE_HEART + E.BLUE_HEART +
-                    " MainController returning uploadBag photo: " + gson.toJson(photo) + " " + E.RED_APPLE);
-            return ResponseEntity.ok(photo);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
-    }
+
 
     @Data
     public static class TestBag {
