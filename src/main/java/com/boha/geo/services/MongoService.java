@@ -28,14 +28,17 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 @Service
 public class MongoService {
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private static final Logger logger = Logger.getLogger(MongoService.class.getSimpleName());
-    private static final String xx = E.COFFEE+E.COFFEE+E.COFFEE;
+    private static final String xx = E.COFFEE + E.COFFEE + E.COFFEE;
     @Autowired
     private final CityRepository cityRepo;
 
@@ -45,12 +48,13 @@ public class MongoService {
         this.resourceLoader = resourceLoader;
         this.userRepository = userRepository;
         this.organizationRepository = organizationRepository;
-        logger.info(xx + " MongoService constructed, will set database and initializeIndexes ........... " + E.BELL+E.BELL);
+        logger.info(xx + " MongoService constructed, will set database and initializeIndexes ........... " + E.BELL + E.BELL);
         setDatabase();
         initializeIndexes();
-        logger.info(xx + " MongoService has completed setup of database and indexes ........... " + E.BELL+E.BELL);
+        logger.info(xx + " MongoService has completed setup of database and indexes ........... " + E.BELL + E.BELL);
 
     }
+
     private final MongoClient mongoClient;
     private final ResourceLoader resourceLoader;
     private final UserRepository userRepository;
@@ -150,11 +154,13 @@ public class MongoService {
             createUniqueCityIndex();
 
             createSettingsIndexes();
+            createProjectSummaryIndexes();
 
         } catch (Exception e) {
-            logger.severe(E.RED_DOT+E.RED_DOT+" Index building failed: " + e.getMessage());
+            logger.severe(E.RED_DOT + E.RED_DOT + " Index building failed: " + e.getMessage());
         }
     }
+
     private void createOrganizationIndexes() {
         //add index
         MongoCollection<Document> dbCollection = db.getCollection("organizations");
@@ -171,6 +177,7 @@ public class MongoService {
                 E.RED_APPLE + result3);
 
     }
+
     private void createSettingsIndexes() {
         //add index
         MongoCollection<Document> dbCollection = db.getCollection("settings");
@@ -200,6 +207,38 @@ public class MongoService {
 
     }
 
+    private void createProjectSummaryIndexes() {
+        //add index
+        MongoCollection<Document> dbCollection = db.getCollection("projectSummaries");
+
+        String result2 = dbCollection.createIndex(Indexes.ascending("organizationId", "date"),
+                new IndexOptions().unique(false));
+        logger.info(mm +
+                " organizationId, date  index on projectSummaries collection: " +
+                E.RED_APPLE + result2);
+        String result2a = dbCollection.createIndex(Indexes.ascending("projectId", "date"),
+                new IndexOptions().unique(false));
+        logger.info(mm +
+                " projectId, date  index on projectSummaries collection: " +
+                E.RED_APPLE + result2a);
+
+        String result3 = dbCollection.createIndex(Indexes.ascending("organizationId"));
+        logger.info(mm +
+                " organizationId index on projectSummaries collection: " +
+                E.RED_APPLE + result3);
+
+        String result4 = dbCollection.createIndex(Indexes.ascending("projectId"));
+        logger.info(mm +
+                " projectId index on projectSummaries collection: " +
+                E.RED_APPLE + result4);
+
+        String result5 = dbCollection.createIndex(Indexes.ascending("date"));
+        logger.info(mm +
+                " date index on projectSummaries collection: " +
+                E.RED_APPLE + result5);
+
+    }
+
     private void createUserIndexes() {
         //add index
         MongoCollection<Document> dbCollection = db.getCollection("users");
@@ -220,6 +259,7 @@ public class MongoService {
                 " organizationId index on users collection: " +
                 E.RED_APPLE + result3);
     }
+
     private void createCommunityIndexes() {
         //add index
         MongoCollection<Document> dbCollection = db.getCollection("communities");
@@ -235,6 +275,7 @@ public class MongoService {
                 " user countryId index on community collection: " +
                 E.RED_APPLE + result);
     }
+
     private void createAudioIndexes() {
         //add index
         MongoCollection<Document> dbCollection = db.getCollection("audios");
@@ -246,19 +287,20 @@ public class MongoService {
                 E.RED_APPLE + result2);
 
         String result = dbCollection.createIndex(Indexes.ascending("userId"));
-        logger.info(mm+
+        logger.info(mm +
                 " userId index on audios collection: " +
                 E.RED_APPLE + result);
 
         String result3 = dbCollection.createIndex(Indexes.geo2dsphere("position"));
-        logger.info(mm+
+        logger.info(mm +
                 " position 2dSphere index on audios collection: " +
                 E.RED_APPLE + result3);
         String result4 = dbCollection.createIndex(Indexes.ascending("organizationId"));
-        logger.info(mm+
+        logger.info(mm +
                 " organizationId index on audios collection: " +
                 E.RED_APPLE + result4);
     }
+
     private void createSchedulesIndexes() {
         //add index
         MongoCollection<Document> dbCollection = db.getCollection("fieldMonitorSchedules");
@@ -270,19 +312,20 @@ public class MongoService {
                 E.RED_APPLE + result2);
 
         String result = dbCollection.createIndex(Indexes.ascending("userId"));
-        logger.info(mm+
+        logger.info(mm +
                 " userId index on fieldMonitorSchedules collection: " +
                 E.RED_APPLE + result);
 
         String result3 = dbCollection.createIndex(Indexes.geo2dsphere("position"));
-        logger.info(mm+
+        logger.info(mm +
                 " position 2dSphere index on fieldMonitorSchedules collection: " +
                 E.RED_APPLE + result3);
     }
+
     private void createUniqueCityIndex() {
         MongoCollection<Document> dbCollection = db.getCollection("cities");
 
-        String result = dbCollection.createIndex(Indexes.ascending( "province", "name"),
+        String result = dbCollection.createIndex(Indexes.ascending("province", "name"),
                 new IndexOptions().unique(true));
 
         logger.info(mm +
@@ -291,6 +334,7 @@ public class MongoService {
     }
 
     private static final String mm = E.LEAF + " ";
+
     private void createCityIndexes() {
         //add index
         MongoCollection<Document> dbCollection = db.getCollection("cities");
@@ -329,6 +373,7 @@ public class MongoService {
                 E.RED_APPLE + result3);
 
     }
+
     private void createLocationResponseIndexes() {
         //add index
         MongoCollection<Document> dbCollection = db.getCollection("locationResponses");
@@ -348,6 +393,7 @@ public class MongoService {
                 E.RED_APPLE + result3);
 
     }
+
     private void createGeofenceEventIndexes() {
         //add index
         MongoCollection<Document> dbCollection = db.getCollection("geofenceEvents");
@@ -367,6 +413,7 @@ public class MongoService {
                 E.RED_APPLE + result3);
 
     }
+
     private void createRatingIndexes() {
         //add index
         MongoCollection<Document> dbCollection = db.getCollection("ratings");
@@ -386,6 +433,7 @@ public class MongoService {
                 E.RED_APPLE + result3);
 
     }
+
     private void createProjectPolygonIndexes() {
         //add index
         MongoCollection<Document> dbCollection = db.getCollection("projectPolygons");
@@ -453,12 +501,14 @@ public class MongoService {
 
 
     private MongoDatabase db;
+
     private void setDatabase() {
         if (db == null) {
             db = mongoClient.getDatabase("geo");
-            logger.info(mm+" Mongo Database set up, name: " + db.getName());
+            logger.info(mm + " Mongo Database set up, name: " + db.getName());
         }
     }
+
     private void createVideoIndexes() {
         //add index
         MongoCollection<Document> dbCollection = db.getCollection("videos");
@@ -483,12 +533,12 @@ public class MongoService {
         List<Organization> orgs = organizationRepository.findAll();
         for (Organization org : orgs) {
             List<User> users = userRepository.findByOrganizationId(org.getOrganizationId());
-            logger.info(E.PEAR+E.PEAR+E.PEAR+ " Organization: " + org.getName());
-            logger.info(E.PEAR+E.PEAR+E.PEAR+ " organizationId: " + org.getOrganizationId());
+            logger.info(E.PEAR + E.PEAR + E.PEAR + " Organization: " + org.getName());
+            logger.info(E.PEAR + E.PEAR + E.PEAR + " organizationId: " + org.getOrganizationId());
             for (User user : users) {
-                logger.info(E.PEAR+E.PEAR + " user: " + user.getUserType() + " " + E.RED_APPLE
-                        + "  " + user.getEmail() + " " + E.BLUE_DOT +"  " + user.getName());
-                logger.info(E.PEAR+E.PEAR + " \tuserId: " + user.getUserId() + " " + E.RED_APPLE);
+                logger.info(E.PEAR + E.PEAR + " user: " + user.getUserType() + " " + E.RED_APPLE
+                        + "  " + user.getEmail() + " " + E.BLUE_DOT + "  " + user.getName());
+                logger.info(E.PEAR + E.PEAR + " \tuserId: " + user.getUserId() + " " + E.RED_APPLE);
             }
             logger.info("\n\n");
         }

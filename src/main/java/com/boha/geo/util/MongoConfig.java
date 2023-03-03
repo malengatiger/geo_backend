@@ -1,6 +1,7 @@
 package com.boha.geo.util;
 
 import com.boha.geo.controllers.ListController;
+import com.google.cloud.spring.secretmanager.SecretManagerTemplate;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mongodb.ConnectionString;
@@ -14,6 +15,7 @@ import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +23,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 import org.slf4j.Logger;
+import org.springframework.ui.ModelMap;
+import org.springframework.util.StringUtils;
 
 
 import java.util.ArrayList;
@@ -116,6 +120,8 @@ public class MongoConfig {
 
     }
 
+    @Autowired
+    SecretManagerTemplate secretManagerTemplate;
     @Bean
     public MongoTemplate mongoTemplate() throws Exception {
         MongoTemplate t = new MongoTemplate(mongo(), databaseName);
@@ -130,4 +136,26 @@ public class MongoConfig {
         return t;
     }
     private static final String bb = E.YELLOW_STAR ;
+    public String getSecret(
+             String secretId,
+            String version,
+            String projectId,
+            ModelMap map) {
+
+        if (StringUtils.isEmpty(version)) {
+            version = SecretManagerTemplate.LATEST_VERSION;
+        }
+
+        String secretPayload;
+        if (StringUtils.isEmpty(projectId)) {
+            secretPayload = this.secretManagerTemplate.getSecretString(
+                    "sm://" + secretId + "/" + version);
+        }
+        else {
+            secretPayload = this.secretManagerTemplate.getSecretString(
+                    "sm://" + projectId + "/" + secretId + "/" + version);
+        }
+
+        return secretPayload;
+    }
 }

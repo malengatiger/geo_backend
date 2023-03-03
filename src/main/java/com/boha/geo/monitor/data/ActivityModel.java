@@ -6,12 +6,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 @Document("activities")
 public class ActivityModel {
-   
+
+        String _id;
         String activityTypeId, activityModelId;
         ActivityType activityType;
         String date;
         String userId;
-        String userName;
+        String userName, userThumbnailUrl;
         String projectId;
         String projectName;
         String organizationName;

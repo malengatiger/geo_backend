@@ -20,9 +20,6 @@ public interface ProjectPositionRepository extends MongoRepository<ProjectPositi
     @Query(value = "{projectId: ?0,  created: { $gt: ?1 } }", count = true)
     public long countByTimeAndProject(String projectId, String created);
 
-    @Query(value = "{projectId: ?0 }", count = true)
-    public long countByProject(String projectId);
-
     @Query(value = "{organizationId: ?0,  created: { $gt: ?1 } }", count = true)
     public long countByTimeAndOrganization(String organizationId, String created);
 

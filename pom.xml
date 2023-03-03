@@ -12,6 +12,7 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
+
 			<dependency>
 				<groupId>com.google.cloud</groupId>
 				<artifactId>libraries-bom</artifactId>
@@ -31,12 +32,13 @@
 	<artifactId>geo</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>geo</name>
-	<description>Demo project for Spring Boot 3.0.1</description>
+	<description>Geo Monitor Backend</description>
 	<properties>
 		<java.version>17</java.version>
-		<spring-cloud-gcp.version>3.4.0</spring-cloud-gcp.version>
+		<spring-cloud-gcp.version>4.1.0</spring-cloud-gcp.version>
 		<spring-cloud.version>2021.0.4</spring-cloud.version>
 	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -139,18 +141,22 @@
 			<groupId>jakarta.activation</groupId>
 			<artifactId>jakarta.activation-api</artifactId>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger2 -->
-<!--		<dependency>-->
-<!--			<groupId>io.springfox</groupId>-->
-<!--			<artifactId>springfox-swagger2</artifactId>-->
-<!--			<version>3.0.0</version>-->
-<!--		</dependency>-->
-		<!-- https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-ui -->
-<!--		<dependency>-->
-<!--			<groupId>org.springdoc</groupId>-->
-<!--			<artifactId>springdoc-openapi-ui</artifactId>-->
-<!--			<version>1.6.14</version>-->
-<!--		</dependency>-->
+
+		<!-- https://mvnrepository.com/artifact/de.flapdoodle.embed/de.flapdoodle.embed.mongo -->
+		<dependency>
+			<groupId>de.flapdoodle.embed</groupId>
+			<artifactId>de.flapdoodle.embed.mongo</artifactId>
+			<version>4.6.1</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.cloud/spring-cloud-gcp-starter-secretmanager -->
+		<dependency>
+			<groupId>com.google.cloud</groupId>
+			<artifactId>spring-cloud-gcp-starter-secretmanager</artifactId>
+			<version>4.1.1</version>
+		</dependency>
+
+
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
@@ -163,11 +169,20 @@
 			<artifactId>springdoc-openapi-data-rest</artifactId>
 			<version>1.6.14</version>
 		</dependency>
-
-
-
-
-
+		<!-- https://mvnrepository.com/artifact/org.springframework.restdocs/spring-restdocs-mockmvc -->
+		<dependency>
+			<groupId>org.springframework.restdocs</groupId>
+			<artifactId>spring-restdocs-mockmvc</artifactId>
+			<version>3.0.0</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.cloud/spring-cloud-gcp-dependencies -->
+		<dependency>
+			<groupId>com.google.cloud</groupId>
+			<artifactId>spring-cloud-gcp-dependencies</artifactId>
+			<version>4.1.1</version>
+			<type>pom</type>
+		</dependency>
 	</dependencies>
 
 	<build>

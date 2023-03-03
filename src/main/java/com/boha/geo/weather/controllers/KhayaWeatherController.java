@@ -24,10 +24,10 @@ public class KhayaWeatherController {
     }
 
     @GetMapping("/")
-    private String  hi() {
+    private ResponseEntity<Object>  hi() {
         LOGGER.info(E.BLUE_HEART + "Base endpoint  requested  ..." + E.BLUE_HEART);
-        return E.BLUE_HEART +  " GeoBackend Application and Khaya saying hi at "
-                + new DateTime().toDateTimeISO();
+        return ResponseEntity.ok(E.BLUE_HEART +  " Geo Backend Application and Khaya saying hi at "
+                + new DateTime().toDateTimeISO());
     }
     @GetMapping("/getForecasts")
     private ResponseEntity<Object> getForecasts(@RequestParam double latitude,

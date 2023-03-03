@@ -374,8 +374,8 @@ public class ListService {
 
         //todo - remove after test
         String date = DateTime.now().toDateTimeISO().minusDays(10).toString();
-        long photoCount = photoRepository.countByTimeAndOrganization(organizationId, date);
-        LOGGER.info(mm + " photo count from query: " + photoCount);
+//        long photoCount = photoRepository.countByTimeAndOrganization(organizationId, date);
+//        LOGGER.info(mm + " photo count from query: " + photoCount);
 
         DataBag bag = getOrganizationData(organizationId);
         String json = G.toJson(bag);
@@ -623,6 +623,7 @@ public class ListService {
         pc.setAudios(audios);
         pc.setSchedules(schedules);
         pc.setProjectName(project.getName());
+        pc.setOrganizationName(project.getOrganizationName());
         pc.setProjectPositions(positions);
         pc.setProjectPolygons(polygons);
 

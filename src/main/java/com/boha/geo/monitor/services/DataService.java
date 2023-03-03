@@ -31,6 +31,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -118,9 +119,10 @@ public class DataService {
         this.fieldMonitorScheduleRepository = fieldMonitorScheduleRepository;
         this.projectSummaryRepository = projectSummaryRepository;
         this.mailService = mailService;
-        LOGGER.info(xx+" DataService constructed and repos injected \uD83C\uDF4F");
+        LOGGER.info(xx + " DataService constructed and repos injected \uD83C\uDF4F");
     }
-    private static final String xx = E.COFFEE+E.COFFEE+E.COFFEE;
+
+    private static final String xx = E.COFFEE + E.COFFEE + E.COFFEE;
 
     public void initializeFirebase() throws Exception {
         String fbConfig = env.getProperty("FIREBASE_CONFIG");
@@ -173,78 +175,192 @@ public class DataService {
 
     }
 
-    public List<ProjectSummary> createDailyOrganizationSummaries(String organizationId, String fromDate, String toDate) throws Exception {
+    public List<ProjectSummary> createDailyProjectSummaries(String projectId, String startDate, String endDate) throws Exception {
         //todo - check if this range has been created before - maybe think of a key strategy to prevent duplicates
-        List<ProjectSummary> counts = new ArrayList<>();
-        DateTime dt = DateTime.parse(fromDate).toDateTimeISO();
+        long start = System.currentTimeMillis();
+        List<ProjectSummary> summaries = new ArrayList<>();
+        DateTime dt = DateTime.parse(startDate).toDateTimeISO();
         DateTime dtStart = dt.withTimeAtStartOfDay();
-        DateTime dtTo = DateTime.parse(toDate).toDateTimeISO();
+        DateTime dtTo = DateTime.parse(endDate).toDateTimeISO();
+        String batchId = UUID.randomUUID().toString();
 
+        Project project = projectRepository.findByProjectId(projectId);
+        long daysDiff = Math.abs(Days.daysBetween(dtStart, dtTo).getDays());
+
+        DateTime myStart = DateTime.parse(dtStart.toString());
+        val positions = projectPositionRepository.findByProjectId(project.getProjectId());
+        val polygons = projectPolygonRepository.findByProjectId(project.getProjectId());
+        val schedules = fieldMonitorScheduleRepository.findByProjectId(project.getProjectId());
+        for (int i = 0; i < daysDiff; i++) {
+            val pc = createProjectSummary(project, myStart.toString(), (myStart.plusDays(1)).toString(), i + 1, -1);
+            pc.setCalculatedHourly(1);
+            pc.setProjectPositions(positions.size());
+            pc.setProjectPolygons(polygons.size());
+            pc.setSchedules(schedules.size());
+            pc.setBatchId(batchId);
+            summaries.add(pc);
+            myStart = myStart.plusDays(1);
+        }
+
+        projectSummaryRepository.insert(summaries);
+        final DecimalFormat df = new DecimalFormat("0.000");
+        long end = System.currentTimeMillis();
+        long ms = (end - start);
+        Double delta = Double.parseDouble("" + ms) / Double.parseDouble("1000");
+
+        LOGGER.info(E.GLOBE + E.GLOBE + E.GLOBE + E.GLOBE + " createDailyProjectSummaries has added " + summaries.size()
+                + " projectCounts, days: " + daysDiff + " elapsed: " + df.format(delta) + " seconds");
+
+        return summaries;
+    }
+
+    public List<ProjectSummary> createDailyOrganizationSummaries(String organizationId, String startDate, String endDate) throws Exception {
+        //todo - check if this range has been created before - maybe think of a key strategy to prevent duplicates
+        long start = System.currentTimeMillis();
+        List<ProjectSummary> summaries = new ArrayList<>();
+        DateTime dt = DateTime.parse(startDate).toDateTimeISO();
+        DateTime dtStart = dt.withTimeAtStartOfDay();
+        DateTime dtTo = DateTime.parse(endDate).toDateTimeISO();
+        String batchId = UUID.randomUUID().toString();
 
         List<Project> projects = projectRepository.findByOrganizationId(organizationId);
         long daysDiff = Math.abs(Days.daysBetween(dtStart, dtTo).getDays());
 
         for (Project project : projects) {
             DateTime myStart = DateTime.parse(dtStart.toString());
-            val positions = projectPositionRepository.countByProject(project.getProjectId());
-            val polygons = projectPositionRepository.countByProject(project.getProjectId());
-            val schedules = projectPositionRepository.countByProject(project.getProjectId());
+            val positions = projectPositionRepository.findByProjectId(project.getProjectId());
+            val polygons = projectPolygonRepository.findByProjectId(project.getProjectId());
+            val schedules = fieldMonitorScheduleRepository.findByProjectId(project.getProjectId());
             for (int i = 0; i < daysDiff; i++) {
-                val pc = createProjectSummary(project, myStart.toString(), (myStart.plusDays(1)).toString());
+                val pc = createProjectSummary(project, myStart.toString(), (myStart.plusDays(1)).toString(), i + 1, -1);
                 pc.setCalculatedHourly(1);
-                pc.setProjectPositions(positions);
-                pc.setProjectPolygons(polygons);
-                pc.setSchedules(schedules);
-                counts.add(pc);
+                pc.setProjectPositions(positions.size());
+                pc.setProjectPolygons(polygons.size());
+                pc.setSchedules(schedules.size());
+                pc.setBatchId(batchId);
+                summaries.add(pc);
                 myStart = myStart.plusDays(1);
             }
 
         }
-        projectSummaryRepository.insert(counts);
-        LOGGER.info(E.GLOBE+E.GLOBE+ " createDailyOrganizationCounts has added " + counts.size()
-                + " projectCounts, days: " + daysDiff);
+        projectSummaryRepository.insert(summaries);
+        final DecimalFormat df = new DecimalFormat("0.000");
+        long end = System.currentTimeMillis();
+        long ms = (end - start);
+        Double delta = Double.parseDouble("" + ms) / Double.parseDouble("1000");
 
-        return counts;
+        LOGGER.info(E.GLOBE + E.GLOBE + E.GLOBE + E.GLOBE + " createDailyOrganizationSummaries has added " + summaries.size()
+                + " summaries, \uD83C\uDF4E\uD83C\uDF4E days: " + daysDiff + " elapsed: " + df.format(delta) + " seconds");
+
+        return summaries;
     }
 
-    public List<ProjectSummary> createHourlyOrganizationSummaries(String organizationId, String fromDate, String toDate) throws Exception {
+    public List<ProjectSummary> createHourlyOrganizationSummaries(String organizationId, String startDate, String endDate) throws Exception {
         //todo - check if this range has been created before - maybe think of a key strategy to prevent duplicates
-
-        List<ProjectSummary> counts = new ArrayList<>();
-        DateTime dtFrom = DateTime.parse(fromDate).toDateTimeISO();
+        long start = System.currentTimeMillis();
+        List<ProjectSummary> summaries = new ArrayList<>();
+        DateTime dtFrom = DateTime.parse(startDate).toDateTimeISO();
         DateTime dtStart = dtFrom.withTimeAtStartOfDay();
-        DateTime dtTo = DateTime.parse(toDate).toDateTimeISO();
+        DateTime dtTo = DateTime.parse(endDate).toDateTimeISO();
+        String batchId = UUID.randomUUID().toString();
 
         List<Project> projects = projectRepository.findByOrganizationId(organizationId);
         long hoursDiff = Math.abs(Hours.hoursBetween(dtStart, dtTo).getHours());
 
         for (Project project : projects) {
             DateTime myStart = DateTime.parse(dtStart.toString());
-            val positions = projectPositionRepository.countByProject(project.getProjectId());
-            val polygons = projectPositionRepository.countByProject(project.getProjectId());
-            val schedules = projectPositionRepository.countByProject(project.getProjectId());
+            val positions = projectPositionRepository.findByProjectId(project.getProjectId());
+            val polygons = projectPolygonRepository.findByProjectId(project.getProjectId());
+            val schedules = fieldMonitorScheduleRepository.findByProjectId(project.getProjectId());
             for (int i = 0; i < hoursDiff; i++) {
-                val pc = createProjectSummary(project, myStart.toString(), (myStart.plusHours(1)).toString());
+                val pc = createProjectSummary(project, myStart.toString(), (myStart.plusHours(1)).toString(), -1, i + 1);
                 pc.setCalculatedHourly(0);
-                pc.setProjectPositions(positions);
-                pc.setProjectPolygons(polygons);
-                pc.setSchedules(schedules);
-                counts.add(pc);
+                pc.setProjectPositions(positions.size());
+                pc.setProjectPolygons(polygons.size());
+                pc.setSchedules(schedules.size());
+                pc.setBatchId(batchId);
+                summaries.add(pc);
                 myStart = myStart.plusHours(1);
             }
         }
-        projectSummaryRepository.insert(counts);
-        LOGGER.info(E.GLOBE+E.GLOBE+ " createHourlyOrganizationCounts has added " + counts.size()
-                + " projectCounts; hours: " + hoursDiff);
-        return counts;
+        projectSummaryRepository.insert(summaries);
+        final DecimalFormat df = new DecimalFormat("0.000");
+        long end = System.currentTimeMillis();
+        long ms = (end - start);
+        Double delta = Double.parseDouble("" + ms) / Double.parseDouble("1000");
+
+        LOGGER.info(E.GLOBE + E.GLOBE + E.GLOBE + E.GLOBE + " createHourlyOrganizationSummaries has added " + summaries.size()
+                + " summaries, days: " + hoursDiff + " elapsed: " + df.format(delta) + " seconds");
+
+        return summaries;
     }
 
-    public ProjectSummary createProjectSummary(Project project, String startDate, String endDate) throws Exception {
+    public List<ProjectSummary> createHourlyProjectSummaries(String projectId, String startDate, String endDate) throws Exception {
+        //todo - check if this range has been created before - maybe think of a key strategy to prevent duplicates
+        long start = System.currentTimeMillis();
+        List<ProjectSummary> summaries = new ArrayList<>();
+        DateTime dtFrom = DateTime.parse(startDate).toDateTimeISO();
+        DateTime dtStart = dtFrom.withTimeAtStartOfDay();
+        DateTime dtTo = DateTime.parse(endDate).toDateTimeISO();
+        String batchId = UUID.randomUUID().toString();
+
+        Project project = projectRepository.findByProjectId(projectId);
+        long hoursDiff = Math.abs(Hours.hoursBetween(dtStart, dtTo).getHours());
+
+        DateTime myStart = DateTime.parse(dtStart.toString());
+        val positions = projectPositionRepository.findByProjectId(project.getProjectId());
+        val polygons = projectPolygonRepository.findByProjectId(project.getProjectId());
+        val schedules = fieldMonitorScheduleRepository.findByProjectId(project.getProjectId());
+        for (int i = 0; i < hoursDiff; i++) {
+            val pc = createProjectSummary(project, myStart.toString(), (myStart.plusHours(1)).toString(), -1, i + 1);
+            pc.setCalculatedHourly(0);
+            pc.setProjectPositions(positions.size());
+            pc.setProjectPolygons(polygons.size());
+            pc.setSchedules(schedules.size());
+            pc.setBatchId(batchId);
+            summaries.add(pc);
+            myStart = myStart.plusHours(1);
+        }
+
+        projectSummaryRepository.insert(summaries);
+        final DecimalFormat df = new DecimalFormat("0.000");
+        long end = System.currentTimeMillis();
+        long ms = (end - start);
+        Double delta = Double.parseDouble("" + ms) / Double.parseDouble("1000");
+
+
+        LOGGER.info(E.GLOBE + E.GLOBE + E.RED_APPLE +
+                " createHourlyProjectSummaries has added " + summaries.size()
+                + " summaries; hours: " + hoursDiff + " elapsed: " + df.format(delta) + " seconds");
+        return summaries;
+    }
+
+    public List<Photo> getProjectPhotosInPeriod(String projectId, String startDate, String endDate) throws Exception {
+
+        Criteria c = Criteria.where("projectId").is(projectId).and("date").gte(startDate).lte(endDate);
+        Query query = new Query(c);
+        return mongoTemplate.find(query, Photo.class);
+    }
+
+    public List<Video> getProjectVideosInPeriod(String projectId, String startDate, String endDate) throws Exception {
+        Criteria c = Criteria.where("projectId").is(projectId).and("date").gte(startDate).lte(endDate);
+        Query query = new Query(c);
+        return mongoTemplate.find(query, Video.class);
+    }
+
+    public List<Audio> getProjectAudiosInPeriod(String projectId, String startDate, String endDate) throws Exception {
+        Criteria c = Criteria.where("projectId").is(projectId).and("date").gte(startDate).lte(endDate);
+        Query query = new Query(c);
+        return mongoTemplate.find(query, Audio.class);
+    }
+
+    public ProjectSummary createProjectSummary(Project project, String startDate, String endDate, int day, int hour) throws Exception {
 
         long start = System.currentTimeMillis();
-        val photos = photoRepository.countByProjectPeriod(project.getProjectId(), startDate, endDate);
-        val videos = videoRepository.countByProjectPeriod(project.getProjectId(), startDate, endDate);
-        val audios = audioRepository.countByProjectPeriod(project.getProjectId(), startDate, endDate);
+
+        val photos = getProjectPhotosInPeriod(project.getProjectId(), startDate, endDate);
+        val videos = getProjectVideosInPeriod(project.getProjectId(), startDate, endDate);
+        val audios = getProjectAudiosInPeriod(project.getProjectId(), startDate, endDate);
 
         val pc = new ProjectSummary();
         pc.setProjectId(project.getProjectId());
@@ -252,26 +368,62 @@ public class DataService {
         pc.setOrganizationId(project.getOrganizationId());
         pc.setOrganizationName(project.getOrganizationName());
         pc.setDate(DateTime.now().toDateTimeISO().toString());
-        pc.setAudios(audios);
-        pc.setVideos(videos);
-        pc.setPhotos(photos);
+        pc.setAudios(audios.size());
+        pc.setVideos(videos.size());
+        pc.setPhotos(photos.size());
+        pc.setDay(day);
+        pc.setHour(hour);
+        pc.setStartDate(startDate);
+        pc.setEndDate(endDate);
 
+        final DecimalFormat df = new DecimalFormat("0.000");
 
         long end = System.currentTimeMillis();
         long ms = (end - start);
-        long delta = ms / 60;
-        LOGGER.info(E.PANDA + E.PANDA + E.PANDA + " project count took " + delta + " seconds");
+        Double delta = Double.parseDouble("" + ms) / Double.parseDouble("1000");
+
+        LOGGER.info(E.BLUE_HEART + E.BLUE_HEART + E.BLUE_HEART + " ProjectSummary took " + df.format(delta) + " seconds for: "
+                + E.BELL + E.BELL + " " + project.getName());
 
         return pc;
     }
 
+
+    public void updateAllActivities() throws Exception {
+        LOGGER.info(E.LEAF.concat(E.LEAF).concat("updateAllActivities started ............ "));
+
+        val list = activityModelRepository.findAll();
+        val users = userRepository.findAll();
+        LOGGER.info(E.RED_APPLE + E.RED_APPLE + " users " + users.size() + " activities: " + list.size());
+
+        long cnt = 0;
+        for (User user : users) {
+            if (user.getThumbnailUrl() == null) {
+                continue;
+            }
+            Query query = new Query(Criteria.where("userId").is(user.getUserId()));
+            Update update = new Update();
+            update.set("userThumbnailUrl", user.getThumbnailUrl());
+            update.set("userName", user.getName());
+            UpdateResult result = mongoTemplate.updateMulti(query, update, ActivityModel.class);
+
+            LOGGER.info(E.RED_APPLE + E.RED_APPLE + " activities have been modified with user url, ModifiedCount: "
+                    + result.getModifiedCount() + " " + E.AMP + " for user: " + user.getName() + " from " + user.getOrganizationName());
+            cnt = cnt + result.getModifiedCount();
+
+
+        }
+
+        LOGGER.info(E.RED_APPLE + E.RED_APPLE + " updated  " + cnt + " activities with user url");
+
+    }
 
     public User updateUser(User user) throws Exception {
 
         LOGGER.info(E.LEAF.concat(E.LEAF).concat("User to be updated on database: "
                 + G.toJson(user)));
 
-        LOGGER.info(E.RED_APPLE+E.RED_APPLE + " update user and set all properties ");
+        LOGGER.info(E.RED_APPLE + E.RED_APPLE + " update user and set all properties ");
         Query query = new Query();
         query.addCriteria(Criteria.where("userId").is(user.getUserId()));
         query.fields().include("userId");
@@ -289,7 +441,7 @@ public class DataService {
 
         UpdateResult result = mongoTemplate.updateFirst(query, update, User.class);
 
-        LOGGER.info(E.RED_APPLE+E.RED_APPLE + " user has been modified: " + result.getModifiedCount());
+        LOGGER.info(E.RED_APPLE + E.RED_APPLE + " user has been modified: " + result.getModifiedCount());
 
         LOGGER.info(E.LEAF.concat(E.LEAF).concat("User updated on database: "
                 + user.getName() + " id: "
@@ -301,7 +453,7 @@ public class DataService {
                 "      \nIf you have not changed anything yourself please contact your Administrator or your Supervisor.\n" +
                 "      \n\nThank you for working with GeoMonitor. \nBest Regards,\nThe GeoMonitor Team\ninfo@geomonitorapp.io\n\n";
 
-        mailService.sendHtmlEmail( user.getEmail(), message,"GeoMonitor Account Updated" );
+        mailService.sendHtmlEmail(user.getEmail(), message, "GeoMonitor Account Updated");
 
 
         ActivityModel am = new ActivityModel();
@@ -313,6 +465,7 @@ public class DataService {
         am.setOrganizationName(user.getOrganizationName());
         am.setOrganizationId(user.getOrganizationId());
         am.setUserName(user.getName());
+        am.setUserThumbnailUrl(user.getThumbnailUrl());
         am.setProjectName(null);
         am.setUser(user);
 
@@ -337,6 +490,7 @@ public class DataService {
         am.setOrganizationName(user.getOrganizationName());
         am.setOrganizationId(user.getOrganizationId());
         am.setUserName(user.getName());
+        am.setUserThumbnailUrl(user.getThumbnailUrl());
         am.setProjectName(null);
 
         addActivityModel(am);
@@ -361,6 +515,7 @@ public class DataService {
         LOGGER.info(E.LEAF.concat(E.LEAF).concat("Photo added to Mongo, : " + photo.getUrl()));
         messageService.sendMessage(photo);
 
+        User user = userRepository.findByUserId(photo.getUserId());
         ActivityModel am = new ActivityModel();
         am.setActivityType(ActivityType.photoAdded);
         am.setActivityModelId(UUID.randomUUID().toString());
@@ -371,12 +526,14 @@ public class DataService {
         am.setOrganizationId(photo.getOrganizationId());
         am.setUserName(photo.getUserName());
         am.setProjectName(photo.getProjectName());
+        am.setUserThumbnailUrl(user.getThumbnailUrl());
         am.setPhoto(photo);
 
         addActivityModel(am);
 
     }
-    public void addActivityModel(ActivityModel model)  throws Exception{
+
+    public void addActivityModel(ActivityModel model) throws Exception {
 
         activityModelRepository.insert(model);
         LOGGER.info(E.LEAF.concat(E.LEAF).concat("ActivityModel added to Mongo "));
@@ -390,7 +547,7 @@ public class DataService {
         }
         projectAssignmentRepository.insert(projectAssignment);
         LOGGER.info(E.LEAF.concat(E.LEAF).concat("ProjectAssignment added to Mongo, user: "
-                +  projectAssignment.getUserName() + " project: " + projectAssignment.getProjectName()));
+                + projectAssignment.getUserName() + " project: " + projectAssignment.getProjectName()));
         return messageService.sendMessage(projectAssignment);
     }
 
@@ -400,6 +557,7 @@ public class DataService {
             video.setVideoId(UUID.randomUUID().toString());
         }
         videoRepository.insert(video);
+        User user = userRepository.findByUserId(video.getUserId());
 
         ActivityModel am = new ActivityModel();
         am.setActivityType(ActivityType.videoAdded);
@@ -410,6 +568,7 @@ public class DataService {
         am.setOrganizationName(null);
         am.setOrganizationId(video.getOrganizationId());
         am.setUserName(video.getUserName());
+        am.setUserThumbnailUrl(user.getThumbnailUrl());
         am.setProjectName(video.getProjectName());
         am.setVideo(video);
 
@@ -417,10 +576,12 @@ public class DataService {
         LOGGER.info(E.LEAF.concat(E.LEAF).concat("Video added: " + video.getVideoId()));
         return messageService.sendMessage(video);
     }
+
     public String addAudio(Audio audio) throws Exception {
 
         audioRepository.save(audio);
         LOGGER.info(E.LEAF.concat(E.LEAF).concat("Video added: " + audio.getAudioId()));
+        User user = userRepository.findByUserId(audio.getUserId());
 
         ActivityModel am = new ActivityModel();
         am.setActivityType(ActivityType.audioAdded);
@@ -431,6 +592,7 @@ public class DataService {
         am.setOrganizationName(null);
         am.setOrganizationId(audio.getOrganizationId());
         am.setUserName(audio.getUserName());
+        am.setUserThumbnailUrl(user.getThumbnailUrl());
         am.setProjectName(audio.getProjectName());
         am.setAudio(audio);
 
@@ -449,6 +611,7 @@ public class DataService {
         LOGGER.info(E.LEAF.concat(E.LEAF).concat("OrgMessage added: " + orgMessage.getMessage()));
         String result = messageService.sendMessage(orgMessage);
         orgMessage.setResult(result);
+        User user = userRepository.findByUserId(orgMessage.getAdminId());
 
         ActivityModel am = new ActivityModel();
         am.setActivityType(ActivityType.messageAdded);
@@ -456,11 +619,12 @@ public class DataService {
         am.setDate(DateTime.now().toDateTimeISO().toString());
         am.setProjectId(orgMessage.getProjectId());
         am.setUserId(orgMessage.getUserId());
+        am.setUserThumbnailUrl(user.getThumbnailUrl());
         am.setOrganizationName(null);
         am.setOrganizationId(orgMessage.getOrganizationId());
         am.setUserName(orgMessage.getAdminName());
         am.setProjectName(orgMessage.getProjectName());
-       am.setOrgMessage(orgMessage);
+        am.setOrgMessage(orgMessage);
 
         addActivityModel(am);
         return orgMessage;
@@ -484,6 +648,7 @@ public class DataService {
                 + " " + E.RAIN);
 
         messageService.sendMessage(m);
+        User user = userRepository.findByUserId(projectPosition.getUserId());
 
         ActivityModel am = new ActivityModel();
         projectPosition.setNearestCities(null);
@@ -492,6 +657,7 @@ public class DataService {
         am.setDate(DateTime.now().toDateTimeISO().toString());
         am.setProjectId(projectPosition.getProjectId());
         am.setUserId(projectPosition.getUserId());
+        am.setUserThumbnailUrl(user.getThumbnailUrl());
         am.setOrganizationName(null);
         am.setOrganizationId(projectPosition.getOrganizationId());
         am.setUserName(projectPosition.getUserName());
@@ -503,17 +669,19 @@ public class DataService {
         m = projectPositionRepository.findByProjectPositionId(projectPosition.getProjectPositionId());
         return m;
     }
+
     public ProjectPolygon addProjectPolygon(ProjectPolygon projectPolygon) throws Exception {
         LOGGER.info(E.RAIN.concat(E.RAIN).concat("addProjectPolygon: "
                 .concat(E.YELLOW)));
 
-        ProjectPolygon m = projectPolygonRepository.save(projectPolygon);
+        ProjectPolygon m = projectPolygonRepository.insert(projectPolygon);
         LOGGER.info(E.YELLOW_BIRD + E.YELLOW_BIRD +
                 "ProjectPolygon added to: " + m.getProjectName()
                 + " " + E.RAIN);
 
         m.setNearestCities(null);
         messageService.sendMessage(m);
+        User user = userRepository.findByUserId(projectPolygon.getUserId());
 
         ActivityModel am = new ActivityModel();
         projectPolygon.setNearestCities(null);
@@ -525,6 +693,7 @@ public class DataService {
         am.setOrganizationName(null);
         am.setOrganizationId(projectPolygon.getOrganizationId());
         am.setUserName(projectPolygon.getUserName());
+        am.setUserThumbnailUrl(user.getThumbnailUrl());
         am.setProjectName(projectPolygon.getProjectName());
         am.setProjectPolygon(projectPolygon);
 
@@ -544,7 +713,7 @@ public class DataService {
         LOGGER.info(E.YELLOW_BIRD + E.YELLOW_BIRD +
                 "GeofenceEvent added to: " + m.getProjectName()
                 + " " + E.RAIN);
-         messageService.sendMessage(m);
+        messageService.sendMessage(m);
 
         ActivityModel am = new ActivityModel();
         am.setActivityType(ActivityType.geofenceEventAdded);
@@ -555,6 +724,7 @@ public class DataService {
         am.setOrganizationName(null);
         am.setOrganizationId(geofenceEvent.getOrganizationId());
         am.setUserName(geofenceEvent.getUser().getName());
+        am.setUserThumbnailUrl(geofenceEvent.getUser().getThumbnailUrl());
         am.setProjectName(geofenceEvent.getProjectName());
         am.setGeofenceEvent(geofenceEvent);
 
@@ -596,6 +766,9 @@ public class DataService {
                 .concat("locationResponse added: " + locationResponse.getOrganizationName()));
         messageService.sendMessage(m);
 
+        User user = userRepository.findByUserId(locationResponse.getUserId());
+
+
         ActivityModel am = new ActivityModel();
         am.setActivityType(ActivityType.locationResponse);
         am.setActivityModelId(UUID.randomUUID().toString());
@@ -607,6 +780,7 @@ public class DataService {
         am.setUserName(locationResponse.getUserName());
         am.setProjectName(null);
         am.setLocationResponse(locationResponse);
+        am.setUserThumbnailUrl(user.getThumbnailUrl());
 
         addActivityModel(am);
         return m;
@@ -619,6 +793,7 @@ public class DataService {
         LOGGER.info(E.LEAF.concat(E.LEAF)
                 .concat("locationRequest added: " + locationRequest.getUserName()));
         messageService.sendMessage(m);
+        User user = userRepository.findByUserId(locationRequest.getUserId());
 
         ActivityModel am = new ActivityModel();
         am.setActivityType(ActivityType.locationRequest);
@@ -631,7 +806,7 @@ public class DataService {
         am.setUserName(locationRequest.getUserName());
         am.setProjectName(null);
         am.setLocationRequest(locationRequest);
-
+        am.setUserThumbnailUrl(user.getThumbnailUrl());
         addActivityModel(am);
         return m;
     }
@@ -684,15 +859,19 @@ public class DataService {
                 .concat("SettingsModel inserted: " + G.toJson(m)));
         messageService.sendMessage(model);
 
+        User user = userRepository.findByUserId(model.getUserId());
+        Organization org = organizationRepository.findByOrganizationId(model.getOrganizationId());
+
         ActivityModel am = new ActivityModel();
         am.setActivityType(ActivityType.settingsChanged);
         am.setActivityModelId(UUID.randomUUID().toString());
         am.setDate(DateTime.now().toDateTimeISO().toString());
         am.setProjectId(model.getProjectId());
-        am.setUserId(null);
-        am.setOrganizationName(null);
+        am.setUserId(model.getUserId());
+        am.setOrganizationName(org.getName());
         am.setOrganizationId(model.getOrganizationId());
-        am.setUserName(null);
+        am.setUserName(model.getUserName());
+        am.setUserThumbnailUrl(model.getUserThumbnailUrl());
         am.setProjectName(null);
 
         addActivityModel(am);
@@ -735,7 +914,7 @@ public class DataService {
                 "      \nPlease login on the web with your email and the attached password but use your cellphone number to sign in on the phone.\n" +
                 "      \n\nThank you for working with GeoMonitor. \nWelcome aboard!!\nBest Regards,\nThe GeoMonitor Team\ninfo@geomonitorapp.io\n\n";
 
-        mailService.sendHtmlEmail( user.getEmail(), message,"Welcome to GeoMonitor" );
+        mailService.sendHtmlEmail(user.getEmail(), message, "Welcome to GeoMonitor");
 
         ActivityModel am = new ActivityModel();
         am.setActivityType(ActivityType.userAddedOrModified);
@@ -768,7 +947,7 @@ public class DataService {
             return 0;
         } catch (Exception e) {
             e.printStackTrace();
-           throw new Exception("User auth update failed: " + e.getMessage());
+            throw new Exception("User auth update failed: " + e.getMessage());
         }
 
     }

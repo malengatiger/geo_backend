@@ -44,7 +44,7 @@ public class MonitorAuthenticationFilter extends OncePerRequestFilter {
         String url = httpServletRequest.getRequestURL().toString();
         LOGGER.info(mm+ " url: " + url);
         //        if (url.contains("192.168.86.230:8080") || url.contains("172.20.10.4:8080")|| url.contains("localhost:8080")) {   //this is my local machine
-        if (url.contains("localhost:8080")) {   //this is my local machine
+        if (url.contains("localhost:") || url.contains("uploadFile")) {   //this is my local machine
             LOGGER.info(E.ANGRY + E.ANGRY + "this request is not subject to authentication: "
                     + E.HAND2 + url);
             String m = httpServletRequest.getHeader("Authorization");

@@ -16,6 +16,8 @@ public class ProjectSummary {
     private long projectPositions;
     private long projectPolygons;
     private int calculatedHourly;
+    private int day, hour;
+    private String startDate, endDate, batchId;
 
     private String date, projectName, organizationId, organizationName;
 

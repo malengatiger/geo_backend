@@ -5,8 +5,10 @@ import com.boha.geo.monitor.services.DataService;
 import com.boha.geo.monitor.services.MessageService;
 import com.boha.geo.monitor.services.MongoDataService;
 import com.boha.geo.monitor.utils.MongoGenerator;
+import com.boha.geo.services.CloudStorageUploader;
 import com.boha.geo.services.RegistrationService;
 import com.boha.geo.util.E;
+import com.google.common.io.Files;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
@@ -21,7 +23,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.Duration;
 
 
@@ -31,9 +36,10 @@ import java.time.Duration;
 public class DataController {
     private static final Logger LOGGER = LoggerFactory.getLogger(DataController.class);
 
-    public DataController(DataService dataService, MongoGenerator mongoGenerator,
+    public DataController(DataService dataService, CloudStorageUploader cloudStorageUploader, MongoGenerator mongoGenerator,
                           MessageService messageService, RegistrationService registrationService, MongoDataService mongoDataService) {
         this.dataService = dataService;
+        this.cloudStorageUploader = cloudStorageUploader;
         this.mongoGenerator = mongoGenerator;
         this.messageService = messageService;
         this.registrationService = registrationService;
@@ -52,10 +58,10 @@ public class DataController {
     Bucket bucket;
     private final DataService dataService;
 
-   
+    private final CloudStorageUploader cloudStorageUploader;
     private final MongoGenerator mongoGenerator;
 
-   
+
     private final MessageService messageService;
 
     private final RegistrationService registrationService;
@@ -89,6 +95,7 @@ public class DataController {
         }
 
     }
+
     @Operation(summary = "register User")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Organization registered",
@@ -174,7 +181,6 @@ public class DataController {
     }
 
 
-   
     private final MongoDataService mongoDataService;
 
     @Operation(summary = "add Project to Organization")
@@ -199,6 +205,7 @@ public class DataController {
         }
 
     }
+
     @Operation(summary = "update Project")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Project updated",
@@ -210,7 +217,7 @@ public class DataController {
     public ResponseEntity<Object> updateProject(@RequestBody Project project) throws Exception {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS).concat("Update Project: ".concat(project.getName())));
         try {
-        return ResponseEntity.ok(dataService.updateProject(project));
+            return ResponseEntity.ok(dataService.updateProject(project));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,
@@ -269,7 +276,7 @@ public class DataController {
 
     })
     @PostMapping("/addSettings")
-    public ResponseEntity<Object> addSettings(@RequestBody SettingsModel model)  throws Exception {
+    public ResponseEntity<Object> addSettings(@RequestBody SettingsModel model) throws Exception {
         try {
             return ResponseEntity.ok(dataService.addSettings(model));
         } catch (Exception e) {
@@ -302,6 +309,7 @@ public class DataController {
         }
 
     }
+
     @Operation(summary = "add ProjectPolygon aka area")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "ProjectPolygon added",
@@ -388,7 +396,8 @@ public class DataController {
         }
 
     }
-//    @PostMapping("/addActivityModel")
+
+    //    @PostMapping("/addActivityModel")
 //    public ResponseEntity<Object> addActivityModel(@RequestBody ActivityModel model) throws Exception {
 //        try {
 //             dataService.addActivityModel(model);
@@ -401,13 +410,13 @@ public class DataController {
 //        }
 //
 //    }
-@Operation(summary = "add ProjectAssignment")
-@ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "ProjectAssignment added",
-                content = {@Content(mediaType = "application/json",
-                        schema = @Schema(implementation = ProjectAssignment.class))}),
+    @Operation(summary = "add ProjectAssignment")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "ProjectAssignment added",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ProjectAssignment.class))}),
 
-})
+    })
     @PostMapping("/addProjectAssignment")
     public ResponseEntity<Object> addProjectAssignment(@RequestBody ProjectAssignment projectAssignment) throws Exception {
         try {
@@ -435,7 +444,7 @@ public class DataController {
         try {
             String result = dataService.addVideo(video);
             LOGGER.info(E.LEAF + E.LEAF + " addVideo, result: " + result);
-        return ResponseEntity.ok(video);
+            return ResponseEntity.ok(video);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,
@@ -444,6 +453,7 @@ public class DataController {
         }
 
     }
+
     @Operation(summary = "add Audio")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Audio added",
@@ -465,6 +475,7 @@ public class DataController {
         }
 
     }
+
     @Operation(summary = "add Condition")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Condition added",
@@ -501,9 +512,9 @@ public class DataController {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
                 .concat("Sending FCM message ... " + orgMessage.getMessage()));
         try {
-        OrgMessage result = dataService.addOrgMessage(orgMessage);
-        LOGGER.info(E.LEAF + E.LEAF + result);
-        return ResponseEntity.ok(result);
+            OrgMessage result = dataService.addOrgMessage(orgMessage);
+            LOGGER.info(E.LEAF + E.LEAF + result);
+            return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,
@@ -541,7 +552,7 @@ public class DataController {
                 .concat(".... Deleting Firebase auth User: ".concat(userId)));
         try {
             int result = messageService.deleteAuthUser(userId);
-            UserDeleteResponse m = new UserDeleteResponse(result,"User deleted from Firebase Auth");
+            UserDeleteResponse m = new UserDeleteResponse(result, "User deleted from Firebase Auth");
             return ResponseEntity.ok(m);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
@@ -572,13 +583,14 @@ public class DataController {
         }
 
     }
+
     @PostMapping("/updateAuthedUser")
     public ResponseEntity<Object> updateAuthedUser(@RequestBody User user) throws Exception {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
                 .concat("Updating authed User: ".concat(user.getName())));
         try {
             int res = dataService.updateAuthedUser(user);
-            UserDeleteResponse r = new UserDeleteResponse(res,"User auth updated");
+            UserDeleteResponse r = new UserDeleteResponse(res, "User auth updated");
             return ResponseEntity.ok(r);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
@@ -588,6 +600,7 @@ public class DataController {
         }
 
     }
+
     @Operation(summary = "add Rating")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Rating added",
@@ -609,6 +622,49 @@ public class DataController {
 
     }
 
+    @Operation(summary = "create Daily Project Summaries for period")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK. Daily ProjectSummaries added or retrieved",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ProjectSummary.class))}),
+
+    })
+    @GetMapping("/createDailyProjectSummaries")
+    public ResponseEntity<?> createDailyProjectSummaries(@RequestParam String projectId,
+                                                         @RequestParam String startDate, @RequestParam String endDate) throws Exception {
+
+        try {
+            return ResponseEntity.ok(dataService.createDailyProjectSummaries(projectId, startDate, endDate));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "createDailyProjectSummaries failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+
+    }
+
+    @Operation(summary = "create Hourly Project Summaries for period")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK. Hourly Project Summaries added or retrieved",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ProjectSummary.class))}),
+
+    })
+    @GetMapping("/createHourlyProjectSummaries")
+    public ResponseEntity<?> createHourlyProjectSummaries(@RequestParam String projectId,
+                                                          @RequestParam String startDate, @RequestParam String endDate) throws Exception {
+        try {
+            return ResponseEntity.ok(dataService.createHourlyProjectSummaries(projectId, startDate, endDate));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "createHourlyProjectSummaries failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+
+    }
+
     @Operation(summary = "create Daily ProjectSummaries for Organization")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK. Daily ProjectSummaries added or retrieved",
@@ -617,11 +673,11 @@ public class DataController {
 
     })
     @GetMapping("/createDailyOrganizationSummaries")
-    public ResponseEntity<?> createDailyOrganizationCounts(@RequestParam String organizationId,
-                                                                @RequestParam String fromDate, @RequestParam String toDate) throws Exception {
+    public ResponseEntity<?> createDailyOrganizationSummaries(@RequestParam String organizationId,
+                                                              @RequestParam String startDate, @RequestParam String endDate) throws Exception {
 
         try {
-            return ResponseEntity.ok(dataService.createDailyOrganizationSummaries(organizationId,fromDate,toDate));
+            return ResponseEntity.ok(dataService.createDailyOrganizationSummaries(organizationId, startDate, endDate));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,
@@ -630,6 +686,7 @@ public class DataController {
         }
 
     }
+
     @Operation(summary = "create Hourly ProjectSummaries for Organization")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK. Hourly ProjectSummaries added or retrieved",
@@ -639,9 +696,9 @@ public class DataController {
     })
     @GetMapping("/createHourlyOrganizationSummaries")
     public ResponseEntity<?> createHourlyOrganizationSummaries(@RequestParam String organizationId,
-                                                           @RequestParam String fromDate, @RequestParam String toDate) throws Exception {
+                                                               @RequestParam String startDate, @RequestParam String endDate) throws Exception {
         try {
-            return ResponseEntity.ok(dataService.createHourlyOrganizationSummaries(organizationId,fromDate,toDate));
+            return ResponseEntity.ok(dataService.createHourlyOrganizationSummaries(organizationId, startDate, endDate));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,
@@ -651,6 +708,42 @@ public class DataController {
 
     }
 
+    @GetMapping("/fix")
+    public ResponseEntity<?> fix() throws Exception {
+        try {
+            dataService.updateAllActivities();
+            return ResponseEntity.ok("All Activities updated with user url");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "fix failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+
+    }
+
+    @PostMapping("uploadFile")
+    public ResponseEntity<Object> uploadFile(
+            @RequestParam String objectName,
+            @RequestPart MultipartFile document) throws IOException {
+
+        //todo - research sending media files zipped
+        String doc = document.getOriginalFilename();
+        assert doc != null;
+        File file = new File(doc);
+        byte[] bytes = document.getBytes();
+
+        Files.write(bytes, file);
+        LOGGER.info(E.RED_APPLE + " file: " + file.getPath() + " length: "
+                + file.length() + " original file name: " + doc);
+        String url = cloudStorageUploader.uploadFile(doc, file);
+        boolean ok = file.delete();
+        if (ok) {
+            LOGGER.info(E.RED_APPLE +E.RED_APPLE +
+                    " cloud storage upload file deleted");
+        }
+        return ResponseEntity.ok(url);
+    }
 
     static class UserDeleteResponse {
         public int returnCode;
