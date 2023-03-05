@@ -721,6 +721,19 @@ public class DataController {
         }
 
     }
+    @GetMapping("/getSignedUrl")
+    public ResponseEntity<?> getSignedUrl(String objectName, String contentType  ) throws Exception {
+        try {
+            String url =cloudStorageUploader.getSignedUrl(objectName,contentType);
+            return ResponseEntity.ok(url);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "fix failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+
+    }
 
     @PostMapping("uploadFile")
     public ResponseEntity<Object> uploadFile(
@@ -735,7 +748,7 @@ public class DataController {
 
         Files.write(bytes, file);
         LOGGER.info(E.RED_APPLE + " file: " + file.getPath() + " length: "
-                + file.length() + " original file name: " + doc);
+                + (file.length()/1024/1024) + " MB, original file name: " + doc);
         String url = cloudStorageUploader.uploadFile(doc, file);
         boolean ok = file.delete();
         if (ok) {

@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class SettingsModel {
     private int distanceFromProject;
     private int photoSize;
-    private int maxVideoLengthInMinutes;
+    private int maxVideoLengthInSeconds;
     private int maxAudioLengthInMinutes;
     private int themeIndex;
     private int activityStreamHours;

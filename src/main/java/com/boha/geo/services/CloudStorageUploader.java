@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.concurrent.TimeUnit;
 
@@ -29,16 +30,38 @@ public class CloudStorageUploader {
     @Value("${cloudStorageDirectory}")
     private String cloudStorageDirectory;
 
-    public String uploadFile(String objectName, File file) throws IOException {
-        //todo - get directories
-
-
+    public String getSignedUrl(String objectName, String contentType  ) throws Exception {
+        LOGGER.info(E.CHIPS+E.CHIPS+E.CHIPS +
+                " getSignedUrl for cloud storage: " + objectName);
         Storage storage = StorageOptions.newBuilder()
                 .setProjectId(projectId).build().getService();
         BlobId blobId = BlobId.of(bucketName, cloudStorageDirectory
                 + "/" + objectName);
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId)
+                .setContentType(contentType)
                 .build();
+        URL vv = storage
+                .signUrl(blobInfo, 20000, TimeUnit.DAYS, Storage.SignUrlOption.withPathStyle());
+        LOGGER.info(E.CHIPS+E.CHIPS+E.CHIPS +
+                "  signed url acquired. Cool! " + vv.toString());
+       return vv.toString();
+    }
+
+    public String uploadFile(String objectName, File file) throws IOException {
+
+        LOGGER.info(E.CHIPS+E.CHIPS+E.CHIPS +
+                " uploadFile to cloud storage: " + objectName);
+        String contentType = Files.probeContentType(file.toPath());
+        Storage storage = StorageOptions.newBuilder()
+                .setProjectId(projectId).build().getService();
+        BlobId blobId = BlobId.of(bucketName, cloudStorageDirectory
+                + "/" + objectName);
+        BlobInfo blobInfo = BlobInfo.newBuilder(blobId)
+                .setContentType(contentType)
+                .build();
+
+        LOGGER.info(E.CHIPS+E.CHIPS+E.CHIPS +
+                " uploadFile to cloud storage, contentType: " + contentType);
 
         Storage.BlobWriteOption precondition;
         if (storage.get(bucketName, objectName) == null) {
@@ -48,13 +71,13 @@ public class CloudStorageUploader {
                     Storage.BlobWriteOption.generationMatch(
                             storage.get(bucketName, objectName).getGeneration());
         }
-        Blob blob = storage.createFrom(blobInfo, Paths.get(file.getPath()), precondition);
+        Blob blob = storage.createFrom(blobInfo, Paths.get(file.getPath()));
         URL vv = storage
                 .signUrl(blobInfo, 20000, TimeUnit.DAYS, Storage.SignUrlOption.withPathStyle());
         LOGGER.info(E.CHIPS+E.CHIPS+E.CHIPS +
-                " signed url acquired. Cool! " );
+                " file uploaded to cloud storage, signed url acquired. Cool! " + vv.toString() );
         LOGGER.info(E.CHIPS+E.CHIPS+E.CHIPS +
-                " signed url acquired. Cool! should we use medialLink?? " + blob.getMediaLink() );
+                " should we use medialLink rather than the signed url?? " + blob.getMediaLink() );
         return vv.toString();
     }
 }

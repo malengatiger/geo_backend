@@ -23,7 +23,7 @@ public class Video {
     private String  created;
     private String  userUrl;
     private int durationInSeconds;
-    private double width, height;
+    private double size;
 
 
 }
