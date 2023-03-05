@@ -11,6 +11,6 @@ public class SettingsModel {
     private int maxVideoLengthInSeconds;
     private int maxAudioLengthInMinutes;
     private int themeIndex;
-    private int activityStreamHours;
+    private int activityStreamHours, numberOfDays;
     private String settingsId, created, organizationId, projectId, userId, userName, userThumbnailUrl;
 }

@@ -226,10 +226,10 @@ public class ListController {
     }
 
     @GetMapping("/getOrganizationProjects")
-    public ResponseEntity<Object> getOrganizationProjects(@RequestParam String organizationId) {
+    public ResponseEntity<Object> getOrganizationProjects(@RequestParam String organizationId,  @RequestParam  String startDate, @RequestParam String endDate) {
         LOGGER.info(E.DICE.concat(E.DICE).concat(" getOrganizationProjects ..."));
         try {
-            List<Project> projects = listService.getOrganizationProjects(organizationId);
+            List<Project> projects = listService.getOrganizationProjects(organizationId, startDate, endDate);
             LOGGER.info(E.DOLPHIN.concat(E.DOLPHIN) + " Projects found: " + projects.size());
             return ResponseEntity.ok(projects);
         } catch (Exception e) {
@@ -256,9 +256,9 @@ public class ListController {
     }
 
     @GetMapping("/getOrganizationUsers")
-    public ResponseEntity<Object> getOrganizationUsers(@RequestParam String organizationId) {
+    public ResponseEntity<Object> getOrganizationUsers(@RequestParam String organizationId,@RequestParam  String startDate, @RequestParam String endDate) {
         try {
-            return ResponseEntity.ok(listService.getOrganizationUsers(organizationId));
+            return ResponseEntity.ok(listService.getOrganizationUsers(organizationId, startDate, endDate));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,
@@ -268,9 +268,9 @@ public class ListController {
     }
 
     @GetMapping("/getOrganizationPhotos")
-    public ResponseEntity<Object> getOrganizationPhotos(@RequestParam String organizationId) {
+    public ResponseEntity<Object> getOrganizationPhotos(@RequestParam String organizationId,@RequestParam  String startDate, @RequestParam String endDate) {
         try {
-            return ResponseEntity.ok(listService.getOrganizationPhotos(organizationId));
+            return ResponseEntity.ok(listService.getOrganizationPhotos(organizationId,startDate,endDate));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,
@@ -280,9 +280,9 @@ public class ListController {
     }
 
     @GetMapping("/getOrganizationVideos")
-    public ResponseEntity<Object> getOrganizationVideos(@RequestParam String organizationId) {
+    public ResponseEntity<Object> getOrganizationVideos(@RequestParam String organizationId,@RequestParam  String startDate, @RequestParam String endDate) {
         try {
-            return ResponseEntity.ok(listService.getOrganizationVideos(organizationId));
+            return ResponseEntity.ok(listService.getOrganizationVideos(organizationId,startDate,endDate));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,
@@ -292,9 +292,9 @@ public class ListController {
     }
 
     @GetMapping("/getOrganizationAudios")
-    public ResponseEntity<Object> getOrganizationAudios(@RequestParam String organizationId) {
+    public ResponseEntity<Object> getOrganizationAudios(@RequestParam String organizationId,@RequestParam  String startDate, @RequestParam String endDate) {
         try {
-            return ResponseEntity.ok(listService.getOrganizationAudios(organizationId));
+            return ResponseEntity.ok(listService.getOrganizationAudios(organizationId, startDate, endDate));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,
@@ -407,11 +407,10 @@ public class ListController {
     }
 
     @GetMapping("/getProjectConditions")
-    public ResponseEntity<Object> getProjectConditions(String projectId) {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
-                .concat("getProjectConditions ... " + projectId));
+    public ResponseEntity<Object> getProjectConditions(@RequestParam String projectId,@RequestParam  String startDate, @RequestParam String endDate) {
+
         try {
-            return ResponseEntity.ok(listService.getProjectConditions(projectId));
+            return ResponseEntity.ok(listService.getProjectConditions(projectId,startDate,endDate));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,
@@ -421,11 +420,10 @@ public class ListController {
     }
 
     @GetMapping("/getProjectPositions")
-    public ResponseEntity<Object> getProjectPositions(String projectId) {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
-                .concat("getProjectPositions: " + projectId));
+    public ResponseEntity<Object> getProjectPositions(@RequestParam String projectId, @RequestParam  String startDate, @RequestParam String endDate) {
+
         try {
-            return ResponseEntity.ok(listService.getProjectPositions(projectId));
+            return ResponseEntity.ok(listService.getProjectPositions(projectId,startDate,endDate));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,
@@ -435,11 +433,10 @@ public class ListController {
     }
 
     @GetMapping("/getProjectPolygons")
-    public ResponseEntity<Object> getProjectPolygons(String projectId) {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
-                .concat("getProjectPositions: " + projectId));
+    public ResponseEntity<Object> getProjectPolygons(@RequestParam String projectId,@RequestParam  String startDate, @RequestParam String endDate) {
+
         try {
-            return ResponseEntity.ok(listService.getProjectPolygons(projectId));
+            return ResponseEntity.ok(listService.getProjectPolygons(projectId,startDate,endDate));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,
@@ -449,11 +446,9 @@ public class ListController {
     }
 
     @GetMapping("/getOrganizationProjectPositions")
-    public ResponseEntity<Object> getOrganizationProjectPositions(String organizationId) {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
-                .concat("getOrganizationProjectPositions, organizationId: " + organizationId));
+    public ResponseEntity<Object> getOrganizationProjectPositions(@RequestParam String organizationId,@RequestParam  String startDate, @RequestParam String endDate) {
         try {
-            return ResponseEntity.ok(listService.getOrganizationProjectPositions(organizationId));
+            return ResponseEntity.ok(listService.getOrganizationProjectPositions(organizationId, startDate,endDate));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(
@@ -463,19 +458,6 @@ public class ListController {
         }
     }
 
-    //    @GetMapping("/getGeofenceEventsByUser")
-//    public ResponseEntity<Object> getGeofenceEventsByUser(String userId) {
-//        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
-//                .concat("getGeofenceEventsByUser: " + userId));
-//        try {
-//            return ResponseEntity.ok(listService.getGeofenceEventsByUser(userId));
-//        } catch (Exception e) {
-//            return ResponseEntity.badRequest().body(
-//                    new CustomErrorResponse(400,
-//                            "getGeofenceEventsByUser failed: " + e.getMessage(),
-//                            new DateTime().toDateTimeISO().toString()));
-//        }
-//    }
     @GetMapping("/getGeofenceEventsByProjectPosition")
     public ResponseEntity<Object> getGeofenceEventsByProjectPosition(String projectPositionId) {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
@@ -599,11 +581,10 @@ public class ListController {
     }
 
     @GetMapping("/getProjectPhotos")
-    public ResponseEntity<Object> getProjectPhotos(String projectId) {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
-                .concat("getProjectPhotos: " + projectId));
+    public ResponseEntity<Object> getProjectPhotos(@RequestParam String projectId,@RequestParam  String startDate, @RequestParam String endDate) {
+
         try {
-            return ResponseEntity.ok(listService.getProjectPhotos(projectId));
+            return ResponseEntity.ok(listService.getProjectPhotos(projectId,startDate,endDate));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,
@@ -613,10 +594,10 @@ public class ListController {
 
     }
     @GetMapping("/getProjectAssignments")
-    public ResponseEntity<Object> getProjectAssignments(String projectId) {
+    public ResponseEntity<Object> getProjectAssignments(@RequestParam String projectId,@RequestParam  String startDate, @RequestParam String endDate) {
 
         try {
-            return ResponseEntity.ok(listService.getProjectAssignments(projectId));
+            return ResponseEntity.ok(listService.getProjectAssignments(projectId, startDate, endDate));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,
@@ -720,10 +701,10 @@ public class ListController {
 
     })
     @GetMapping("/getProjectAudios")
-    public ResponseEntity<Object> getProjectAudios(String projectId) {
+    public ResponseEntity<Object> getProjectAudios(@RequestParam String projectId, @RequestParam  String startDate, @RequestParam String endDate) {
 
         try {
-            return ResponseEntity.ok(listService.getProjectAudios(projectId));
+            return ResponseEntity.ok(listService.getProjectAudios(projectId, startDate, endDate));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,
@@ -797,11 +778,10 @@ public class ListController {
     }
 
     @GetMapping("/getProjectData")
-    public ResponseEntity<Object> getProjectData(@RequestParam String projectId) {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
-                .concat("getProjectData: " + projectId));
+    public ResponseEntity<Object> getProjectData(@RequestParam String projectId,@RequestParam  String startDate, @RequestParam String endDate) {
+
         try {
-            return ResponseEntity.ok(listService.getProjectData(projectId));
+            return ResponseEntity.ok(listService.getProjectData(projectId, startDate, endDate));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,
@@ -812,12 +792,11 @@ public class ListController {
     }
 
     @GetMapping("/getOrganizationData")
-    public ResponseEntity<Object> getOrganizationData(@RequestParam String organizationId) {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
-                .concat("getOrganizationData: " + organizationId));
+    public ResponseEntity<Object> getOrganizationData(@RequestParam String organizationId,@RequestParam  String startDate, @RequestParam String endDate) {
+
         try {
             long start = System.currentTimeMillis();
-            DataBag bag = listService.getOrganizationData(organizationId);
+            DataBag bag = listService.getOrganizationData(organizationId, startDate, endDate);
             long end = System.currentTimeMillis();
             Double m = Double.valueOf("" + (end - start));
             Double ms = 1000.0;
@@ -842,9 +821,9 @@ public class ListController {
     })
 
     @GetMapping(value = "/getProjectDataZippedFile", produces = "application/zip")
-    public byte[] getProjectDataZippedFile(@RequestParam String projectId) throws Exception {
+    public byte[] getProjectDataZippedFile(@RequestParam String projectId,@RequestParam  String startDate, @RequestParam String endDate) throws Exception {
 
-        File zippedFile = listService.getProjectDataZippedFile(projectId);
+        File zippedFile = listService.getProjectDataZippedFile(projectId,startDate,endDate);
         byte[] bytes = java.nio.file.Files.readAllBytes(zippedFile.toPath());
         boolean deleted = zippedFile.delete();
 
@@ -860,9 +839,9 @@ public class ListController {
 
     })
     @GetMapping(value = "/getOrganizationDataZippedFile", produces = "application/zip")
-    public byte[] getOrganizationDataZippedFile(@RequestParam String organizationId) throws Exception {
+    public byte[] getOrganizationDataZippedFile(@RequestParam String organizationId,@RequestParam  String startDate, @RequestParam String endDate) throws Exception {
 
-        File zippedFile = listService.getOrganizationDataZippedFile(organizationId);
+        File zippedFile = listService.getOrganizationDataZippedFile(organizationId, startDate, endDate);
         byte[] bytes = java.nio.file.Files.readAllBytes(zippedFile.toPath());
         boolean deleted = zippedFile.delete();
 
@@ -878,10 +857,9 @@ public class ListController {
 
     })
     @GetMapping("/getUserData")
-    public byte[] getUserData(@RequestParam String userId) throws Exception {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
-                .concat("getUserData: " + userId));
-        File zippedFile = listService.getUserDataZippedFile(userId);
+    public byte[] getUserData(@RequestParam String userId,@RequestParam  String startDate, @RequestParam String endDate) throws Exception {
+
+        File zippedFile = listService.getUserDataZippedFile(userId,startDate,endDate);
         byte[] bytes = java.nio.file.Files.readAllBytes(zippedFile.toPath());
         boolean deleted = zippedFile.delete();
 
@@ -942,9 +920,9 @@ public class ListController {
 
     })
     @GetMapping("/getUserProjectAudios")
-    public ResponseEntity<Object> getUserProjectAudios(String userId) {
+    public ResponseEntity<Object> getUserProjectAudios(@RequestParam String userId,@RequestParam  String startDate, @RequestParam String endDate) {
         try {
-            return ResponseEntity.ok(listService.getUserProjectAudios(userId));
+            return ResponseEntity.ok(listService.getUserProjectAudios(userId, startDate, endDate));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,
@@ -962,12 +940,11 @@ public class ListController {
 
     })
     @GetMapping("/getProjectVideos")
-    public ResponseEntity<Object> getProjectVideos(String projectId)
+    public ResponseEntity<Object> getProjectVideos(@RequestParam String projectId,@RequestParam  String startDate, @RequestParam String endDate)
             throws Exception {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
-                .concat("getProjectVideos: " + projectId));
+
         try {
-            return ResponseEntity.ok(listService.getProjectVideos(projectId));
+            return ResponseEntity.ok(listService.getProjectVideos(projectId, startDate,endDate));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,
@@ -985,12 +962,10 @@ public class ListController {
 
     })
     @GetMapping("/getProjectFieldMonitorSchedules")
-    public ResponseEntity<Object> getProjectFieldMonitorSchedules(String projectId)
+    public ResponseEntity<Object> getProjectFieldMonitorSchedules(@RequestParam String projectId,@RequestParam  String startDate, @RequestParam String endDate)
             throws Exception {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
-                .concat("getProjectFieldMonitorSchedules: " + projectId));
-        try {
-            return ResponseEntity.ok(listService.getProjectFieldMonitorSchedules(projectId));
+                try {
+            return ResponseEntity.ok(listService.getProjectFieldMonitorSchedules(projectId, startDate,endDate));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,
@@ -1032,12 +1007,10 @@ public class ListController {
     }
 
     @GetMapping("/getOrgFieldMonitorSchedules")
-    public ResponseEntity<Object> getOrgFieldMonitorSchedules(String organizationId)
+    public ResponseEntity<Object> getOrgFieldMonitorSchedules(@RequestParam String organizationId, @RequestParam  String startDate, @RequestParam String endDate)
             throws Exception {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
-                .concat("getOrgFieldMonitorSchedules: " + organizationId));
         try {
-            return ResponseEntity.ok(listService.getOrgFieldMonitorSchedules(organizationId));
+            return ResponseEntity.ok(listService.getOrgFieldMonitorSchedules(organizationId,startDate,endDate));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,

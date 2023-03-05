@@ -71,7 +71,8 @@ public class ListService {
     ProjectAssignmentRepository projectAssignmentRepository;
     @Autowired
     VideoRepository videoRepository;
-
+    @Autowired
+    DataService dataService;
     @Autowired
     AudioRepository audioRepository;
     @Autowired
@@ -103,13 +104,13 @@ public class ListService {
         return user;
     }
 
-    public List<FieldMonitorSchedule> getProjectFieldMonitorSchedules(String projectId) {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS).concat("getProjectFieldMonitorSchedules: "
-                .concat(E.FLOWER_YELLOW)));
+    public List<FieldMonitorSchedule> getProjectFieldMonitorSchedules(String projectId, String startDate, String endDate) {
 
-        List<FieldMonitorSchedule> m = fieldMonitorScheduleRepository.findByProjectId(projectId);
+        Criteria c = Criteria.where("projectId").is(projectId)
+                .and("created").gte(startDate).lte(endDate);
+        Query query = new Query(c);
+        List<FieldMonitorSchedule> m = mongoTemplate.find(query, FieldMonitorSchedule.class);
 
-        LOGGER.info(E.LEAF.concat(E.LEAF).concat("getProjectFieldMonitorSchedules found: " + m.size()));
         return m;
     }
 
@@ -123,14 +124,14 @@ public class ListService {
         return m;
     }
 
-    public List<FieldMonitorSchedule> getOrgFieldMonitorSchedules(String organizationId) {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS).concat("getOrgFieldMonitorSchedules: "
-                .concat(E.FLOWER_YELLOW)));
+    public List<FieldMonitorSchedule> getOrgFieldMonitorSchedules(String organizationId, String startDate, String endDate) {
+        Criteria c = Criteria.where("organizationId").is(organizationId)
+                .and("created").gte(startDate).lte(endDate);
+        Query query = new Query(c);
+        List<FieldMonitorSchedule> mList = mongoTemplate.find(query, FieldMonitorSchedule.class);
 
-        List<FieldMonitorSchedule> m = fieldMonitorScheduleRepository.findByOrganizationId(organizationId);
 
-        LOGGER.info(E.LEAF.concat(E.LEAF).concat("getOrgFieldMonitorSchedules found: " + m.size()));
-        return m;
+        return mList;
     }
 
     public List<FieldMonitorSchedule> getMonitorFieldMonitorSchedules(String userId) {
@@ -191,18 +192,22 @@ public class ListService {
         return mList;
     }
 
-    public List<Photo> getProjectPhotos(String projectId) {
+    public List<Photo> getProjectPhotos(String projectId, String startDate, String endDate) {
 
-        LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getProjectPhotos ..."));
-        List<Photo> mList = photoRepository.findByProjectId(projectId);
-        LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getProjectPhotos ... found: " + mList.size()));
+        Criteria c = Criteria.where("projectId").is(projectId)
+                .and("created").gte(startDate).lte(endDate);
+        Query query = new Query(c);
+        List<Photo> mList = mongoTemplate.find(query, Photo.class);
 
         return mList;
     }
 
-    public List<ProjectAssignment> getProjectAssignments(String projectId) {
-
-        return projectAssignmentRepository.findByProjectId(projectId);
+    public List<ProjectAssignment> getProjectAssignments(String projectId, String startDate, String endDate) {
+        Criteria c = Criteria.where("projectId").is(projectId)
+                .and("created").gte(startDate).lte(endDate);
+        Query query = new Query(c);
+        List<ProjectAssignment> mList = mongoTemplate.find(query, ProjectAssignment.class);
+        return mList;
     }
 
     public List<ProjectAssignment> getUserProjectAssignments(String userId) {
@@ -260,7 +265,7 @@ public class ListService {
         return activities;
     }
 
-    public DataBag getUserData(String userId) {
+    public DataBag getUserData(String userId, String startDate, String endDate) {
         DataBag bag = new DataBag();
         User user = userRepository.findByUserId(userId);
         List<Project> projects = projectRepository.findByOrganizationId(user.getOrganizationId());
@@ -268,10 +273,10 @@ public class ListService {
         List<Video> videos = getUserProjectVideos(userId);
         List<ProjectAssignment> assignments = getUserProjectAssignments(userId);
 
-        List<ProjectPosition> projectPositions = getOrganizationProjectPositions(user.getOrganizationId());
-        List<ProjectPolygon> projectPolygons = getOrganizationProjectPolygons(user.getOrganizationId());
-        List<FieldMonitorSchedule> fieldMonitorSchedules = getOrgFieldMonitorSchedules(user.getOrganizationId());
-        List<User> users = getOrganizationUsers(user.getOrganizationId());
+        List<ProjectPosition> projectPositions = getOrganizationProjectPositions(user.getOrganizationId(), startDate, endDate);
+        List<ProjectPolygon> projectPolygons = getOrganizationProjectPolygons(user.getOrganizationId(), startDate, endDate);
+        List<FieldMonitorSchedule> fieldMonitorSchedules = getOrgFieldMonitorSchedules(user.getOrganizationId(), startDate, endDate);
+        List<User> users = getOrganizationUsers(user.getOrganizationId(), startDate, endDate);
 
         bag.setDate(DateTime.now().toDateTimeISO().toString());
         bag.setProjects(projects);
@@ -290,19 +295,19 @@ public class ListService {
         return bag;
     }
 
-    public DataBag getProjectData(String projectId) {
+    public DataBag getProjectData(String projectId, String startDate, String endDate) {
         DataBag bag = new DataBag();
         Project project = projectRepository.findByProjectId(projectId);
         List<Project> projects = new ArrayList<>();
         projects.add(project);
 
-        List<Photo> photos = getProjectPhotos(projectId);
-        List<Video> videos = getProjectVideos(projectId);
-        List<Audio> audios = getProjectAudios(projectId);
-        List<ProjectAssignment> assignments = getProjectAssignments(projectId);
-        List<ProjectPosition> projectPositions = getProjectPositions(projectId);
-        List<ProjectPolygon> projectPolygons = getProjectPolygons(projectId);
-        List<FieldMonitorSchedule> fieldMonitorSchedules = getProjectFieldMonitorSchedules(projectId);
+        List<Photo> photos = getProjectPhotos(projectId, startDate, endDate);
+        List<Video> videos = getProjectVideos(projectId, startDate, endDate);
+        List<Audio> audios = getProjectAudios(projectId, startDate, endDate);
+        List<ProjectAssignment> assignments = getProjectAssignments(projectId, startDate, endDate);
+        List<ProjectPosition> projectPositions = getProjectPositions(projectId, startDate, endDate);
+        List<ProjectPolygon> projectPolygons = getProjectPolygons(projectId, startDate, endDate);
+        List<FieldMonitorSchedule> fieldMonitorSchedules = getProjectFieldMonitorSchedules(projectId, startDate, endDate);
         List<SettingsModel> settings = getProjectSettings(projectId);
 
         bag.setDate(DateTime.now().toDateTimeISO().toString());
@@ -334,19 +339,21 @@ public class ListService {
         return audioRepository.findByAudioId(photoId);
     }
 
-    public DataBag getOrganizationData(String organizationId) throws Exception {
+    public DataBag getOrganizationData(String organizationId, String startDate, String endDate) throws Exception {
         DataBag bag = new DataBag();
-        List<Project> projects = getOrganizationProjects(organizationId);
-        List<Photo> photos = getOrganizationPhotos(organizationId);
-        List<Video> videos = getOrganizationVideos(organizationId);
-        List<Audio> audios = getOrganizationAudios(organizationId);
+
+        List<Project> projects = getOrganizationProjects(organizationId, startDate, endDate);
+        List<Photo> photos = getOrganizationPhotos(organizationId, startDate, endDate);
+        List<Video> videos = getOrganizationVideos(organizationId, startDate, endDate);
+        List<Audio> audios = getOrganizationAudios(organizationId, startDate, endDate);
+
         List<ProjectAssignment> assignments = getOrganizationProjectAssignments(organizationId);
 
-        List<ProjectPosition> projectPositions = getOrganizationProjectPositions(organizationId);
-        List<FieldMonitorSchedule> fieldMonitorSchedules = getOrgFieldMonitorSchedules(organizationId);
-        List<ProjectPolygon> polygons = getOrganizationProjectPolygons(organizationId);
+        List<ProjectPosition> projectPositions = getOrganizationProjectPositions(organizationId, startDate, endDate);
+        List<FieldMonitorSchedule> fieldMonitorSchedules = getOrgFieldMonitorSchedules(organizationId, startDate, endDate);
+        List<ProjectPolygon> polygons = getOrganizationProjectPolygons(organizationId, startDate, endDate);
 
-        List<User> users = getOrganizationUsers(organizationId);
+        List<User> users = getOrganizationUsers(organizationId, startDate, endDate);
 
         bag.setDate(DateTime.now().toDateTimeISO().toString());
         bag.setProjects(projects);
@@ -368,16 +375,30 @@ public class ListService {
         return bag;
     }
 
+    public List<ProjectSummary> getOrganizationSummary(
+            String organizationId, String startDate, String endDate) throws Exception {
+
+        List<ProjectSummary> list = dataService.createDailyOrganizationSummaries(organizationId, startDate, endDate);
+
+        LOGGER.info(E.RED_APPLE + " Organization summaries found:  " + list.size());
+
+        return list;
+    }
+
+    public List<ProjectSummary> getProjectSummary(
+            String projectId, String startDate, String endDate) throws Exception {
+
+
+        return new ArrayList<>();
+    }
+
     static final String mm = "" + E.BLUE_DOT + E.BLUE_DOT + E.BLUE_DOT + " Zipping Org data: ";
 
-    public File getOrganizationDataZippedFile(String organizationId) throws Exception {
+    public File getOrganizationDataZippedFile(String organizationId, String startDate, String endDate) throws Exception {
 
-        //todo - remove after test
-        String date = DateTime.now().toDateTimeISO().minusDays(10).toString();
-//        long photoCount = photoRepository.countByTimeAndOrganization(organizationId, date);
-//        LOGGER.info(mm + " photo count from query: " + photoCount);
+        long start = System.currentTimeMillis();
 
-        DataBag bag = getOrganizationData(organizationId);
+        DataBag bag = getOrganizationData(organizationId, startDate, endDate);
         String json = G.toJson(bag);
         LOGGER.info(mm + " Size of json file before zipping: " + json.length() + " bytes");
         File dir = new File("zipDirectory");
@@ -395,13 +416,17 @@ public class ListService {
         out.closeEntry();
 
         out.close();
-        LOGGER.info(mm + " Size of zipped json file after zipping: " + zippedFile.length() + " bytes");
+        long end = System.currentTimeMillis();
+        long seconds = ((end - start) / 1000) % 60;
+
+        LOGGER.info(mm + " Size of zipped json file after zipping: "
+                + zippedFile.length() + " bytes, elapsed: " + seconds + " seconds");
         return zippedFile;
     }
 
-    public File getProjectDataZippedFile(String projectId) throws Exception {
-
-        DataBag bag = getProjectData(projectId);
+    public File getProjectDataZippedFile(String projectId, String startDate, String endDate) throws Exception {
+        long start = System.currentTimeMillis();
+        DataBag bag = getProjectData(projectId, startDate, endDate);
         String json = G.toJson(bag);
         LOGGER.info(mm + " Size of json file before zipping: " + json.length() + " bytes");
 
@@ -420,13 +445,17 @@ public class ListService {
         out.closeEntry();
 
         out.close();
-        LOGGER.info(mm + " Size of zipped json file after zipping: " + zippedFile.length() + " bytes");
+        long end = System.currentTimeMillis();
+        long seconds = ((end - start) / 1000) % 60;
+
+        LOGGER.info(mm + " Size of zipped json file after zipping: "
+                + zippedFile.length() + " bytes, elapsed: " + seconds + " seconds");
         return zippedFile;
     }
 
-    public File getUserDataZippedFile(String userId) throws Exception {
+    public File getUserDataZippedFile(String userId, String startDate, String endDate) throws Exception {
 
-        DataBag bag = getUserData(userId);
+        DataBag bag = getUserData(userId, startDate, endDate);
         String json = G.toJson(bag);
         LOGGER.info(mm + " getUserDataZippedFile: Size of json file before zipping: " + json.length() + " bytes");
 
@@ -449,7 +478,6 @@ public class ListService {
         return zippedFile;
     }
 
-
     public List<Photo> getUserProjectPhotos(String userId) {
 
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getUserProjectPhotos ...userId: " + userId));
@@ -466,69 +494,78 @@ public class ListService {
 
         return mList;
     }
+
     public List<ProjectSummary> getProjectSummaries(String projectId, String startDate, String endDate) {
 
-        List<ProjectSummary> mList = projectSummaryRepository.findByProjectInPeriod(projectId,startDate,endDate);
+        List<ProjectSummary> mList = projectSummaryRepository.findByProjectInPeriod(projectId, startDate, endDate);
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getProjectSummaries ... found: " + mList.size()
                 + " startDate: " + startDate + " endDate: " + endDate));
 
         return mList;
     }
+
     public List<ActivityModel> getProjectActivityPeriod(String projectId, String startDate, String endDate) {
 
-        List<ActivityModel> mList = activityModelRepository.findByProjectPeriod(projectId,startDate,endDate);
+        List<ActivityModel> mList = activityModelRepository.findByProjectPeriod(projectId, startDate, endDate);
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getProjectActivityPeriod ... found: " + mList.size()
                 + " startDate: " + startDate + " endDate: " + endDate));
 
         return mList;
     }
+
     public List<ProjectSummary> getOrganizationSummaries(String organizationId, String startDate, String endDate) {
 
-        List<ProjectSummary> mList = projectSummaryRepository.findByOrganizationInPeriod(organizationId,startDate,endDate);
+        List<ProjectSummary> mList = projectSummaryRepository.findByOrganizationInPeriod(organizationId, startDate, endDate);
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getProjectSummaries ... found: " + mList.size()
                 + " startDate: " + startDate + " endDate: " + endDate));
 
         return mList;
     }
+
     public List<ActivityModel> getOrganizationActivityPeriod(String organizationId, String startDate, String endDate) {
 
-        List<ActivityModel> mList = activityModelRepository.findByOrganizationPeriod(organizationId,startDate,endDate);
+        List<ActivityModel> mList = activityModelRepository.findByOrganizationPeriod(organizationId, startDate, endDate);
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getOrganizationActivityPeriod ... found: " + mList.size()
                 + " startDate: " + startDate + " endDate: " + endDate));
 
         return mList;
     }
+
     public List<ActivityModel> getUserActivityPeriod(String userId, String startDate, String endDate) {
 
-        List<ActivityModel> mList = activityModelRepository.findByUserPeriod(userId,startDate,endDate);
+        List<ActivityModel> mList = activityModelRepository.findByUserPeriod(userId, startDate, endDate);
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getUserActivityPeriod ... found: " + mList.size()
                 + " startDate: " + startDate + " endDate: " + endDate));
 
         return mList;
     }
 
-    public List<Audio> getUserProjectAudios(String userId) {
-
-        List<Audio> mList = audioRepository.findByUserId(userId);
+    public List<Audio> getUserProjectAudios(String userId, String startDate, String endDate) {
+        Criteria c = Criteria.where("userId").is(userId)
+                .and("created").gte(startDate).lte(endDate);
+        Query query = new Query(c);
+        List<Audio> mList = mongoTemplate.find(query, Audio.class);
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getUserProjectAudios ... found: " + mList.size()));
 
         return mList;
     }
 
-    public List<Video> getProjectVideos(String projectId) {
+    public List<Video> getProjectVideos(String projectId, String startDate, String endDate) {
 
-        LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getProjectVideos ..."));
-        List<Video> mList = videoRepository.findByProjectId(projectId);
-        LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getProjectVideos ... found: " + mList.size()));
+        Criteria c = Criteria.where("projectId").is(projectId)
+                .and("created").gte(startDate).lte(endDate);
+        Query query = new Query(c);
+        List<Video> mList = mongoTemplate.find(query, Video.class);
 
         return mList;
     }
 
-    public List<Audio> getProjectAudios(String projectId) {
+    public List<Audio> getProjectAudios(String projectId, String startDate, String endDate) {
 
-        LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getProjectAudios ..."));
-        List<Audio> mList = audioRepository.findByProjectId(projectId);
-        LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getProjectAudios ... found: " + mList.size()));
+        Criteria c = Criteria.where("projectId").is(projectId)
+                .and("created").gte(startDate).lte(endDate);
+        Query query = new Query(c);
+        List<Audio> mList = mongoTemplate.find(query, Audio.class);
 
         return mList;
     }
@@ -542,11 +579,12 @@ public class ListService {
         return mList;
     }
 
-    public List<Condition> getProjectConditions(String projectId) {
+    public List<Condition> getProjectConditions(String projectId, String startDate, String endDate) {
 
-        LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getProjectConditions ..."));
-        List<Condition> mList = conditionRepository.findByProjectId(projectId);
-        LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getProjectConditions ... found: " + mList.size()));
+        Criteria c = Criteria.where("projectId").is(projectId)
+                .and("created").gte(startDate).lte(endDate);
+        Query query = new Query(c);
+        List<Condition> mList = mongoTemplate.find(query, Condition.class);
 
         return mList;
     }
@@ -701,42 +739,41 @@ public class ListService {
         return mPositions;
     }
 
-    public List<ProjectPosition> getProjectPositions(String projectId) {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS).concat("getProjectPositions: "
-                .concat(E.FLOWER_YELLOW)));
+    public List<ProjectPosition> getProjectPositions(String projectId, String startDate, String endDate) {
+        Criteria c = Criteria.where("projectId").is(projectId)
+                .and("created").gte(startDate).lte(endDate);
+        Query query = new Query(c);
+        List<ProjectPosition> mList = mongoTemplate.find(query, ProjectPosition.class);
 
-        List<ProjectPosition> m = projectPositionRepository.findByProjectId(projectId);
-
-        LOGGER.info(E.LEAF.concat(E.LEAF).concat("ProjectPositions found: " + m.size()));
-        return m;
+        LOGGER.info(E.LEAF.concat(E.LEAF).concat("ProjectPositions found: " + mList.size()));
+        return mList;
     }
 
-    public List<ProjectPolygon> getProjectPolygons(String projectId) {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS).concat("getProjectPolygons: "
-                .concat(E.FLOWER_YELLOW)));
+    public List<ProjectPolygon> getProjectPolygons(String projectId, String startDate, String endDate) {
+        Criteria c = Criteria.where("projectId").is(projectId)
+                .and("created").gte(startDate).lte(endDate);
+        Query query = new Query(c);
+        List<ProjectPolygon> mList = mongoTemplate.find(query, ProjectPolygon.class);
 
-        List<ProjectPolygon> m = projectPolygonRepository.findByProjectId(projectId);
-
-        LOGGER.info(E.LEAF.concat(E.LEAF).concat("ProjectPolygons found: " + m.size()));
-        return m;
+        LOGGER.info(E.LEAF.concat(E.LEAF).concat("ProjectPolygons found: " + mList.size()));
+        return mList;
     }
 
-    public List<ProjectPosition> getOrganizationProjectPositions(String organizationId) {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS).concat("getOrganizationProjectPositions: "
-                .concat(E.FLOWER_YELLOW)));
-
-        List<ProjectPosition> mList = projectPositionRepository.findByOrganizationId(organizationId);
-
+    public List<ProjectPosition> getOrganizationProjectPositions(String organizationId, String startDate, String endDate) {
+        Criteria c = Criteria.where("organizationId").is(organizationId)
+                .and("created").gte(startDate).lte(endDate);
+        Query query = new Query(c);
+        List<ProjectPosition> mList = mongoTemplate.find(query, ProjectPosition.class);
         LOGGER.info(E.LEAF.concat(E.LEAF).concat(" OrgProjectPositions found: " + mList.size()
                 + " for organizationId: " + organizationId));
         return mList;
     }
 
-    public List<ProjectPolygon> getOrganizationProjectPolygons(String organizationId) {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS).concat("getOrganizationProjectPolygons: "
-                .concat(E.FLOWER_YELLOW)));
-
-        List<ProjectPolygon> mList = projectPolygonRepository.findByOrganizationId(organizationId);
+    public List<ProjectPolygon> getOrganizationProjectPolygons(String organizationId, String startDate, String endDate) {
+        Criteria c = Criteria.where("organizationId").is(organizationId)
+                .and("created").gte(startDate).lte(endDate);
+        Query query = new Query(c);
+        List<ProjectPolygon> mList = mongoTemplate.find(query, ProjectPolygon.class);
 
         LOGGER.info(E.LEAF.concat(E.LEAF).concat(" OrgProjectPolygons found: " + mList.size()
                 + " for organizationId: " + organizationId));
@@ -776,9 +813,12 @@ public class ListService {
         return mList;
     }
 
-    public List<Project> getOrganizationProjects(String organizationId) {
+    public List<Project> getOrganizationProjects(String organizationId, String startDate, String endDate) {
 
-        List<Project> mList = projectRepository.findByOrganizationId(organizationId);
+        Criteria c = Criteria.where("organizationId").is(organizationId)
+                .and("created").gte(startDate).lte(endDate);
+        Query query = new Query(c);
+        List<Project> mList = mongoTemplate.find(query, Project.class);
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getOrganizationProjects ... found: " + mList.size()));
 
         return mList;
@@ -793,9 +833,12 @@ public class ListService {
     }
 
 
-    public List<User> getOrganizationUsers(String organizationId) {
+    public List<User> getOrganizationUsers(String organizationId, String startDate, String endDate) {
         List<User> filteredList = new ArrayList<>();
-        List<User> mList = userRepository.findByOrganizationId(organizationId);
+        Criteria c = Criteria.where("organizationId").is(organizationId)
+                .and("created").gte(startDate).lte(endDate);
+        Query query = new Query(c);
+        List<User> mList = mongoTemplate.find(query, User.class);
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getOrganizationUsers ... found: " + mList.size()));
         for (User user : mList) {
             if (user.getActive() == 0) {
@@ -806,25 +849,34 @@ public class ListService {
         return filteredList;
     }
 
-    public List<Photo> getOrganizationPhotos(String organizationId) {
+    public List<Photo> getOrganizationPhotos(String organizationId, String startDate, String endDate) {
 
-        List<Photo> mList = photoRepository.findByOrganizationId(organizationId);
+        Criteria c = Criteria.where("organizationId").is(organizationId)
+                .and("created").gte(startDate).lte(endDate);
+        Query query = new Query(c);
+        List<Photo> mList = mongoTemplate.find(query, Photo.class);
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getOrganizationPhotos ... found: " + mList.size()));
 
         return mList;
     }
 
-    public List<Video> getOrganizationVideos(String organizationId) {
+    public List<Video> getOrganizationVideos(String organizationId, String startDate, String endDate) {
 
-        List<Video> mList = videoRepository.findByOrganizationId(organizationId);
+        Criteria c = Criteria.where("organizationId").is(organizationId)
+                .and("created").gte(startDate).lte(endDate);
+        Query query = new Query(c);
+        List<Video> mList = mongoTemplate.find(query, Video.class);
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getOrganizationVideos ... found: " + mList.size()));
 
         return mList;
     }
 
-    public List<Audio> getOrganizationAudios(String organizationId) {
+    public List<Audio> getOrganizationAudios(String organizationId, String startDate, String endDate) {
 
-        List<Audio> mList = audioRepository.findByOrganizationId(organizationId);
+        Criteria c = Criteria.where("organizationId").is(organizationId)
+                .and("created").gte(startDate).lte(endDate);
+        Query query = new Query(c);
+        List<Audio> mList = mongoTemplate.find(query, Audio.class);
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getOrganizationAudios ... found: " + mList.size()));
 
         return mList;
