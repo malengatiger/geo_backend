@@ -54,8 +54,8 @@ public class GeoApplication implements ApplicationListener<ApplicationReadyEvent
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
-        logger.info(alien + " onApplicationEvent, MainApplicationClass: "
-                + event.getSpringApplication().getMainApplicationClass());
+//        logger.info(alien + " onApplicationEvent, MainApplicationClass: "
+//                + event.getSpringApplication().getMainApplicationClass());
         ApplicationContext applicationContext = event.getApplicationContext();
         RequestMappingHandlerMapping requestMappingHandlerMapping = applicationContext
                 .getBean("requestMappingHandlerMapping", RequestMappingHandlerMapping.class);

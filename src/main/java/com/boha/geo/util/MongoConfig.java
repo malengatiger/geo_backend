@@ -106,11 +106,11 @@ public class MongoConfig {
         MongoClient client = MongoClients.create(settings);
 
         LOGGER.info(mm + " " + client.listDatabases().iterator().getServerAddress() + " MongoClientSettings have been set with pojoCodecRegistry");
-        for (Document document : client.listDatabases()) {
-            LOGGER.info(mm + "Database Document: " + document.toJson() + E.RAIN);
-        }
-        LOGGER.info(mm + " ClusterDescription: "
-                + client.getClusterDescription().getShortDescription() + mm);
+//        for (Document document : client.listDatabases()) {
+//            LOGGER.info(mm + "Database Document: " + document.toJson() + E.RAIN);
+//        }
+//        LOGGER.info(mm + " ClusterDescription: "
+//                + client.getClusterDescription().getShortDescription() + mm);
         LOGGER.info(mm + " Database Name: "
                 + client.getDatabase(databaseName).getName() + " " + mm);
 
@@ -125,13 +125,13 @@ public class MongoConfig {
     @Bean
     public MongoTemplate mongoTemplate() throws Exception {
         MongoTemplate t = new MongoTemplate(mongo(), databaseName);
-        LOGGER.info(mm + " Geo DB Collections " + mm);
-        List<String> cols = new ArrayList<>(t.getCollectionNames());
-        Collections.sort(cols);
-        for (String col : cols) {
-            LOGGER.info(mm + " Collection: "
-                    + col + " " + E.BLUE_DOT);
-        }
+//        LOGGER.info(mm + " Geo DB Collections " + mm);
+//        List<String> cols = new ArrayList<>(t.getCollectionNames());
+//        Collections.sort(cols);
+//        for (String col : cols) {
+//            LOGGER.info(mm + " Collection: "
+//                    + col + " " + E.BLUE_DOT);
+//        }
 
         return t;
     }

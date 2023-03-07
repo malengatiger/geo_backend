@@ -33,11 +33,11 @@ public class EndpointsListener {
                     cnt++;
                     sorted.add(String.valueOf(key));
         });
-        LOGGER.info(E.DIAMOND.concat(E.DIAMOND).concat("Total Number of Endpoints: " + cnt));
+//        LOGGER.info(E.DIAMOND.concat(E.DIAMOND).concat("Total Number of Endpoints: " + cnt));
         Collections.sort(sorted);
-        for (String s : sorted) {
-            LOGGER.info("Endpoint: " + E.RED_APPLE+E.RED_APPLE + "{}", s);
-        }
+//        for (String s : sorted) {
+//            LOGGER.info("Endpoint: " + E.RED_APPLE+E.RED_APPLE + "{}", s);
+//        }
         LOGGER.info(E.DIAMOND.concat(E.DIAMOND).concat("Total Number of Endpoints: " + sorted.size()));
 
     }

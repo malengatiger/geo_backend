@@ -53,27 +53,17 @@ public class ListController {
 
     @GetMapping("/hello")
     public String hello() throws Exception {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS).concat("saying PING! the backend application .... : ".concat(E.FLOWER_YELLOW)));
         return E.HAND2 + E.HAND2 + "PROJECT MONITOR SERVICES PLATFORM says Hi, Nigga! "
-                + E.RED_APPLE.concat(new DateTime().toDateTimeISO().toString());
-    }
-
-    @PostMapping("/post")
-    public String post() throws Exception {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS).concat("testing POST on the backend application .... : ".concat(E.FLOWER_YELLOW)));
-        return E.HAND2 + E.HAND2 + "PROJECT MONITOR SERVICES PLATFORM tested POST OK!"
                 + E.RED_APPLE.concat(new DateTime().toDateTimeISO().toString());
     }
 
     @GetMapping("/findUserByEmail")
     public ResponseEntity<Object> findUserByEmail(@RequestParam String email) {
-        LOGGER.info(E.DICE.concat(E.DICE).concat("findUserByEmail ... email: ".concat(email)));
         try {
             if (email.isEmpty()) {
                 throw new Exception("Email is missing ".concat(E.NOT_OK));
             }
             User user = listService.findUserByEmail(email);
-            LOGGER.info(E.DOLPHIN.concat(E.DOLPHIN) + " findUserByEmail found: " + user.getName());
             return ResponseEntity.ok(user);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
@@ -85,10 +75,8 @@ public class ListController {
 
     @GetMapping("/getOrganizations")
     public ResponseEntity<Object> getOrganizations() {
-        LOGGER.info(E.DICE.concat(E.DICE).concat(" getOrganizations ..."));
         try {
             List<Organization> orgs = listService.getOrganizations();
-            LOGGER.info(E.DOLPHIN.concat(E.DOLPHIN) + " Organizations found: " + orgs.size());
             return ResponseEntity.ok(orgs);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
@@ -100,10 +88,8 @@ public class ListController {
 
     @GetMapping("/getCommunities")
     public ResponseEntity<Object> getCommunities() {
-        LOGGER.info(E.DICE.concat(E.DICE).concat(" getCommunities ..."));
         try {
             List<Community> communities = listService.getCommunities();
-            LOGGER.info(E.DOLPHIN.concat(E.DOLPHIN) + " Communities found: " + communities.size());
             return ResponseEntity.ok(communities);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
@@ -115,11 +101,8 @@ public class ListController {
 
     @GetMapping("/getProjects")
     public ResponseEntity<Object> getProjects() {
-        LOGGER.info(E.DICE.concat(E.DICE).concat("ListController: getProjects ..."));
         try {
             List<Project> projects = listService.getProjects();
-            LOGGER.info(E.DOLPHIN.concat(E.DOLPHIN)
-                    + "ListController: Projects found: \uD83D\uDC24 " + projects.size());
             return ResponseEntity.ok(projects);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
@@ -134,11 +117,8 @@ public class ListController {
 
     @GetMapping("/getCities")
     public ResponseEntity<Object> getCities() {
-        LOGGER.info(E.DICE.concat(E.DICE).concat("ListController: getCities ..."));
         try {
             List<City> cities = mongoDataService.getCities();
-            LOGGER.info(E.DOLPHIN.concat(E.DOLPHIN)
-                    + "ListController: Cities found: \uD83D\uDC24 " + cities.size());
             return ResponseEntity.ok(cities);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
@@ -150,11 +130,8 @@ public class ListController {
 
     @GetMapping("/getCitiesByLocation")
     public ResponseEntity<Object> getCitiesByLocation(double latitude, double longitude, int radiusInKM) {
-        LOGGER.info(E.DICE.concat(E.DICE).concat("ListController: ...... getCitiesByLocation ..."));
         try {
             List<City> cities = mongoDataService.getCitiesByLocation(new Point(latitude, longitude), new Distance(radiusInKM, Metrics.KILOMETERS));
-            LOGGER.info(E.DOLPHIN.concat(E.DOLPHIN)
-                    + "ListController: getCitiesByLocation found: \uD83D\uDC24 " + cities.size());
             return ResponseEntity.ok(cities);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
@@ -166,11 +143,8 @@ public class ListController {
 
     @GetMapping("/findCommunitiesByCountry")
     public ResponseEntity<Object> findCommunitiesByCountry(@RequestParam String countryId) throws Exception {
-        LOGGER.info(E.DICE.concat(E.DICE).concat("ListController: findCommunitiesByCountry ..."));
         try {
             List<Community> countries = listService.findCommunitiesByCountry(countryId);
-            LOGGER.info(E.DOLPHIN.concat(E.DOLPHIN)
-                    + "ListController: findCommunitiesByCountry found: \uD83D\uDC24 " + countries.size());
             return ResponseEntity.ok(countries);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
@@ -190,11 +164,8 @@ public class ListController {
     @GetMapping("/getCountries")
 
     public ResponseEntity<Object> getCountries() throws Exception {
-        LOGGER.info(E.DICE.concat(E.DICE).concat("ListController: findSettlementsByCountry ..."));
         try {
             List<Country> countries = listService.getCountries();
-            LOGGER.info(E.DOLPHIN.concat(E.DOLPHIN)
-                    + "ListController: Countries found: \uD83D\uDC24 " + countries.size());
             if (bucket.tryConsume(1)) {
                 return ResponseEntity.ok(countries);
             } else {
@@ -212,10 +183,8 @@ public class ListController {
 
     @GetMapping("/getCountryOrganizations")
     public ResponseEntity<Object> getCountryOrganizations(@RequestParam String countryId) {
-        LOGGER.info(E.DICE.concat(E.DICE).concat(" getCountryOrganizations ..."));
         try {
             List<Organization> orgs = listService.getCountryOrganizations(countryId);
-            LOGGER.info(E.DOLPHIN.concat(E.DOLPHIN) + " Organizations found: " + orgs.size());
             return ResponseEntity.ok(orgs);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
@@ -227,10 +196,8 @@ public class ListController {
 
     @GetMapping("/getOrganizationProjects")
     public ResponseEntity<Object> getOrganizationProjects(@RequestParam String organizationId,  @RequestParam  String startDate, @RequestParam String endDate) {
-        LOGGER.info(E.DICE.concat(E.DICE).concat(" getOrganizationProjects ..."));
         try {
             List<Project> projects = listService.getOrganizationProjects(organizationId, startDate, endDate);
-            LOGGER.info(E.DOLPHIN.concat(E.DOLPHIN) + " Projects found: " + projects.size());
             return ResponseEntity.ok(projects);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
@@ -242,10 +209,8 @@ public class ListController {
 
     @GetMapping("/getQuestionnairesByOrganization")
     public ResponseEntity<Object> getQuestionnairesByOrganization(@RequestParam String organizationId) {
-        LOGGER.info(E.DICE.concat(E.DICE).concat(" getOrganizationUsers ..."));
         try {
             List<Questionnaire> users = listService.getQuestionnairesByOrganization(organizationId);
-            LOGGER.info(E.DOLPHIN.concat(E.DOLPHIN) + " Questionnaires found: " + users.size());
             return ResponseEntity.ok(users);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
@@ -262,7 +227,18 @@ public class ListController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,
-                            "addFieldMonitorSchedule failed: " + e.getMessage(),
+                            "getOrganizationUsers failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+    }
+    @GetMapping("/getAllOrganizationUsers")
+    public ResponseEntity<Object> getOrganizationUsers(@RequestParam String organizationId) {
+        try {
+            return ResponseEntity.ok(listService.getOrganizationUsers(organizationId));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "getAllOrganizationUsers failed: " + e.getMessage(),
                             new DateTime().toDateTimeISO().toString()));
         }
     }
@@ -305,10 +281,8 @@ public class ListController {
 
     @GetMapping("/findProjectsByOrganization")
     public ResponseEntity<Object> findProjectsByOrganization(@RequestParam String organizationId) {
-        LOGGER.info(E.DICE.concat(E.DICE).concat(" findProjectsByOrganization ... id: ".concat(organizationId)));
         try {
             List<Project> users = listService.findProjectsByOrganization(organizationId);
-            LOGGER.info(E.DOLPHIN.concat(E.DOLPHIN) + " findProjectsByOrganization found: " + users.size());
             return ResponseEntity.ok(users);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
@@ -320,10 +294,8 @@ public class ListController {
 
     @GetMapping("/getUsers")
     public ResponseEntity<Object> getUsers() {
-        LOGGER.info(E.DICE.concat(E.DICE).concat(" getUsers ..."));
         try {
             List<User> users = listService.getUsers();
-            LOGGER.info(E.DOLPHIN.concat(E.DOLPHIN) + " Users found: " + users.size());
             return ResponseEntity.ok(users);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
@@ -343,13 +315,11 @@ public class ListController {
 
     @GetMapping("/getUserById")
     public ResponseEntity<?> getUserById(@Parameter(description = "userId of user to be searched") @RequestParam String userId) {
-        LOGGER.info(E.DICE.concat(E.DICE).concat(" getUserById ..."));
         try {
             User user = listService.getUserById(userId);
             if (user == null) {
                 throw new Exception("User is not active; meaning this user is kaput!");
             }
-            LOGGER.info(E.DOLPHIN.concat(E.DOLPHIN) + " User found: " + user.getName());
             return ResponseEntity.ok(user);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
@@ -362,10 +332,8 @@ public class ListController {
     @GetMapping("/findProjectsByLocation")
     public ResponseEntity<?> findProjectsByLocation(@RequestParam String organizationId, @RequestParam double latitude,
                                                          @RequestParam double longitude, @RequestParam double radiusInKM) {
-        LOGGER.info(E.DICE.concat(E.DICE).concat(" ...... findProjectsByLocation ..."));
         try {
             List<Project> projects = listService.findProjectsByLocation(organizationId,latitude, longitude, radiusInKM);
-            LOGGER.info(E.DOLPHIN.concat(E.DOLPHIN) + " Nearby Projects found: " + projects.size());
             return ResponseEntity.ok(projects);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
@@ -377,10 +345,8 @@ public class ListController {
 
     @GetMapping("/findCitiesByLocation")
     public ResponseEntity<Object> findCitiesByLocation(@RequestParam double latitude, @RequestParam double longitude, @RequestParam double radiusInKM) {
-        LOGGER.info(E.DICE.concat(E.DICE).concat(" findCitiesByLocation: ... radiusInKM: " + radiusInKM + " km"));
         try {
             List<City> cities = listService.findCitiesByLocation(latitude, longitude, radiusInKM);
-            LOGGER.info(E.DOLPHIN.concat(E.DOLPHIN) + " ....... findCitiesByLocation: cities found: " + cities.size());
             return ResponseEntity.ok(cities);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
@@ -393,10 +359,8 @@ public class ListController {
     @GetMapping("/findProjectPositionsByLocation")
     public ResponseEntity<Object> findProjectPositionsByLocation(@RequestParam String organizationId, @RequestParam double latitude,
                                                                  @RequestParam double longitude, @RequestParam double radiusInKM) {
-        LOGGER.info(E.DICE.concat(E.DICE).concat(" findProjectPositionsByLocation ..."));
         try {
             List<ProjectPosition> positions = listService.findProjectPositionsByLocation(organizationId, latitude, longitude, radiusInKM);
-            LOGGER.info(E.DOLPHIN.concat(E.DOLPHIN) + " Nearby ProjectPositions found: " + positions.size());
             return ResponseEntity.ok(positions);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
@@ -457,11 +421,33 @@ public class ListController {
                             new DateTime().toDateTimeISO().toString()));
         }
     }
+    @GetMapping("/getAllOrganizationProjectPositions")
+    public ResponseEntity<Object> getOrganizationProjectPositions(@RequestParam String organizationId) {
+        try {
+            return ResponseEntity.ok(listService.getOrganizationProjectPositions(organizationId));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "getOrganizationProjectPositions failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+    }
+    @GetMapping("/getAllOrganizationProjectPolygons")
+    public ResponseEntity<Object> getOrganizationProjectPolygons(@RequestParam String organizationId) {
+        try {
+            return ResponseEntity.ok(listService.getOrganizationProjectPolygons(organizationId));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "getAllOrganizationProjectPolygons failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+    }
 
     @GetMapping("/getGeofenceEventsByProjectPosition")
     public ResponseEntity<Object> getGeofenceEventsByProjectPosition(String projectPositionId) {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
-                .concat("getGeofenceEventsByProjectPosition: " + projectPositionId));
         try {
             return ResponseEntity.ok(listService.getGeofenceEventsByProjectPosition(projectPositionId));
         } catch (Exception e) {
@@ -474,8 +460,6 @@ public class ListController {
 
     @GetMapping("/countPhotosByProject")
     public ResponseEntity<Object> countPhotosByProject(String projectId) {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
-                .concat("countPhotosByProject:  starting call: " + projectId));
         try {
             return ResponseEntity.ok(listService.countPhotosByProject(projectId));
         } catch (Exception e) {
@@ -500,8 +484,6 @@ public class ListController {
 
     @GetMapping("/countPhotosByUser")
     public ResponseEntity<Object> countPhotosByUser(String userId) {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
-                .concat("countPhotosByUser:  starting call: " + userId));
         try {
             return ResponseEntity.ok(listService.countPhotosByUser(userId));
         } catch (Exception e) {
@@ -514,8 +496,6 @@ public class ListController {
 
     @GetMapping("/countVideosByProject")
     public ResponseEntity<Object> countVideosByProject(String projectId) {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
-                .concat("countVideosByProject:  starting call: " + projectId));
         try {
             return ResponseEntity.ok(listService.countVideosByProject(projectId));
         } catch (Exception e) {
@@ -530,8 +510,6 @@ public class ListController {
 
     @GetMapping("/countVideosByUser")
     public ResponseEntity<Object> countVideosByUser(String userId) {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
-                .concat("countVideosByUser:  starting call: " + userId));
         try {
             return ResponseEntity.ok(listService.countVideosByUser(userId));
         } catch (Exception e) {
@@ -552,8 +530,6 @@ public class ListController {
     })
     @GetMapping("/getCountsByProject")
     public ResponseEntity<?> getCountsByProject(String projectId) {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
-                .concat("getCountsByProject: " + projectId));
         try {
             return ResponseEntity.ok(listService.getCountsByProject(projectId));
         } catch (Exception e) {
@@ -567,8 +543,6 @@ public class ListController {
 
     @GetMapping("/getCountsByUser")
     public ResponseEntity<Object> getCountsByUser(String userId) {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
-                .concat("getCountsByUser: " + userId));
         try {
             return ResponseEntity.ok(listService.getCountsByUser(userId));
         } catch (Exception e) {
@@ -716,8 +690,6 @@ public class ListController {
 
     @GetMapping("/findAudioById")
     public ResponseEntity<Object> findAudioById(@RequestParam String audioId) {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
-                .concat("findAudioById: " + audioId));
         try {
             Audio p = listService.findAudioById(audioId);
             if (p == null) {
@@ -737,8 +709,6 @@ public class ListController {
 
     @GetMapping("/findPhotoById")
     public ResponseEntity<Object> findPhotoById(@RequestParam String photoId) {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
-                .concat("findPhotoById: " + photoId));
         try {
             Photo p = listService.findPhotoById(photoId);
             if (p == null) {
@@ -758,8 +728,6 @@ public class ListController {
 
     @GetMapping("/findVideoById")
     public ResponseEntity<Object> findVideoById(@RequestParam String videoId) {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
-                .concat("findVideoById: " + videoId));
         try {
             Video p = listService.findVideoById(videoId);
             if (p == null) {
@@ -877,8 +845,7 @@ public class ListController {
     })
     @GetMapping("/getUserProjectPhotos")
     public ResponseEntity<Object> getUserProjectPhotos(String userId) {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
-                .concat("getUserProjectPhotos: " + userId));
+
         try {
             return ResponseEntity.ok(listService.getUserProjectPhotos(userId));
         } catch (Exception e) {
@@ -899,8 +866,7 @@ public class ListController {
     })
     @GetMapping("/getUserProjectVideos")
     public ResponseEntity<Object> getUserProjectVideos(String userId) {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
-                .concat("getUserProjectVideos: " + userId));
+
         try {
             return ResponseEntity.ok(listService.getUserProjectVideos(userId));
         } catch (Exception e) {
@@ -977,8 +943,7 @@ public class ListController {
 
     @GetMapping("/getUserFieldMonitorSchedules")
     public ResponseEntity<Object> getUserFieldMonitorSchedules(String userId) {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
-                .concat("getProjectFieldMonitorSchedules: " + userId));
+
         try {
             return ResponseEntity.ok(listService.getUserFieldMonitorSchedules(userId));
         } catch (Exception e) {
@@ -993,8 +958,6 @@ public class ListController {
     @GetMapping("/getMonitorFieldMonitorSchedules")
     public ResponseEntity<Object> getMonitorFieldMonitorSchedules(String userId)
             throws Exception {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
-                .concat("getMonitorFieldMonitorSchedules: " + userId));
         try {
             return ResponseEntity.ok(listService.getMonitorFieldMonitorSchedules(userId));
         } catch (Exception e) {

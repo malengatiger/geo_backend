@@ -69,7 +69,6 @@ public class DataController {
 
     @GetMapping("/ping")
     public String ping() throws Exception {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS).concat("pinging the backend application .... : ".concat(E.FLOWER_YELLOW)));
         return E.HAND2 + E.HAND2 + "PROJECT MONITOR SERVICES PLATFORM pinged at ".concat(new DateTime().toDateTimeISO().toString());
     }
 
@@ -105,8 +104,7 @@ public class DataController {
     })
     @PostMapping("/createUser")
     public ResponseEntity<Object> createUser(@RequestBody User user) throws Exception {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
-                .concat(".... Creating User: ".concat(user.getName())));
+
         try {
             return ResponseEntity.ok(dataService.createUser(user));
         } catch (Exception e) {
@@ -121,8 +119,7 @@ public class DataController {
 
     @PostMapping("/addCountry")
     public ResponseEntity<Object> addCountry(@RequestBody Country country) throws Exception {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
-                .concat("Adding Country: ".concat(country.getName())));
+
         try {
             return ResponseEntity.ok(dataService.addCountry(country));
         } catch (Exception e) {
@@ -136,7 +133,6 @@ public class DataController {
 
     @PostMapping("/addCommunity")
     public ResponseEntity<Object> addCommunity(@RequestBody Community community) throws Exception {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS).concat("Adding Community: ".concat(community.getName())));
         try {
             return ResponseEntity.ok(dataService.addCommunity(community));
         } catch (Exception e) {
@@ -151,7 +147,6 @@ public class DataController {
 
     @PostMapping("/addCity")
     public ResponseEntity<Object> addCity(@RequestBody City city) throws Exception {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS).concat("Adding City: ".concat(city.getName())));
         try {
             City city1 = dataService.addCity(city);
             return ResponseEntity.ok(city1);
@@ -166,8 +161,6 @@ public class DataController {
 
     @PostMapping("/addFieldMonitorSchedule")
     public ResponseEntity<Object> addFieldMonitorSchedule(@RequestBody FieldMonitorSchedule fieldMonitorSchedule) throws Exception {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS).concat("Adding FieldMonitorSchedule: "
-                .concat(fieldMonitorSchedule.getFieldMonitorId())));
         try {
             FieldMonitorSchedule schedule = dataService.addFieldMonitorSchedule(fieldMonitorSchedule);
             return ResponseEntity.ok(schedule);
@@ -192,10 +185,8 @@ public class DataController {
     })
     @PostMapping("/addProject")
     public ResponseEntity<Object> addProject(@RequestBody Project project) throws Exception {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS).concat("Adding Project: ".concat(project.getName())));
         try {
             Project result = dataService.addProject(project);
-            LOGGER.info(E.LEAF + E.LEAF + result);
             return ResponseEntity.ok(project);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
@@ -215,7 +206,6 @@ public class DataController {
     })
     @PostMapping("/updateProject")
     public ResponseEntity<Object> updateProject(@RequestBody Project project) throws Exception {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS).concat("Update Project: ".concat(project.getName())));
         try {
             return ResponseEntity.ok(dataService.updateProject(project));
         } catch (Exception e) {
@@ -236,8 +226,6 @@ public class DataController {
     })
     @PostMapping("/sendLocationRequest")
     public ResponseEntity<Object> sendLocationRequest(@RequestBody LocationRequest locationRequest) {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
-                .concat("sendLocationRequest message: " + locationRequest.getOrganizationId()));
         try {
             return ResponseEntity.ok(messageService.sendMessage(locationRequest));
         } catch (Exception e) {
@@ -298,7 +286,6 @@ public class DataController {
     @PostMapping("/addProjectPosition")
     public ResponseEntity<Object> addProjectPosition(@RequestBody ProjectPosition projectPosition)
             throws Exception {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS).concat("Adding Project Position: "));
         try {
             return ResponseEntity.ok(dataService.addProjectPosition(projectPosition));
         } catch (Exception e) {
@@ -320,7 +307,6 @@ public class DataController {
     @PostMapping("/addProjectPolygon")
     public ResponseEntity<Object> addProjectPolygon(@RequestBody ProjectPolygon projectPolygon)
             throws Exception {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS).concat("Adding Project Position: "));
         try {
             return ResponseEntity.ok(dataService.addProjectPolygon(projectPolygon));
         } catch (Exception e) {
@@ -342,7 +328,6 @@ public class DataController {
     @PostMapping("/addGeofenceEvent")
     public ResponseEntity<Object> addGeofenceEvent(@RequestBody GeofenceEvent geofenceEvent)
             throws Exception {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS).concat("Adding GeofenceEvent: "));
         try {
             return ResponseEntity.ok(dataService.addGeofenceEvent(geofenceEvent));
         } catch (Exception e) {
@@ -421,7 +406,6 @@ public class DataController {
     public ResponseEntity<Object> addProjectAssignment(@RequestBody ProjectAssignment projectAssignment) throws Exception {
         try {
             String result = dataService.addProjectAssignment(projectAssignment);
-            LOGGER.info(E.LEAF + E.LEAF + "addProjectAssignment, result: " + result);
             return ResponseEntity.ok(projectAssignment);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
@@ -443,7 +427,6 @@ public class DataController {
     public ResponseEntity<Object> addVideo(@RequestBody Video video) throws Exception {
         try {
             String result = dataService.addVideo(video);
-            LOGGER.info(E.LEAF + E.LEAF + " addVideo, result: " + result);
             return ResponseEntity.ok(video);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
@@ -465,7 +448,6 @@ public class DataController {
     public ResponseEntity<Object> addAudio(@RequestBody Audio audio) throws Exception {
         try {
             String result = dataService.addAudio(audio);
-            LOGGER.info(E.LEAF + E.LEAF + "addAudio, result: " + result);
             return ResponseEntity.ok(audio);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
@@ -485,11 +467,8 @@ public class DataController {
     })
     @PostMapping("/addCondition")
     public ResponseEntity<Object> addCondition(@RequestBody Condition condition) throws Exception {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
-                .concat("Adding Condition ... " + condition.getProjectName()));
         try {
             String result = dataService.addCondition(condition);
-            LOGGER.info(E.LEAF + E.LEAF + result);
             return ResponseEntity.ok(condition);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
@@ -509,11 +488,8 @@ public class DataController {
     })
     @PostMapping("/sendMessage")
     public ResponseEntity<Object> sendMessage(@RequestBody OrgMessage orgMessage) throws Exception {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
-                .concat("Sending FCM message ... " + orgMessage.getMessage()));
         try {
             OrgMessage result = dataService.addOrgMessage(orgMessage);
-            LOGGER.info(E.LEAF + E.LEAF + result);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
@@ -533,8 +509,6 @@ public class DataController {
     })
     @PostMapping("/addUser")
     public ResponseEntity<Object> addUser(@RequestBody User user) throws FirebaseMessagingException {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
-                .concat(".... Adding User: ".concat(user.getName())));
         try {
             return ResponseEntity.ok(dataService.addUser(user));
         } catch (Exception e) {
@@ -548,8 +522,6 @@ public class DataController {
 
     @PostMapping("/deleteAuthUser")
     public ResponseEntity<Object> deleteAuthUser(@RequestBody String userId) throws FirebaseMessagingException {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
-                .concat(".... Deleting Firebase auth User: ".concat(userId)));
         try {
             int result = messageService.deleteAuthUser(userId);
             UserDeleteResponse m = new UserDeleteResponse(result, "User deleted from Firebase Auth");
@@ -571,8 +543,6 @@ public class DataController {
     })
     @PostMapping("/updateUser")
     public ResponseEntity<Object> updateUser(@RequestBody User user) throws Exception {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
-                .concat("Updating User: ".concat(user.getName())));
         try {
             return ResponseEntity.ok(dataService.updateUser(user));
         } catch (Exception e) {
@@ -586,8 +556,7 @@ public class DataController {
 
     @PostMapping("/updateAuthedUser")
     public ResponseEntity<Object> updateAuthedUser(@RequestBody User user) throws Exception {
-        LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
-                .concat("Updating authed User: ".concat(user.getName())));
+
         try {
             int res = dataService.updateAuthedUser(user);
             UserDeleteResponse r = new UserDeleteResponse(res, "User auth updated");
@@ -747,8 +716,6 @@ public class DataController {
         byte[] bytes = document.getBytes();
 
         Files.write(bytes, file);
-        LOGGER.info(E.RED_APPLE + " file: " + file.getPath() + " length: "
-                + (file.length()/1024/1024) + " MB, original file name: " + doc);
         String url = cloudStorageUploader.uploadFile(doc, file);
         boolean ok = file.delete();
         if (ok) {

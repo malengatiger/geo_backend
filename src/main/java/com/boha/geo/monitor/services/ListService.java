@@ -366,8 +366,10 @@ public class ListService {
         bag.setUsers(users);
         bag.setProjectAssignments(assignments);
 
-        LOGGER.info(E.RED_APPLE + " Organization data found: photos: " + bag.getPhotos().size() + " videos: " + bag.getVideos().size()
-                + " schedules: " + bag.getFieldMonitorSchedules().size() + " polygons: " + bag.getProjectPolygons().size());
+        LOGGER.info(E.RED_APPLE + E.RED_APPLE + " Organization data found: photos: " + bag.getPhotos().size() + " videos: " + bag.getVideos().size()
+                + " schedules: " + bag.getFieldMonitorSchedules().size()
+                + " users: " + bag.getUsers().size()
+                + " polygons: " + bag.getProjectPolygons().size());
 
 //        File zipped = getOrganizationDataZippedFile(organizationId);
 //        LOGGER.info(" zipped file with org data: " + zipped.length() + " bytes");
@@ -764,8 +766,13 @@ public class ListService {
                 .and("created").gte(startDate).lte(endDate);
         Query query = new Query(c);
         List<ProjectPosition> mList = mongoTemplate.find(query, ProjectPosition.class);
-        LOGGER.info(E.LEAF.concat(E.LEAF).concat(" OrgProjectPositions found: " + mList.size()
-                + " for organizationId: " + organizationId));
+
+        return mList;
+    }
+    public List<ProjectPosition> getOrganizationProjectPositions(String organizationId) {
+
+        List<ProjectPosition> mList = projectPositionRepository.findByOrganizationId(organizationId);
+
         return mList;
     }
 
@@ -775,8 +782,10 @@ public class ListService {
         Query query = new Query(c);
         List<ProjectPolygon> mList = mongoTemplate.find(query, ProjectPolygon.class);
 
-        LOGGER.info(E.LEAF.concat(E.LEAF).concat(" OrgProjectPolygons found: " + mList.size()
-                + " for organizationId: " + organizationId));
+        return mList;
+    }
+    public List<ProjectPolygon> getOrganizationProjectPolygons(String organizationId) {
+        List<ProjectPolygon> mList = projectPolygonRepository.findByOrganizationId(organizationId);
         return mList;
     }
 
@@ -848,6 +857,19 @@ public class ListService {
         LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getOrganizationUsers ... found after filtering for inactive users: " + filteredList.size()));
         return filteredList;
     }
+    public List<User> getOrganizationUsers(String organizationId) {
+        List<User> filteredList = new ArrayList<>();
+        List<User> mList = userRepository.findByOrganizationId(organizationId);
+        LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getOrganizationUsers ... found: " + mList.size()));
+        for (User user : mList) {
+            if (user.getActive() == 0) {
+                filteredList.add(user);
+            }
+        }
+        LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getOrganizationUsers ... found after filtering for inactive users: " + filteredList.size()));
+        return filteredList;
+    }
+
 
     public List<Photo> getOrganizationPhotos(String organizationId, String startDate, String endDate) {
 
