@@ -448,6 +448,7 @@ public class DataService {
                 + user.getUserId() + " " + user.getFcmRegistration()));
 
         messageService.sendMessage(user);
+
         String message = "Dear " + user.getName() +
                 "      ,\n\nYour account has been updated with new information. '\n" +
                 "      \nIf you have not changed anything yourself please contact your Administrator or your Supervisor.\n" +
