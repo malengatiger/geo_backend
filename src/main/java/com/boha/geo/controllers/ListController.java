@@ -206,6 +206,18 @@ public class ListController {
                             new DateTime().toDateTimeISO().toString()));
         }
     }
+    @GetMapping("/getAllOrganizationProjects")
+    public ResponseEntity<Object> getAllOrganizationProjects(@RequestParam String organizationId) {
+        try {
+            List<Project> projects = listService.getAllOrganizationProjects(organizationId);
+            return ResponseEntity.ok(projects);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "getAllOrganizationProjects failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+    }
 
     @GetMapping("/getQuestionnairesByOrganization")
     public ResponseEntity<Object> getQuestionnairesByOrganization(@RequestParam String organizationId) {

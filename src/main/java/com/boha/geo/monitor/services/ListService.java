@@ -832,6 +832,13 @@ public class ListService {
 
         return mList;
     }
+    public List<Project> getAllOrganizationProjects(String organizationId) {
+
+        List<Project> mList = projectRepository.findByOrganizationId(organizationId);
+        LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("getAllOrganizationProjects ... found: " + mList.size()));
+
+        return mList;
+    }
 
     public List<SettingsModel> getOrganizationSettings(String organizationId) {
 
