@@ -69,9 +69,8 @@ public class GeoApplication implements ApplicationListener<ApplicationReadyEvent
         logger.info(E.PEAR + E.PEAR + E.PEAR + E.PEAR +
                 " Total Endpoints: " + map.size() + "\n");
         try {
-
             firebaseService.initializeFirebase();
-
+            mongoService.initializeIndexes();
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }

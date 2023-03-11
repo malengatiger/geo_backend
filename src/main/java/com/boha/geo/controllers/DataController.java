@@ -426,7 +426,7 @@ public class DataController {
     @PostMapping("/addVideo")
     public ResponseEntity<Object> addVideo(@RequestBody Video video) throws Exception {
         try {
-            String result = dataService.addVideo(video);
+            dataService.addVideo(video);
             return ResponseEntity.ok(video);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
@@ -447,7 +447,7 @@ public class DataController {
     @PostMapping("/addAudio")
     public ResponseEntity<Object> addAudio(@RequestBody Audio audio) throws Exception {
         try {
-            String result = dataService.addAudio(audio);
+            dataService.addAudio(audio);
             return ResponseEntity.ok(audio);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
@@ -468,7 +468,7 @@ public class DataController {
     @PostMapping("/addCondition")
     public ResponseEntity<Object> addCondition(@RequestBody Condition condition) throws Exception {
         try {
-            String result = dataService.addCondition(condition);
+            dataService.addCondition(condition);
             return ResponseEntity.ok(condition);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(

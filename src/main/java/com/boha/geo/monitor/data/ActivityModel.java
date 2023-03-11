@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class ActivityModel {
 
         String _id;
-        String activityTypeId, activityModelId;
+        String activityModelId;
         ActivityType activityType;
         String date;
         String userId;

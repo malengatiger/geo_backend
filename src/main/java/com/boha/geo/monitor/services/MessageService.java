@@ -139,9 +139,8 @@ admin.messaging().send({
 
             Message message = buildMessage("projectPosition", topic,
                     G.toJson(m), notification);
-            String response = FirebaseMessaging.getInstance().send(message);
-            LOGGER.info(E.RED_APPLE + E.RED_APPLE + "Successfully sent projectPosition message to FCM topic: "
-                    + topic + E.RED_APPLE + " response: " + response);
+            FirebaseMessaging.getInstance().send(message);
+
         } catch (Exception e) {
             LOGGER.error("Failed to send projectPosition FCM message");
             e.printStackTrace();
@@ -153,8 +152,7 @@ admin.messaging().send({
         Message message = buildMessage("projectAssignment", topic, G.toJson(projectAssignment));
 
         String response = FirebaseMessaging.getInstance().send(message);
-        LOGGER.info(E.RED_APPLE + E.RED_APPLE + "Successfully sent projectAssignment message to FCM topic: "
-                + topic + E.RED_APPLE + response);
+
         return response;
     }
 
@@ -165,9 +163,8 @@ admin.messaging().send({
                 .setTitle("Message from Geo")
                 .build();
         Message message = buildMessage("projectPolygon", topic, G.toJson(projectPolygon), notification);
-        String response = FirebaseMessaging.getInstance().send(message);
-        LOGGER.info(E.RED_APPLE + E.RED_APPLE + "Successfully sent projectPolygon message to FCM topic: "
-                + topic + E.RED_APPLE + response);
+        FirebaseMessaging.getInstance().send(message);
+
     }
 
     public void sendMessage(ActivityModel activityModel) throws FirebaseMessagingException {
@@ -175,10 +172,8 @@ admin.messaging().send({
 
         Message message = buildMessage("activity",
                 topic, G.toJson(activityModel));
-        String response = FirebaseMessaging.getInstance().send(message);
+        FirebaseMessaging.getInstance().send(message);
 
-        LOGGER.info(E.RED_APPLE + E.RED_APPLE + "Successfully sent activityModel message to FCM topic: "
-                + topic + E.RED_APPLE + response);
     }
 
     public void sendMessage(Photo photo) throws FirebaseMessagingException {
@@ -189,9 +184,8 @@ admin.messaging().send({
                 .build();
         Message message = buildMessage("photo", topic, G.toJson(photo), notification);
 
-        String response = FirebaseMessaging.getInstance().send(message);
-        LOGGER.info(E.RED_APPLE + E.RED_APPLE + "Successfully sent photo message to FCM topic: "
-                + topic + E.RED_APPLE);
+        FirebaseMessaging.getInstance().send(message);
+
     }
 
     public void sendMessage(SettingsModel settingsModel) throws FirebaseMessagingException {
@@ -199,9 +193,8 @@ admin.messaging().send({
         Message message = buildMessage("settings", topic, G.toJson(settingsModel));
 
 
-        String response = FirebaseMessaging.getInstance().send(message);
-        LOGGER.info(E.RED_APPLE + E.RED_APPLE + "Successfully sent settingsModel message to FCM topic: "
-                + topic + E.RED_APPLE + response);
+        FirebaseMessaging.getInstance().send(message);
+
     }
 
     public void sendMessage(GeofenceEvent geofenceEvent) throws FirebaseMessagingException {
@@ -215,11 +208,10 @@ admin.messaging().send({
         Message message = buildMessage("geofenceEvent", topic, G.toJson(geofenceEvent), notification);
 
         FirebaseMessaging.getInstance().send(message);
-        LOGGER.info(E.RED_APPLE + E.RED_APPLE + "Successfully sent geofenceEvent message to FCM topic: "
-                + topic + E.RED_APPLE);
+
     }
 
-    public String sendMessage(Audio audio) throws FirebaseMessagingException {
+    public void sendMessage(Audio audio) throws FirebaseMessagingException {
         String topic = "audios_" + audio.getOrganizationId();
 
         Notification notification = Notification.builder()
@@ -228,10 +220,7 @@ admin.messaging().send({
                 .build();
         Message message = buildMessage("audio", topic, G.toJson(audio), notification);
 
-        String response = FirebaseMessaging.getInstance().send(message);
-        LOGGER.info(E.RED_APPLE + E.RED_APPLE + "Successfully sent audio message to FCM topic: "
-                + topic + E.RED_APPLE);
-        return response;
+        FirebaseMessaging.getInstance().send(message);
     }
 
     public LocationRequest sendMessage(LocationRequest locationRequest) throws FirebaseMessagingException {
@@ -245,9 +234,8 @@ admin.messaging().send({
         Message message = buildMessage("locationRequest",
                 topic, G.toJson(locationRequest), notification);
 
-        String response = FirebaseMessaging.getInstance().send(message);
-        LOGGER.info(E.RED_APPLE + E.RED_APPLE + "Successfully sent locationRequest message to FCM topic: "
-                + topic + E.RED_APPLE + " resp: " + response);
+        FirebaseMessaging.getInstance().send(message);
+
         return locationRequest;
     }
 
@@ -262,14 +250,12 @@ admin.messaging().send({
         Message message = buildMessage("locationResponse", topic,
                 G.toJson(locationResponse), notification);
 
-        String response = FirebaseMessaging.getInstance().send(message);
-        LOGGER.info(E.RED_APPLE + E.RED_APPLE + "Successfully sent locationResponse message to FCM topic: "
-                + topic + E.RED_APPLE + " resp: " + response);
+         FirebaseMessaging.getInstance().send(message);
+
     }
 
-    public String sendMessage(Video video) throws FirebaseMessagingException {
+    public void sendMessage(Video video) throws FirebaseMessagingException {
         String topic = "videos_" + video.getOrganizationId();
-//        Message message = buildMessage("video", topic, G.toJson(video));
 
         Notification notification = Notification.builder()
                 .setBody("A video from the field has arrived")
@@ -278,33 +264,27 @@ admin.messaging().send({
 
         Message message = buildMessage("video", topic, G.toJson(video), notification);
 
-        String response = FirebaseMessaging.getInstance().send(message);
-        LOGGER.info(E.RED_APPLE + E.RED_APPLE + "Successfully sent video message to FCM topic: "
-                + topic + E.RED_APPLE);
-        return response;
+        FirebaseMessaging.getInstance().send(message);
+
     }
 
-    public String sendMessage(Condition condition) throws FirebaseMessagingException {
+    public void sendMessage(Condition condition) throws FirebaseMessagingException {
         String topic = "conditions_" + condition.getOrganizationId();
         Message message = buildMessage("condition", topic, G.toJson(condition));
 
-        String response = FirebaseMessaging.getInstance().send(message);
-        LOGGER.info(E.RED_APPLE + E.RED_APPLE + "Successfully sent condition message to FCM topic: "
-                + topic + " " + E.RED_APPLE);
-        return response;
+       FirebaseMessaging.getInstance().send(message);
+
     }
 
-    public String sendMessage(FieldMonitorSchedule fieldMonitorSchedule) throws FirebaseMessagingException {
+    public void sendMessage(FieldMonitorSchedule fieldMonitorSchedule) throws FirebaseMessagingException {
         String topic = "fieldMonitorSchedules_" + fieldMonitorSchedule.getOrganizationId();
         Message message = buildMessage("fieldMonitorSchedule", topic, G.toJson(fieldMonitorSchedule));
 
-        String response = FirebaseMessaging.getInstance().send(message);
-        LOGGER.info(E.RED_APPLE + E.RED_APPLE + "Successfully sent fieldMonitorSchedule message to FCM topic: "
-                + topic + " " + E.RED_APPLE);
-        return response;
+        FirebaseMessaging.getInstance().send(message);
+
     }
 
-    public String sendMessage(OrgMessage orgMessage) throws FirebaseMessagingException {
+    public void sendMessage(OrgMessage orgMessage) throws FirebaseMessagingException {
         assert (orgMessage.getOrganizationId() != null);
         Notification notification = Notification.builder()
                 .setBody(orgMessage.getMessage())
@@ -316,14 +296,12 @@ admin.messaging().send({
                 .setTopic(topic)
                 .setNotification(notification)
                 .build();
-        String response = FirebaseMessaging.getInstance().send(message);
-        LOGGER.info(E.RED_APPLE + E.RED_APPLE + "Successfully sent org message to FCM topic: "
-                + topic + E.RED_APPLE);
-        return response;
+         FirebaseMessaging.getInstance().send(message);
+
 
     }
 
-    public String sendMessage(Project project) throws FirebaseMessagingException {
+    public void sendMessage(Project project) throws FirebaseMessagingException {
         String topic = "projects_" + project.getOrganizationId();
 
         Notification notification = Notification.builder()
@@ -332,13 +310,11 @@ admin.messaging().send({
                 .build();
         Message message = buildMessage("project", topic, G.toJson(project), notification);
 
-        String response = FirebaseMessaging.getInstance().send(message);
-        LOGGER.info(E.RED_APPLE + E.RED_APPLE + "Successfully sent project message to FCM topic: "
-                + topic + E.RED_APPLE);
-        return response;
+         FirebaseMessaging.getInstance().send(message);
+
     }
 
-    public String sendMessage(User user) throws FirebaseMessagingException {
+    public void sendMessage(User user) throws FirebaseMessagingException {
         String topic = "users_" + user.getOrganizationId();
         Notification notification = Notification.builder()
                 .setBody("A member has been added or modified")
@@ -346,10 +322,8 @@ admin.messaging().send({
                 .build();
         Message message = buildMessage("user", topic, G.toJson(user), notification);
 
-        String response = FirebaseMessaging.getInstance().send(message);
-        LOGGER.info(E.RED_APPLE + E.RED_APPLE + "Successfully sent user message to FCM topic: "
-                + topic + E.RED_APPLE);
-        return response;
+        FirebaseMessaging.getInstance().send(message);
+
     }
 
     public KillResponse sendKillMessage(String userId, String killerId) throws Exception {

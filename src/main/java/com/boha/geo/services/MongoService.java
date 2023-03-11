@@ -50,8 +50,7 @@ public class MongoService {
         this.organizationRepository = organizationRepository;
         logger.info(xx + " MongoService constructed, will set database and initializeIndexes ........... " + E.BELL + E.BELL);
         setDatabase();
-        initializeIndexes();
-        logger.info(xx + " MongoService has completed setup of database and indexes ........... " + E.BELL + E.BELL);
+        logger.info(xx + " MongoService has completed setup of database ........... " + E.BELL + E.BELL);
 
     }
 
@@ -133,7 +132,6 @@ public class MongoService {
     public void initializeIndexes() {
         try {
             createCityIndexes();
-
             createProjectPositionIndexes();
             createProjectPolygonIndexes();
             createGeofenceEventIndexes();
@@ -155,6 +153,7 @@ public class MongoService {
 
             createSettingsIndexes();
             createProjectSummaryIndexes();
+            logger.info(xx + " MongoService has completed setup of indexes " + E.BELL + E.BELL);
 
         } catch (Exception e) {
             logger.severe(E.RED_DOT + E.RED_DOT + " Index building failed: " + e.getMessage());
@@ -167,9 +166,6 @@ public class MongoService {
 
         String result2 = dbCollection.createIndex(Indexes.ascending("name"),
                 new IndexOptions().unique(true));
-        logger.info(mm +
-                " unique name index on organizations collection: " +
-                E.RED_APPLE + result2);
 
         dbCollection.createIndex(Indexes.ascending("organizationId"));
 

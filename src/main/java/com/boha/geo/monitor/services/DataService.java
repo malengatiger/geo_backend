@@ -155,8 +155,6 @@ public class DataService {
 
                     LOGGER.info(E.BLUE_DOT + E.BLUE_DOT + "Firebase has been set up and initialized. " +
                             "\uD83D\uDC99 URL: " + app.getOptions().getDatabaseUrl() + " " + E.PINK + E.PINK + E.PINK + E.PINK);
-                    LOGGER.info(E.BLUE_DOT + E.BLUE_DOT + "Firebase has been set up and initialized. " +
-                            "\uD83E\uDD66 Name: " + app.getName() + " " + E.PINK + E.PINK);
 
                 }
 
@@ -168,7 +166,7 @@ public class DataService {
             }
         } catch (Exception e) {
             String msg = "Unable to initialize Firebase";
-            LOGGER.info(E.RED_DOT.concat(E.RED_DOT).concat(msg));
+            LOGGER.error(E.RED_DOT.concat(E.RED_DOT).concat(msg));
             throw new Exception(msg, e);
         }
 
@@ -203,13 +201,6 @@ public class DataService {
         }
 
         projectSummaryRepository.insert(summaries);
-        final DecimalFormat df = new DecimalFormat("0.000");
-        long end = System.currentTimeMillis();
-        long ms = (end - start);
-        Double delta = Double.parseDouble("" + ms) / Double.parseDouble("1000");
-
-        LOGGER.info(E.GLOBE + E.GLOBE + E.GLOBE + E.GLOBE + " createDailyProjectSummaries has added " + summaries.size()
-                + " projectCounts, days: " + daysDiff + " elapsed: " + df.format(delta) + " seconds");
 
         return summaries;
     }
@@ -244,13 +235,6 @@ public class DataService {
 
         }
         projectSummaryRepository.insert(summaries);
-        final DecimalFormat df = new DecimalFormat("0.000");
-        long end = System.currentTimeMillis();
-        long ms = (end - start);
-        Double delta = Double.parseDouble("" + ms) / Double.parseDouble("1000");
-
-        LOGGER.info(E.GLOBE + E.GLOBE + E.GLOBE + E.GLOBE + " createDailyOrganizationSummaries has added " + summaries.size()
-                + " summaries, \uD83C\uDF4E\uD83C\uDF4E days: " + daysDiff + " elapsed: " + df.format(delta) + " seconds");
 
         return summaries;
     }
@@ -284,13 +268,6 @@ public class DataService {
             }
         }
         projectSummaryRepository.insert(summaries);
-        final DecimalFormat df = new DecimalFormat("0.000");
-        long end = System.currentTimeMillis();
-        long ms = (end - start);
-        Double delta = Double.parseDouble("" + ms) / Double.parseDouble("1000");
-
-        LOGGER.info(E.GLOBE + E.GLOBE + E.GLOBE + E.GLOBE + " createHourlyOrganizationSummaries has added " + summaries.size()
-                + " summaries, days: " + hoursDiff + " elapsed: " + df.format(delta) + " seconds");
 
         return summaries;
     }
@@ -328,10 +305,6 @@ public class DataService {
         long ms = (end - start);
         Double delta = Double.parseDouble("" + ms) / Double.parseDouble("1000");
 
-
-        LOGGER.info(E.GLOBE + E.GLOBE + E.RED_APPLE +
-                " createHourlyProjectSummaries has added " + summaries.size()
-                + " summaries; hours: " + hoursDiff + " elapsed: " + df.format(delta) + " seconds");
         return summaries;
     }
 
@@ -382,19 +355,14 @@ public class DataService {
         long ms = (end - start);
         Double delta = Double.parseDouble("" + ms) / Double.parseDouble("1000");
 
-        LOGGER.info(E.BLUE_HEART + E.BLUE_HEART + E.BLUE_HEART + " ProjectSummary took " + df.format(delta) + " seconds for: "
-                + E.BELL + E.BELL + " " + project.getName());
-
         return pc;
     }
 
 
     public void updateAllActivities() throws Exception {
-        LOGGER.info(E.LEAF.concat(E.LEAF).concat("updateAllActivities started ............ "));
 
         val list = activityModelRepository.findAll();
         val users = userRepository.findAll();
-        LOGGER.info(E.RED_APPLE + E.RED_APPLE + " users " + users.size() + " activities: " + list.size());
 
         long cnt = 0;
         for (User user : users) {
@@ -407,23 +375,16 @@ public class DataService {
             update.set("userName", user.getName());
             UpdateResult result = mongoTemplate.updateMulti(query, update, ActivityModel.class);
 
-            LOGGER.info(E.RED_APPLE + E.RED_APPLE + " activities have been modified with user url, ModifiedCount: "
-                    + result.getModifiedCount() + " " + E.AMP + " for user: " + user.getName() + " from " + user.getOrganizationName());
             cnt = cnt + result.getModifiedCount();
 
 
         }
 
-        LOGGER.info(E.RED_APPLE + E.RED_APPLE + " updated  " + cnt + " activities with user url");
 
     }
 
     public User updateUser(User user) throws Exception {
 
-        LOGGER.info(E.LEAF.concat(E.LEAF).concat("User to be updated on database: "
-                + G.toJson(user)));
-
-        LOGGER.info(E.RED_APPLE + E.RED_APPLE + " update user and set all properties ");
         Query query = new Query();
         query.addCriteria(Criteria.where("userId").is(user.getUserId()));
         query.fields().include("userId");
@@ -440,12 +401,6 @@ public class DataService {
         update.set("updated", DateTime.now().toDateTimeISO().toString());
 
         UpdateResult result = mongoTemplate.updateFirst(query, update, User.class);
-
-        LOGGER.info(E.RED_APPLE + E.RED_APPLE + " user has been modified: " + result.getModifiedCount());
-
-        LOGGER.info(E.LEAF.concat(E.LEAF).concat("User updated on database: "
-                + user.getName() + " id: "
-                + user.getUserId() + " " + user.getFcmRegistration()));
 
         messageService.sendMessage(user);
 
@@ -477,10 +432,7 @@ public class DataService {
     public User addUser(User user) throws Exception {
 
         User mUser = userRepository.save(user);
-        String result = messageService.sendMessage(user);
-        LOGGER.info(E.LEAF.concat(E.LEAF).concat("User added to database: "
-                + user.getName() + " result: "
-                + result));
+         messageService.sendMessage(user);
 
         ActivityModel am = new ActivityModel();
         am.setActivityType(ActivityType.userAddedOrModified);
@@ -504,7 +456,6 @@ public class DataService {
             rating.setRatingId(UUID.randomUUID().toString());
         }
         Rating res = ratingRepository.insert(rating);
-        LOGGER.info(E.LEAF.concat(E.LEAF).concat("Rating added to Mongo, ratingCode: " + rating.getRatingCode()));
         return res;
     }
 
@@ -513,7 +464,6 @@ public class DataService {
             photo.setPhotoId(UUID.randomUUID().toString());
         }
         photoRepository.save(photo);
-        LOGGER.info(E.LEAF.concat(E.LEAF).concat("Photo added to Mongo, : " + photo.getUrl()));
         messageService.sendMessage(photo);
 
         User user = userRepository.findByUserId(photo.getUserId());
@@ -537,8 +487,6 @@ public class DataService {
     public void addActivityModel(ActivityModel model) throws Exception {
 
         activityModelRepository.insert(model);
-        LOGGER.info(E.LEAF.concat(E.LEAF).concat("ActivityModel added to Mongo "));
-
         messageService.sendMessage(model);
     }
 
@@ -547,13 +495,11 @@ public class DataService {
             projectAssignment.setProjectAssignmentId(UUID.randomUUID().toString());
         }
         projectAssignmentRepository.insert(projectAssignment);
-        LOGGER.info(E.LEAF.concat(E.LEAF).concat("ProjectAssignment added to Mongo, user: "
-                + projectAssignment.getUserName() + " project: " + projectAssignment.getProjectName()));
         return messageService.sendMessage(projectAssignment);
     }
 
 
-    public String addVideo(Video video) throws Exception {
+    public Video addVideo(Video video) throws Exception {
         if (video.getVideoId() == null) {
             video.setVideoId(UUID.randomUUID().toString());
         }
@@ -574,14 +520,13 @@ public class DataService {
         am.setVideo(video);
 
         addActivityModel(am);
-        LOGGER.info(E.LEAF.concat(E.LEAF).concat("Video added: " + video.getVideoId()));
-        return messageService.sendMessage(video);
+        messageService.sendMessage(video);
+        return video;
     }
 
-    public String addAudio(Audio audio) throws Exception {
+    public Audio addAudio(Audio audio) throws Exception {
 
         audioRepository.save(audio);
-        LOGGER.info(E.LEAF.concat(E.LEAF).concat("Video added: " + audio.getAudioId()));
         User user = userRepository.findByUserId(audio.getUserId());
 
         ActivityModel am = new ActivityModel();
@@ -598,20 +543,20 @@ public class DataService {
         am.setAudio(audio);
 
         addActivityModel(am);
-        return messageService.sendMessage(audio);
+        messageService.sendMessage(audio);
+        return audio;
     }
 
-    public String addCondition(Condition condition) throws Exception {
+    public Condition addCondition(Condition condition) throws Exception {
         conditionRepository.save(condition);
-        LOGGER.info(E.LEAF.concat(E.LEAF).concat("Condition added: " + condition.getConditionId()));
-        return messageService.sendMessage(condition);
+         messageService.sendMessage(condition);
+         return condition;
     }
 
     public OrgMessage addOrgMessage(OrgMessage orgMessage) throws Exception {
         orgMessageRepository.save(orgMessage);
-        LOGGER.info(E.LEAF.concat(E.LEAF).concat("OrgMessage added: " + orgMessage.getMessage()));
-        String result = messageService.sendMessage(orgMessage);
-        orgMessage.setResult(result);
+        messageService.sendMessage(orgMessage);
+        orgMessage.setResult(null);
         User user = userRepository.findByUserId(orgMessage.getAdminId());
 
         ActivityModel am = new ActivityModel();
@@ -633,20 +578,14 @@ public class DataService {
 
     public FieldMonitorSchedule addFieldMonitorSchedule(FieldMonitorSchedule fieldMonitorSchedule) throws Exception {
         fieldMonitorScheduleRepository.save(fieldMonitorSchedule);
-        LOGGER.info(E.LEAF.concat(E.LEAF).concat("FieldMonitorSchedule added: " + fieldMonitorSchedule.getFieldMonitorId()));
         messageService.sendMessage(fieldMonitorSchedule);
 
         return fieldMonitorSchedule;
     }
 
     public ProjectPosition addProjectPosition(ProjectPosition projectPosition) throws Exception {
-        LOGGER.info(E.RAIN.concat(E.RAIN).concat("addProjectPosition: "
-                .concat(E.YELLOW)));
 
         ProjectPosition m = projectPositionRepository.save(projectPosition);
-        LOGGER.info(E.YELLOW_BIRD + E.YELLOW_BIRD +
-                "ProjectPosition added to: " + m.getProjectName()
-                + " " + E.RAIN);
 
         messageService.sendMessage(m);
         User user = userRepository.findByUserId(projectPosition.getUserId());
@@ -672,13 +611,8 @@ public class DataService {
     }
 
     public ProjectPolygon addProjectPolygon(ProjectPolygon projectPolygon) throws Exception {
-        LOGGER.info(E.RAIN.concat(E.RAIN).concat("addProjectPolygon: "
-                .concat(E.YELLOW)));
 
         ProjectPolygon m = projectPolygonRepository.insert(projectPolygon);
-        LOGGER.info(E.YELLOW_BIRD + E.YELLOW_BIRD +
-                "ProjectPolygon added to: " + m.getProjectName()
-                + " " + E.RAIN);
 
         m.setNearestCities(null);
         messageService.sendMessage(m);
@@ -707,13 +641,9 @@ public class DataService {
     }
 
     public GeofenceEvent addGeofenceEvent(GeofenceEvent geofenceEvent) throws Exception {
-        LOGGER.info(E.RAIN.concat(E.RAIN).concat("addGeofenceEvent: "
-                .concat(E.YELLOW)));
 
         GeofenceEvent m = geofenceEventRepository.insert(geofenceEvent);
-        LOGGER.info(E.YELLOW_BIRD + E.YELLOW_BIRD +
-                "GeofenceEvent added to: " + m.getProjectName()
-                + " " + E.RAIN);
+
         messageService.sendMessage(m);
 
         ActivityModel am = new ActivityModel();
@@ -734,14 +664,9 @@ public class DataService {
     }
 
     public Project addProject(Project project) throws Exception {
-        LOGGER.info(E.RAIN.concat(E.RAIN).concat("addProject: "
-                .concat(project.getName()).concat(" ")
-                .concat(E.YELLOW)));
 
         Project m = projectRepository.insert(project);
 
-        LOGGER.info(E.LEAF.concat(E.LEAF)
-                .concat("Project added: " + m.getProjectId()));
         ActivityModel am = new ActivityModel();
         am.setActivityType(ActivityType.projectAdded);
         am.setActivityModelId(UUID.randomUUID().toString());
@@ -763,12 +688,8 @@ public class DataService {
 
         LocationResponse m = locationResponseRepository.insert(locationResponse);
 
-        LOGGER.info(E.LEAF.concat(E.LEAF)
-                .concat("locationResponse added: " + locationResponse.getOrganizationName()));
         messageService.sendMessage(m);
-
         User user = userRepository.findByUserId(locationResponse.getUserId());
-
 
         ActivityModel am = new ActivityModel();
         am.setActivityType(ActivityType.locationResponse);
@@ -791,8 +712,6 @@ public class DataService {
 
         LocationRequest m = locationRequestRepository.insert(locationRequest);
 
-        LOGGER.info(E.LEAF.concat(E.LEAF)
-                .concat("locationRequest added: " + locationRequest.getUserName()));
         messageService.sendMessage(m);
         User user = userRepository.findByUserId(locationRequest.getUserId());
 
@@ -813,33 +732,21 @@ public class DataService {
     }
 
     public Project updateProject(Project project) throws Exception {
-        LOGGER.info(E.RAIN.concat(E.RAIN).concat("updateProject: "
-                .concat(project.getName()).concat(" ")
-                .concat(E.YELLOW)));
 
         Project m = projectRepository.save(project);
-
-        LOGGER.info(E.LEAF.concat(E.LEAF)
-                .concat("Project added: " + project.getProjectId()));
         return m;
     }
 
     public City addCity(City city) throws Exception {
         city.setCityId(UUID.randomUUID().toString());
         City c = cityRepository.save(city);
-        LOGGER.info(E.LEAF.concat(E.LEAF)
-                .concat("City added to database : " + city.getCityId()));
         return c;
     }
 
     public Community addCommunity(Community community) throws Exception {
         community.setCommunityId(UUID.randomUUID().toString());
         Community cm = communityRepository.save(community);
-        LOGGER.info(E.LEAF.concat(E.LEAF)
-                .concat("Community: \uD83C\uDF3C "
-                        + community.getName()
-                        + " added to database: \uD83D\uDC24 "
-                        + community.getCommunityId()));
+
         return cm;
     }
 
@@ -847,20 +754,15 @@ public class DataService {
         country.setCountryId(UUID.randomUUID().toString());
 
         Country m = countryRepository.save(country);
-        LOGGER.info(E.LEAF.concat(E.LEAF)
-                .concat("Country added: " + country.getCountryId()));
         return m;
     }
 
     public SettingsModel addSettings(SettingsModel model) throws Exception {
 
-        LOGGER.info(E.RED_DOT + " adding Settings model to db: " + G.toJson(model));
         SettingsModel m = settingsModelRepository.insert(model);
-        LOGGER.info(E.LEAF.concat(E.LEAF)
-                .concat("SettingsModel inserted: " + G.toJson(m)));
         messageService.sendMessage(model);
 
-        User user = userRepository.findByUserId(model.getUserId());
+        //User user = userRepository.findByUserId(model.getUserId());
         Organization org = organizationRepository.findByOrganizationId(model.getOrganizationId());
 
         ActivityModel am = new ActivityModel();
@@ -885,8 +787,6 @@ public class DataService {
         organization.setCreated(new DateTime().toDateTimeISO().toString());
 
         Organization org = organizationRepository.save(organization);
-        LOGGER.info(E.LEAF.concat(E.LEAF)
-                .concat("Organization added: " + organization.getOrganizationId()));
 
         return org;
     }
@@ -903,11 +803,6 @@ public class DataService {
         ApiFuture<UserRecord> userRecord = firebaseAuth.createUserAsync(createRequest);
         String uid = userRecord.get().getUid();
         user.setUserId(uid);
-        LOGGER.info(E.PINK + E.PINK
-                + "Firebase user auth record created: "
-                .concat(" \uD83E\uDDE1 ").concat(user.getName()
-                        .concat(" \uD83E\uDDE1 ").concat(user.getEmail())
-                        .concat(" \uD83E\uDDE1 ").concat(uid)));
 
         user.setPassword(null);
         String message = "Dear " + user.getName() +
@@ -943,8 +838,7 @@ public class DataService {
                     .setDisplayName(user.getName())
                     .setDisabled(false);
 
-            UserRecord userRecord = FirebaseAuth.getInstance().updateUser(request);
-            LOGGER.info(E.RED_DOT + E.RED_DOT + " Successfully updated user: " + userRecord.getUid());
+            FirebaseAuth.getInstance().updateUser(request);
             return 0;
         } catch (Exception e) {
             e.printStackTrace();
