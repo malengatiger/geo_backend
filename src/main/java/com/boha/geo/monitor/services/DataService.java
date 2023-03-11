@@ -466,7 +466,6 @@ public class DataService {
         photoRepository.save(photo);
         messageService.sendMessage(photo);
 
-        User user = userRepository.findByUserId(photo.getUserId());
         ActivityModel am = new ActivityModel();
         am.setActivityType(ActivityType.photoAdded);
         am.setActivityModelId(UUID.randomUUID().toString());
@@ -477,7 +476,7 @@ public class DataService {
         am.setOrganizationId(photo.getOrganizationId());
         am.setUserName(photo.getUserName());
         am.setProjectName(photo.getProjectName());
-        am.setUserThumbnailUrl(user.getThumbnailUrl());
+        am.setUserThumbnailUrl(photo.getUserUrl());
         am.setPhoto(photo);
 
         addActivityModel(am);
@@ -504,7 +503,6 @@ public class DataService {
             video.setVideoId(UUID.randomUUID().toString());
         }
         videoRepository.insert(video);
-        User user = userRepository.findByUserId(video.getUserId());
 
         ActivityModel am = new ActivityModel();
         am.setActivityType(ActivityType.videoAdded);
@@ -515,7 +513,7 @@ public class DataService {
         am.setOrganizationName(null);
         am.setOrganizationId(video.getOrganizationId());
         am.setUserName(video.getUserName());
-        am.setUserThumbnailUrl(user.getThumbnailUrl());
+        am.setUserThumbnailUrl(video.getUserUrl());
         am.setProjectName(video.getProjectName());
         am.setVideo(video);
 
@@ -527,7 +525,6 @@ public class DataService {
     public Audio addAudio(Audio audio) throws Exception {
 
         audioRepository.save(audio);
-        User user = userRepository.findByUserId(audio.getUserId());
 
         ActivityModel am = new ActivityModel();
         am.setActivityType(ActivityType.audioAdded);
@@ -538,7 +535,7 @@ public class DataService {
         am.setOrganizationName(null);
         am.setOrganizationId(audio.getOrganizationId());
         am.setUserName(audio.getUserName());
-        am.setUserThumbnailUrl(user.getThumbnailUrl());
+        am.setUserThumbnailUrl(audio.getUserUrl());
         am.setProjectName(audio.getProjectName());
         am.setAudio(audio);
 

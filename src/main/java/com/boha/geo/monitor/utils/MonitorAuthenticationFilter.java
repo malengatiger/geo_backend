@@ -39,24 +39,12 @@ public class MonitorAuthenticationFilter extends OncePerRequestFilter {
                                     @NotNull HttpServletResponse httpServletResponse,
                                     @NotNull FilterChain filterChain) throws ServletException, IOException {
 
-//        print(httpServletRequest);
-
         String url = httpServletRequest.getRequestURL().toString();
         LOGGER.info(mm+ " url: " + url);
         //        if (url.contains("192.168.86.230:8080") || url.contains("172.20.10.4:8080")|| url.contains("localhost:8080")) {   //this is my local machine
         if (url.contains("localhost:") || url.contains("uploadFile")) {   //this is my local machine
             LOGGER.info(E.ANGRY + E.ANGRY + "this request is not subject to authentication: "
                     + E.HAND2 + url);
-            String m = httpServletRequest.getHeader("Authorization");
-            String s;
-            if (m == null) {
-                s = E.RED_DOT + E.RED_DOT + E.RED_DOT + E.RED_DOT
-                        + " ... but you do NOT have an auth key anyway!";
-            } else {
-                s = mm
-                        + " ... but you do have an auth key. " + E.RED_APPLE + " Cool Beans!!";
-            }
-            LOGGER.info(s);
             doFilter(httpServletRequest, httpServletResponse, filterChain);
             return;
         }
@@ -70,7 +58,7 @@ public class MonitorAuthenticationFilter extends OncePerRequestFilter {
             doFilter(httpServletRequest, httpServletResponse, filterChain);
             return;
         }
-        //allow getCountries
+        //allow api-docs
         if (httpServletRequest.getRequestURI().contains("api-docs")) {
             LOGGER.info("" + mm + " contextPath: " + httpServletRequest.getContextPath()
                     + E.AMP + " requestURI: " + httpServletRequest.getRequestURI() + "\n\n");
@@ -80,35 +68,27 @@ public class MonitorAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        LOGGER.info(mm + "this request IS subject to authentication: "
-                + E.HAND2 + url);
         String m = httpServletRequest.getHeader("Authorization");
         if (m == null) {
-            String msg = mm +
-                    "Authorization Header is missing. Needs JWT token! \uD83C\uDF4E "
-                    + httpServletRequest.getQueryString() + " \uD83C\uDF4E \uD83C\uDF4E";
-            LOGGER.info(msg);
             httpServletResponse.sendError(403, "GTFO");
             return;
-//            throw new ServletException("Forbidden!");
         }
         String token = m.substring(7);
         try {
             dataService.initializeFirebase();
             ApiFuture<FirebaseToken> future = FirebaseAuth.getInstance().verifyIdTokenAsync(token, true);
             FirebaseToken mToken = future.get();
-            LOGGER.info(mm+" Authentication executed, uid: "
-                    + mToken.getUid() + " \uD83D\uDE21 email: " + mToken.getEmail()
-                    + "  \uD83C\uDF38" +
-                    " \uD83C\uDF4E request authenticated OK!! \uD83C\uDF4E");
-            doFilter(httpServletRequest, httpServletResponse, filterChain);
+            if (mToken != null) {
+                doFilter(httpServletRequest, httpServletResponse, filterChain);
+            } else {
+                httpServletResponse.sendError(403, "GTFO");
+            }
 
         } catch (Exception e) {
             String msg = "\uD83D\uDD06 \uD83D\uDD06 \uD83D\uDD06 " +
                     "FirebaseAuthException happened: \uD83C\uDF4E " + e.getMessage();
             LOGGER.info("\uD83D\uDE21 \uD83D\uDE21 \uD83D\uDE21 " + msg);
             httpServletResponse.sendError(403, "GTFO");
-//            throw new ServletException("Forbidden!");
         }
 
     }
