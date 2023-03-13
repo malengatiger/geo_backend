@@ -31,8 +31,7 @@ public class CloudStorageUploader {
     private String cloudStorageDirectory;
 
     public String getSignedUrl(String objectName, String contentType  ) throws Exception {
-        LOGGER.info(E.CHIPS+E.CHIPS+E.CHIPS +
-                " getSignedUrl for cloud storage: " + objectName);
+        LOGGER.info("%s%s%s getSignedUrl for cloud storage: %s".formatted(E.CHIPS, E.CHIPS, E.CHIPS, objectName));
         Storage storage = StorageOptions.newBuilder()
                 .setProjectId(projectId).build().getService();
         BlobId blobId = BlobId.of(bucketName, cloudStorageDirectory

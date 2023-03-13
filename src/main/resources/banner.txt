@@ -1,0 +1,4 @@
+application = ${application.version}
+springboot = ${spring-boot.version}
+title = ${application.title}
+cloudStorageDirectory = ${cloudStorageDirectory}

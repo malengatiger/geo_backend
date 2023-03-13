@@ -7,6 +7,7 @@ import com.boha.geo.monitor.services.MongoDataService;
 import com.boha.geo.monitor.utils.MongoGenerator;
 import com.boha.geo.services.CloudStorageUploader;
 import com.boha.geo.services.RegistrationService;
+import com.boha.geo.services.TextTranslationService;
 import com.boha.geo.util.E;
 import com.google.common.io.Files;
 import com.google.firebase.messaging.FirebaseMessagingException;
@@ -21,6 +22,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -677,15 +679,18 @@ public class DataController {
 
     }
 
-    @GetMapping("/fix")
-    public ResponseEntity<?> fix() throws Exception {
+    @Autowired
+    TextTranslationService textTranslationService;
+
+    @GetMapping("/generateTranslations")
+    public ResponseEntity<?> generateTranslations() throws Exception {
         try {
-            dataService.updateAllActivities();
-            return ResponseEntity.ok("All Activities updated with user url");
+            textTranslationService.generateTranslations();
+            return ResponseEntity.ok("Translations completed");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,
-                            "fix failed: " + e.getMessage(),
+                            "generateTranslations failed: " + e.getMessage(),
                             new DateTime().toDateTimeISO().toString()));
         }
 

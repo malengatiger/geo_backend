@@ -32,8 +32,8 @@ public class SimpleCorsFilter implements Filter {
         Enumeration<String> en = req.getParameterNames();
         while (en.hasMoreElements()) {
             String key = en.nextElement();
-            log.info(E.AMP +E.AMP + E.AMP + " Param Key:" + key + " "
-                    + E.RED_APPLE + " value: " + req.getParameter(key));
+            log.info(E.AMP +E.AMP + E.AMP + " Param: " + key + " "
+                    + E.RED_APPLE + " " + req.getParameter(key));
         }
         log.info(""+E.AMP + E.AMP +E.AMP + E.AMP + " contextPath: " + request.getContextPath()
                 + E.AMP +" requestURI: " + request.getRequestURI() + "\n\n");

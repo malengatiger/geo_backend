@@ -21,7 +21,8 @@ public class LogTimeFilter implements Filter {
             long end = System.currentTimeMillis();
             long ms = end - startTime;
             double dur = Double.parseDouble("" + ms) / Double.parseDouble("1000");
-            LOGGER.info(E.DICE+E.DICE +E.DICE+E.DICE + " Request took " + dur + " seconds");
+            LOGGER.info(E.DICE+E.DICE +E.DICE+E.DICE + " Request took "
+                    +E.RED_APPLE+ " " + dur + " seconds");
         } catch (IOException | ServletException e) {
             throw new RuntimeException(e);
         }

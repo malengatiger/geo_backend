@@ -40,7 +40,7 @@ public class MonitorAuthenticationFilter extends OncePerRequestFilter {
                                     @NotNull FilterChain filterChain) throws ServletException, IOException {
 
         String url = httpServletRequest.getRequestURL().toString();
-        LOGGER.info(mm+ " url: " + url);
+        //LOGGER.info(mm+ " url: " + url);
         //        if (url.contains("192.168.86.230:8080") || url.contains("172.20.10.4:8080")|| url.contains("localhost:8080")) {   //this is my local machine
         if (url.contains("localhost:") || url.contains("uploadFile")) {   //this is my local machine
             LOGGER.info(E.ANGRY + E.ANGRY + "this request is not subject to authentication: "
@@ -75,7 +75,7 @@ public class MonitorAuthenticationFilter extends OncePerRequestFilter {
         }
         String token = m.substring(7);
         try {
-            dataService.initializeFirebase();
+            //dataService.initializeFirebase();
             ApiFuture<FirebaseToken> future = FirebaseAuth.getInstance().verifyIdTokenAsync(token, true);
             FirebaseToken mToken = future.get();
             if (mToken != null) {

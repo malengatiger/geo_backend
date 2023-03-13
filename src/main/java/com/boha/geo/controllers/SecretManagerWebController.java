@@ -44,13 +44,6 @@ public class SecretManagerWebController {
     private String myAppSecret;
 
 
-//    @GetMapping("/")
-//    public ModelAndView renderIndex(ModelMap map) {
-//        map.put("applicationSecret", this.appSecret);
-//        map.put("myApplicationSecret", this.myAppSecret);
-//        return new ModelAndView("index.html", map);
-//    }
-
     @GetMapping("/getSecret")
     @ResponseBody
     public String getSecret(
