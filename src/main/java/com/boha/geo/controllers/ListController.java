@@ -823,9 +823,9 @@ public class ListController {
 
         File zippedFile = listService.getOrganizationDataZippedFile(organizationId, startDate, endDate);
         byte[] bytes = java.nio.file.Files.readAllBytes(zippedFile.toPath());
-        boolean deleted = zippedFile.delete();
+        zippedFile.delete();
 
-        LOGGER.info(E.PANDA+E.PANDA + " zipped organization file deleted : " + deleted);
+//        LOGGER.info(E.PANDA+E.PANDA + " zipped organization file deleted : " + deleted);
         return bytes;
     }
 

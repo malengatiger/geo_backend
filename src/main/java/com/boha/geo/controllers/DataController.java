@@ -682,6 +682,20 @@ public class DataController {
     @Autowired
     TextTranslationService textTranslationService;
 
+    @GetMapping("/getEnglishKeys")
+    public ResponseEntity<?> getEnglishKeys() throws Exception {
+        try {
+            String json =textTranslationService.getEnglishKeys();
+            return ResponseEntity.ok(json);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "generateTranslations failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+
+    }
+
     @GetMapping("/generateTranslations")
     public ResponseEntity<?> generateTranslations() throws Exception {
         try {

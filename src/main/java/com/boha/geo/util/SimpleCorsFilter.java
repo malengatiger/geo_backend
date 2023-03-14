@@ -27,16 +27,16 @@ public class SimpleCorsFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
 
-        log.info("\n\n"+E.AMP + E.AMP +E.AMP + E.AMP + " SimpleCorsFilter doFilter ...ServerPort : "
-                +E.AMP + E.AMP + req.getServerPort()+ " " + E.AMP + " ServerName: " + req.getServerName());
+        log.info(E.AMP + E.AMP +E.AMP +  " Port "
+                +E.AMP + req.getServerPort()+ " " + E.AMP + " ServerName: " + req.getServerName());
         Enumeration<String> en = req.getParameterNames();
         while (en.hasMoreElements()) {
             String key = en.nextElement();
-            log.info(E.AMP +E.AMP + E.AMP + " Param: " + key + " "
+            log.info(E.AMP +E.AMP + E.AMP + " " + key + " "
                     + E.RED_APPLE + " " + req.getParameter(key));
         }
-        log.info(""+E.AMP + E.AMP +E.AMP + E.AMP + " contextPath: " + request.getContextPath()
-                + E.AMP +" requestURI: " + request.getRequestURI() + "\n\n");
+        log.info(E.AMP + E.AMP +E.AMP + " " + request.getContextPath()
+                + E.AMP +" requestURI: " + request.getRequestURI());
 
 
         response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));

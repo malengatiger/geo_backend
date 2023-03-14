@@ -52,7 +52,7 @@ public class MonitorAuthenticationFilter extends OncePerRequestFilter {
         if (httpServletRequest.getRequestURI().contains("getCountries")
                 || httpServletRequest.getRequestURI().contains("addCountry")) {
             LOGGER.info("" + mm + " contextPath: " + httpServletRequest.getContextPath()
-                    + E.AMP + " requestURI: " + httpServletRequest.getRequestURI() + "\n\n");
+                    + E.AMP + " requestURI: " + httpServletRequest.getRequestURI());
             LOGGER.info("" + mm + " allowing addCountry and getCountries without authentication, is this OK?");
 
             doFilter(httpServletRequest, httpServletResponse, filterChain);
@@ -98,8 +98,9 @@ public class MonitorAuthenticationFilter extends OncePerRequestFilter {
                           FilterChain filterChain) throws IOException, ServletException {
         filterChain.doFilter(httpServletRequest, httpServletResponse);
         String url = httpServletRequest.getRequestURL().toString();
-        LOGGER.info("\uD83D\uDD37 \uD83D\uDD37 \uD83D\uDD37 Response Status Code: "
-                + httpServletResponse.getStatus() + "  \uD83D\uDD37 \uD83D\uDD37 \uD83D\uDD37 " + url + "  \uD83D\uDD37 \uD83D\uDD37 \uD83D\uDD37 ");
+        LOGGER.info("\uD83D\uDD37\uD83D\uDD37\uD83D\uDD37 Status Code: "
+                + httpServletResponse.getStatus() + "  \uD83D\uDD37 "
+                + httpServletRequest.getRequestURI() + "  \uD83D\uDD37 \uD83D\uDD37 \uD83D\uDD37 ");
     }
 
     private void print(@NotNull HttpServletRequest httpServletRequest) {

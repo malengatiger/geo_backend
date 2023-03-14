@@ -115,8 +115,7 @@ public class TextTranslationService {
                 lts.setTranslations(mJson);
                 localeTranslationsRepository.insert(lts);
                 LOGGER.info(E.PINK + E.PINK + E.PINK + " Locale Translations saved for: " + code);
-            }
-            catch (IOException ex) {
+            } catch (IOException ex) {
                 LOGGER.error("Invalid Path");
             }
 
@@ -149,38 +148,52 @@ public class TextTranslationService {
     List<TranslationBag> bags = new ArrayList<>();
 
     private void setStrings() {
-        hashMap.put("locationNotAvailable", "Device Location not available");
-        hashMap.put("dataRefreshFailed", "Data refresh failed");
-        hashMap.put("fileSize", "File Size");
-        hashMap.put("duration", "Duration");
-        hashMap.put("videoBuffering", "Video is buffering");
-        hashMap.put("notReadyYet", "Not ready yet");
-        hashMap.put("createAudioClip", "Create Audio Clip");
-        hashMap.put("projectsNotFound", "Projects Not Found'");
-        hashMap.put("projectLocationFailed", "Project Location failed");
 
-        hashMap.put("userCreateFailed", "User Creation failed");
-        hashMap.put("memberCreateFailed", "Member Create failed");
-        hashMap.put("updateFailed", "Update failed");
-        hashMap.put("weGotAProblem", "We got a problem, Sir!");
-        hashMap.put("projectAudio", "Project Audio Clips");
-        hashMap.put("fieldMonitorSchedules", "FieldMonitor Schedules");
-        hashMap.put("audioPlayer", "Audio Player");
-        hashMap.put("welcomeToGeo", "Welcome to Geo!");
-        hashMap.put("projectEditor", "Project Editor");
-        hashMap.put("projectDetails", "Project Details");
+        hashMap.put("enterDescription","Enter Description");
+//        hashMap.put("projectsNotFound","Projects Not Found");
+//        hashMap.put("newProject","New Project");
+//        hashMap.put("loadingActivities", "Loading Activity Data");
+//        hashMap.put("enterProjectName", "Enter Project Name");
 
-        hashMap.put("verifyPhoneNumber", "Verify Phone Number");
-        hashMap.put("phoneNumber", "Phone Number");
-        hashMap.put("projectAddedToOrganization", "{projectName} added to organization");
-        hashMap.put("memberDashboard", "Member Dashboard");
-        hashMap.put("sendCode", "Send Code");
-        hashMap.put("startDate", "Start Date");
+//        hashMap.put("selectPhotoSize", "Select Size of Photos");
+//        hashMap.put("fr", "French");
+//        hashMap.put("en", "English");
+//        hashMap.put("es", "Spanish");
+//        hashMap.put("pt", "Portuguese");
+//        hashMap.put("zu", "Zulu");
+//        hashMap.put("xh", "Xhosa");
+//        hashMap.put("sw", "Swahili");
+//        hashMap.put("ts", "Tsonga");
+//        hashMap.put("st", "Sotho");
+//        hashMap.put("yo", "Yoruba");
+//        hashMap.put("ig", "Lingala");
+//        hashMap.put("noActivities", "No activities happening yet");
+//        hashMap.put("tapToRefresh", "Tap to Refresh");
 
-        hashMap.put("endDate", "End Date");
-        hashMap.put("numberOfDays", "Number of Days");
-        hashMap.put("projectActivities", "Project Activities");
 
+
+//        hashMap.put("dashboard", "Dashboard");
+//        hashMap.put("loadingActivities", "Loading Activities");
+//        hashMap.put("selectLanguage", "Select Language");
+//        hashMap.put("pleaseSelectLanguage", "Please Select Language");
+//        hashMap.put("small", "Small");
+//        hashMap.put("medium", "Medium");
+//        hashMap.put("large", "Large");
+//        hashMap.put("at", "at");
+//        hashMap.put("arrivedAt", "Arrived at $project");
+//        hashMap.put("leftFrom", "Leaving $project");
+//        hashMap.put("pleaseEnterDistance", "Please enter maximum distance from project in metres");
+//        hashMap.put("enterDistance", "Enter maximum distance from project in metres");
+//        hashMap.put("pleaseEnterVideoLength", "Please enter maximum video length in seconds");
+//        hashMap.put("enterVideoLength", "Enter maximum video length in seconds");
+//
+//        hashMap.put("maxVideoLength", "Maximum Video Length in Seconds");
+//        hashMap.put("maxAudioLength", "Please enter maximum audio length in minutes");
+//        hashMap.put("pleaseActivityStreamHours", "Please enter the number of hours your activity stream must show");
+//        hashMap.put("activityStreamHours", "Enter the number of hours your activity stream must show");
+//        hashMap.put("pleaseNumberOfDays", "Please enter the number of days your dashboard must show");
+//        hashMap.put("dashNumberOfDays", "Enter the number of days your dashboard must show");
+//        ////
 //        hashMap.put("registerOrganization", "Register Organization");
 //        hashMap.put("organizationDashboard", "Organization Dashboard");
 //        hashMap.put("projectDashboard", "Project Dashboard");
@@ -205,7 +218,6 @@ public class TextTranslationService {
 //        hashMap.put("maximumMonitoringDistance", "Maximum Monitoring Distance in metres");
 //        hashMap.put("maximumVideoLength", "Maximum Video Length in seconds");
 //        hashMap.put("maximumAudioLength", "Maximum Audio Length in minutes");
-//        hashMap.put("activityStreamHours", "Activity Stream in hours");
 //        hashMap.put("numberOfDaysForDashboardData", "Number of days for Dashboard data");
 //        hashMap.put("selectSizePhotos", "Select size of photos");
 //        hashMap.put("selectProjectIfNecessary", "Select project only if these settings are for a single project, otherwise the settings are for the entire organization");
@@ -251,16 +263,87 @@ public class TextTranslationService {
 //        hashMap.put("internetConnectionNotAvailable", "Internet Connection not available");
 //        hashMap.put("signInFailed", "Sign in failed");
 //        hashMap.put("organizationRegistered", "Organization has been registered");
+//        //
+//        hashMap.put("locationNotAvailable", "Device Location not available");
+//        hashMap.put("dataRefreshFailed", "Data refresh failed");
+//        hashMap.put("fileSize", "File Size");
+//        hashMap.put("duration", "Duration");
+//        hashMap.put("videoBuffering", "Video is buffering");
+//        hashMap.put("notReadyYet", "Not ready yet");
+//        hashMap.put("createAudioClip", "Create Audio Clip");
+//        hashMap.put("projectsNotFound", "Projects Not Found'");
+//        hashMap.put("projectLocationFailed", "Project Location failed");
+//
+//        hashMap.put("userCreateFailed", "User Creation failed");
+//        hashMap.put("memberCreateFailed", "Member Create failed");
+//        hashMap.put("updateFailed", "Update failed");
+//        hashMap.put("weGotAProblem", "We got a problem, Sir!");
+//        hashMap.put("projectAudio", "Project Audio Clips");
+//        hashMap.put("fieldMonitorSchedules", "FieldMonitor Schedules");
+//        hashMap.put("audioPlayer", "Audio Player");
+//        hashMap.put("welcomeToGeo", "Welcome to Geo!");
+//        hashMap.put("projectEditor", "Project Editor");
+//        hashMap.put("projectDetails", "Project Details");
+//
+//        hashMap.put("verifyPhoneNumber", "Verify Phone Number");
+//        hashMap.put("phoneNumber", "Phone Number");
+//        hashMap.put("projectAddedToOrganization", "{projectName} added to organization");
+//        hashMap.put("memberDashboard", "Member Dashboard");
+//        hashMap.put("sendCode", "Send Code");
+//        hashMap.put("startDate", "Start Date");
+//
+//        hashMap.put("endDate", "End Date");
+//        hashMap.put("numberOfDays", "Number of Days");
+//        hashMap.put("projectActivities", "Project Activities");
 
     }
 
+    public String getEnglishKeys() {
+        setLanguageCodes();
+        setStrings();
+
+        LOGGER.info(E.PINK + E.PINK + E.PINK + " Number of Languages: " + codes.size());
+        LOGGER.info(E.PINK + E.PINK + E.PINK + " Number of Strings: " + hashMap.size());
+        int cnt = 0;
+
+        List<TranslationBag> translationBags = new ArrayList<>();
+        for (String key : hashMap.keySet()) {
+            TranslationBag bag = getBag("en", hashMap.get(key), key);
+            translationBags.add(bag);
+        }
+        JSONObject object = new JSONObject();
+        for (TranslationBag bag : translationBags) {
+            object.put(bag.getKey(), bag.getStringToTranslate());
+            cnt++;
+            LOGGER.info("%s%sTranslationBag #%d %s%s".formatted(E.AMP, E.AMP, cnt, E.RED_APPLE, G.toJson(bag)));
+        }
+        String mJson = G.toJson(object);
+        Path path
+                = Paths.get("en" + ".json");
+        try {
+            Files.writeString(path, mJson,
+                    StandardCharsets.UTF_8);
+            LocaleTranslations lts = new LocaleTranslations();
+            lts.setLocaleTranslationsId(UUID.randomUUID().toString());
+            lts.setDate(DateTime.now().toDateTimeISO().toString());
+            lts.setLocale("en");
+            lts.setTranslations(mJson);
+            localeTranslationsRepository.insert(lts);
+            LOGGER.info(E.PINK + E.PINK + E.PINK + " Locale Translations saved for: en");
+        } catch (IOException ex) {
+            LOGGER.error("Invalid Path");
+        }
+        return mJson;
+    }
+
     private void setLanguageCodes() {
-        //codes.add("en");
+        codes.add("en");
+        codes.add("sn");
+        codes.add("yo");
         codes.add("fr");
         codes.add("es");
         codes.add("pt");
         codes.add("af");
-
         codes.add("zu");
         codes.add("ts");
         codes.add("ig");

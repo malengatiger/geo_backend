@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -354,15 +355,18 @@ public class ListService {
         return new ArrayList<>();
     }
 
-    static final String mm = "" + E.BLUE_DOT + E.BLUE_DOT + E.BLUE_DOT + " Zipping Org data: ";
+    static final String mm = "" + E.BLUE_DOT + E.BLUE_DOT  + " Zip: ";
 
     public File getOrganizationDataZippedFile(String organizationId, String startDate, String endDate) throws Exception {
 
         long start = System.currentTimeMillis();
+        DecimalFormat decimalFormat = new DecimalFormat("#.##");
+        decimalFormat.setGroupingUsed(true);
+        decimalFormat.setGroupingSize(3);
 
         DataBag bag = getOrganizationData(organizationId, startDate, endDate);
         String json = G.toJson(bag);
-        LOGGER.info(mm + " Size of json file before zipping: " + json.length() + " bytes");
+        LOGGER.info(mm + " Before zip: " + decimalFormat.format(json.length()) + " bytes in file");
         File dir = new File("zipDirectory");
         if (!dir.exists()) {
             dir.mkdir();
@@ -378,10 +382,12 @@ public class ListService {
 
         out.close();
         long end = System.currentTimeMillis();
-        long seconds = ((end - start) / 1000) % 60;
+        long ms = (end - start);
+        double elapsed = Double.parseDouble(""+ms) / Double.parseDouble("1000");
 
-        LOGGER.info(mm + " Size of zipped json file after zipping: "
-                + zippedFile.length() + " bytes, elapsed: " + seconds + " seconds");
+        LOGGER.info(mm + " After zip: "
+                + decimalFormat.format(zippedFile.length()) +
+                " bytes, elapsed: " + elapsed + " seconds");
         return zippedFile;
     }
 
@@ -389,12 +395,17 @@ public class ListService {
         long start = System.currentTimeMillis();
         DataBag bag = getProjectData(projectId, startDate, endDate);
         String json = G.toJson(bag);
-        LOGGER.info(mm + " Size of json file before zipping: " + json.length() + " bytes");
+
+        DecimalFormat decimalFormat = new DecimalFormat("#.##");
+        decimalFormat.setGroupingUsed(true);
+        decimalFormat.setGroupingSize(3);
+
+        LOGGER.info(mm + " Before zip: " + decimalFormat.format( json.length()) + " bytes in json");
 
         File dir = new File("zipDirectory");
         if (!dir.exists()) {
             boolean ok = dir.mkdir();
-            LOGGER.info(mm + " Zip directory has been created: path: " + dir.getAbsolutePath() + " created: " + ok);
+            LOGGER.info(mm + " Zip directory created: path: " + dir.getAbsolutePath() + " created: " + ok);
         }
         File zippedFile = new File(dir, "" + DateTime.now().getMillis() + ".zip");
         ZipOutputStream out = new ZipOutputStream(new FileOutputStream(zippedFile));
@@ -407,18 +418,22 @@ public class ListService {
 
         out.close();
         long end = System.currentTimeMillis();
-        long seconds = ((end - start) / 1000) % 60;
+        long ms = (end - start);
+        double elapsed = Double.parseDouble(""+ms) / Double.parseDouble("1000");
 
-        LOGGER.info(mm + " Size of zipped json file after zipping: "
-                + zippedFile.length() + " bytes, elapsed: " + seconds + " seconds");
+        LOGGER.info(mm + " After zip: "
+                + decimalFormat.format(zippedFile.length()) + " bytes in file, elapsed: "
+                + E.RED_APPLE + " " + elapsed + " seconds");
         return zippedFile;
     }
 
     public File getUserDataZippedFile(String userId, String startDate, String endDate) throws Exception {
-
+        DecimalFormat decimalFormat = new DecimalFormat("#.##");
+        decimalFormat.setGroupingUsed(true);
+        decimalFormat.setGroupingSize(3);
         DataBag bag = getUserData(userId, startDate, endDate);
         String json = G.toJson(bag);
-        LOGGER.info(mm + " getUserDataZippedFile: Size of json file before zipping: " + json.length() + " bytes");
+        LOGGER.info(mm + " getUserDataZippedFile: Before zip: " + decimalFormat.format(json.length()) + " bytes");
 
         File dir = new File("zipDirectory");
         if (!dir.exists()) {
@@ -435,7 +450,7 @@ public class ListService {
         out.closeEntry();
 
         out.close();
-        LOGGER.info(mm + " Size of zipped json file after zipping: " + zippedFile.length() + " bytes");
+        LOGGER.info(mm + " After zipping: " + decimalFormat.format(zippedFile.length()) + " bytes in file");
         return zippedFile;
     }
 
