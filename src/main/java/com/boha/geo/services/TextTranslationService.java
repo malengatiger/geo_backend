@@ -149,12 +149,61 @@ public class TextTranslationService {
 
     private void setStrings() {
 
-        hashMap.put("enterDescription","Enter Description");
-//        hashMap.put("projectsNotFound","Projects Not Found");
-//        hashMap.put("newProject","New Project");
-//        hashMap.put("loadingActivities", "Loading Activity Data");
-//        hashMap.put("enterProjectName", "Enter Project Name");
+        hashMap.put("zh","Chinese");
+        hashMap.put("de","German");
 
+//        hashMap.put("sunday","Sunday");
+//        hashMap.put("monday","Monday");
+//        hashMap.put("tuesday","Tuesday");
+//        hashMap.put("wednesday","Wednesday");
+//        hashMap.put("thursday","Thursday");
+//        hashMap.put("friday","Friday");
+//        hashMap.put("saturday","Saturday");
+//
+//        hashMap.put("af", "Afrikaans");
+//        hashMap.put("projectAreas", "Project Areas");
+//        hashMap.put("areas", "Areas");
+//        hashMap.put("stopMessage", "If you have changed the language of the app please press the stop button and then restart the app to use the new language. If you cancel you will only see the changes after a full stop and start");
+//        hashMap.put("restartMessage", "If you have changed the language of the app please press the restart button and then restart the app to use the new language. If you cancel you will only see the changes after a full stop and start");
+//        hashMap.put("stop", "Stop");
+//        hashMap.put("cancel", "Cancel");
+//        hashMap.put("restart", "Restart");
+//
+//        hashMap.put("weHelpYou", "We help you see more!");
+//        hashMap.put("South Africa", "South Africa");
+//        hashMap.put("Zimbabwe", "Zimbabwe");
+//        hashMap.put("Mozambique", "Mozambique");
+//        hashMap.put("Namibia", "Namibia");
+//        hashMap.put("Botswana", "Botswana");
+//        hashMap.put("Kenya", "Kenya");
+//        hashMap.put("Nigeria", "Nigeria");
+//        hashMap.put("Democratic Republic of Congo", "Democratic Republic of Congo");
+//        hashMap.put("Angola", "Angola");
+//
+//        hashMap.put("memberLocationResponse", "Member responded to location request");
+//        hashMap.put("conditionAdded", "Project condition added");
+//
+//        hashMap.put("male", "Male");
+//        hashMap.put("female", "Female");
+//
+//        hashMap.put("enterFullName", "Enter Full Name");
+//        hashMap.put("enterEmail", "Enter Email Address");
+//        hashMap.put("enterCell", "Enter Telephone Number");
+//        hashMap.put("submitMember", "Submit Member");
+//        hashMap.put("profilePhoto", "Create Profile Photo");
+//
+//        hashMap.put("enterDescription", "Enter Description");
+//        hashMap.put("settingsChanged", "Settings changed or added");
+//        hashMap.put("projectAdded", "Project added or changed");
+//        hashMap.put("projectLocationAdded", "Project location added");
+//        hashMap.put("projectAreaAdded", "Project Area added");
+//        hashMap.put("memberAtProject", "Member at Project");
+//        hashMap.put("memberAddedChanged", "Member changed or added");
+//
+//
+//        hashMap.put("newProject", "New Project");
+//        hashMap.put("enterProjectName", "Enter Project Name");
+//
 //        hashMap.put("selectPhotoSize", "Select Size of Photos");
 //        hashMap.put("fr", "French");
 //        hashMap.put("en", "English");
@@ -169,9 +218,8 @@ public class TextTranslationService {
 //        hashMap.put("ig", "Lingala");
 //        hashMap.put("noActivities", "No activities happening yet");
 //        hashMap.put("tapToRefresh", "Tap to Refresh");
-
-
-
+//
+//
 //        hashMap.put("dashboard", "Dashboard");
 //        hashMap.put("loadingActivities", "Loading Activities");
 //        hashMap.put("selectLanguage", "Select Language");
@@ -229,7 +277,6 @@ public class TextTranslationService {
 //        hashMap.put("members", "Members");
 //
 //        hashMap.put("locations", "Locations");
-//        hashMap.put("areas", "Areas");
 //        hashMap.put("schedules", "Schedules");
 //        hashMap.put("january", "January");
 //        hashMap.put("february", "February");
@@ -251,14 +298,12 @@ public class TextTranslationService {
 //        hashMap.put("removeMember", "Remove Member");
 //        hashMap.put("name", "Name");
 //        hashMap.put("emailAddress", "Email Address");
-//        hashMap.put("male", "Male");
-//        hashMap.put("female", "Female");
+//
 //        hashMap.put("cellphone", "Cellphone");
 //        hashMap.put("fieldMonitor", "Field Monitor");
 //        hashMap.put("administrator", "Administrator");
 //        hashMap.put("executive", "Executive");
-//        hashMap.put("submitMember", "Submit Member");
-//        hashMap.put("profilePhoto", "Profile Photo");
+//
 //        hashMap.put("pleaseSelectCountry", "Please select Country");
 //        hashMap.put("internetConnectionNotAvailable", "Internet Connection not available");
 //        hashMap.put("signInFailed", "Sign in failed");
@@ -349,8 +394,9 @@ public class TextTranslationService {
         codes.add("ig");
         codes.add("nso");
         codes.add("st");
-        codes.add("sn");
         codes.add("sw");
         codes.add("xh");
+        codes.add("zh");
+        codes.add("de");
     }
 }
