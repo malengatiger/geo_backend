@@ -71,12 +71,8 @@ public class CloudStorageUploader {
                             storage.get(bucketName, objectName).getGeneration());
         }
         Blob blob = storage.createFrom(blobInfo, Paths.get(file.getPath()));
-        URL vv = storage
-                .signUrl(blobInfo, 20000, TimeUnit.DAYS, Storage.SignUrlOption.withPathStyle());
         LOGGER.info(E.CHIPS+E.CHIPS+E.CHIPS +
-                " file uploaded to cloud storage, signed url acquired. Cool! " + vv.toString() );
-        LOGGER.info(E.CHIPS+E.CHIPS+E.CHIPS +
-                " should we use medialLink rather than the signed url?? " + blob.getMediaLink() );
-        return vv.toString();
+                " file uploaded to cloud storage; url = "+ E.RED_APPLE + blob.getMediaLink() + E.RED_APPLE+E.RED_APPLE);
+        return blob.getMediaLink();
     }
 }

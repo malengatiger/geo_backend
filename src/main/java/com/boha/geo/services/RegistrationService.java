@@ -47,13 +47,6 @@ public class RegistrationService {
             orgBag.getUser().setPassword(null);
             User u = dataService.addUser(orgBag.getUser());
             u.setPassword(password);
-            if (password != null) {
-                LOGGER.info(E.RED_DOT+E.RED_DOT+
-                        "... Will update the org admin Firebase auth so they can sign in by phone: "
-                + u.getCellphone() + " admin: " + u.getName() + " with " + u.getOrganizationName());
-                dataService.updateAuthedUser(u);
-            }
-
             MyProjectBag bag = addSampleProject(org, orgBag.getLatitude(), orgBag.getLongitude());
 
             OrganizationRegistrationBag registrationBag = new OrganizationRegistrationBag();
@@ -83,8 +76,8 @@ public class RegistrationService {
         p0.setDescription("Sample Project for learning and practice");
         p0.setOrganizationName(organization.getName());
         p0.setOrganizationId(organization.getOrganizationId());
-        p0.setMonitorMaxDistanceInMetres(500);
-        List<City> list = listService.findCitiesByLocation(latitude, longitude, 10);
+        p0.setMonitorMaxDistanceInMetres(200);
+        List<City> list = listService.findCitiesByLocation(latitude, longitude, 5);
         p0.setNearestCities(list);
         projectRepository.insert(p0);
         LOGGER.info(E.LEAF+E.LEAF+" Sample Organization Project added: " + p0.getName());

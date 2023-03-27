@@ -709,6 +709,7 @@ public class DataController {
         }
 
     }
+
     @GetMapping("/getSignedUrl")
     public ResponseEntity<?> getSignedUrl(String objectName, String contentType  ) throws Exception {
         try {

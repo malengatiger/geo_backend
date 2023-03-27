@@ -759,16 +759,12 @@ public class DataService {
         SettingsModel m = settingsModelRepository.insert(model);
         messageService.sendMessage(model);
 
-        //User user = userRepository.findByUserId(model.getUserId());
-        Organization org = organizationRepository.findByOrganizationId(model.getOrganizationId());
-
         ActivityModel am = new ActivityModel();
         am.setActivityType(ActivityType.settingsChanged);
         am.setActivityModelId(UUID.randomUUID().toString());
         am.setDate(DateTime.now().toDateTimeISO().toString());
         am.setProjectId(model.getProjectId());
         am.setUserId(model.getUserId());
-        am.setOrganizationName(org.getName());
         am.setOrganizationId(model.getOrganizationId());
         am.setUserName(model.getUserName());
         am.setUserThumbnailUrl(model.getUserThumbnailUrl());

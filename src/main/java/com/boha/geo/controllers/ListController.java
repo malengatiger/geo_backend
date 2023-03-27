@@ -297,6 +297,7 @@ public class ListController {
             List<Project> users = listService.findProjectsByOrganization(organizationId);
             return ResponseEntity.ok(users);
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,
                             "findProjectsByOrganization failed: " + e.getMessage(),
@@ -572,6 +573,7 @@ public class ListController {
         try {
             return ResponseEntity.ok(listService.getProjectPhotos(projectId,startDate,endDate));
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,
                             "getProjectPhotos failed: " + e.getMessage(),

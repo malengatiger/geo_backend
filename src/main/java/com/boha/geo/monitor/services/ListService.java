@@ -178,9 +178,7 @@ public class ListService {
         Criteria c = Criteria.where("projectId").is(projectId)
                 .and("created").gte(startDate).lte(endDate);
         Query query = new Query(c);
-        List<Photo> mList = mongoTemplate.find(query, Photo.class);
-
-        return mList;
+        return mongoTemplate.find(query, Photo.class);
     }
 
     public List<ProjectAssignment> getProjectAssignments(String projectId, String startDate, String endDate) {
@@ -751,9 +749,7 @@ public class ListService {
     }
     public List<Project> getAllOrganizationProjects(String organizationId) {
 
-        List<Project> mList = projectRepository.findByOrganizationId(organizationId);
-
-        return mList;
+        return projectRepository.findByOrganizationId(organizationId);
     }
 
     public List<SettingsModel> getOrganizationSettings(String organizationId) {
@@ -857,8 +853,7 @@ public class ListService {
 
     public List<Project> findProjectsByOrganization(String organizationId) {
 
-        List<Project> list = projectRepository.findByOrganizationId(organizationId);
-        return list;
+        return projectRepository.findByOrganizationId(organizationId);
     }
 
     //
