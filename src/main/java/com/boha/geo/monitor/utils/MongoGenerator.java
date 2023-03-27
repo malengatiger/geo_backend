@@ -228,7 +228,7 @@ public class MongoGenerator {
             org1.setCreated(DateTime.now().toDateTime().toString());
             org1.setCountryName(country.getName());
 
-            Organization id1 = organizationRepository.save(org1);
+            Organization id1 = organizationRepository.insert(org1);
             organizations.add(id1);
             LOGGER.info(E.RAINBOW.concat(E.RAINBOW.concat("Organization has been generated ".concat(org1.getName()
                     .concat(" ").concat(E.RED_APPLE)))));
@@ -279,7 +279,7 @@ public class MongoGenerator {
                     schedule.setPerDay(3);
                     schedule.setProjectId(p.getProjectId());
                     schedule.setProjectName(p.getName());
-                    fieldMonitorScheduleRepository.save(schedule);
+                    fieldMonitorScheduleRepository.insert(schedule);
                     LOGGER.info(E.BROCCOLI + E.BROCCOLI
                             + "fieldMonitorSchedule added, " +E.RED_APPLE+ " fieldMonitor: " + u.getName() + " - "
                             + " project: " + p.getName());
@@ -314,7 +314,7 @@ public class MongoGenerator {
             p0.setMonitorMaxDistanceInMetres(500);
             List<City> list = listService.findCitiesByLocation(loc.latitude, loc.longitude, 5);
             p0.setNearestCities(list);
-            projectRepository.save(p0);
+            projectRepository.insert(p0);
 
             ProjectPosition pPos = new ProjectPosition();
             pPos.setProjectId(p0.getProjectId());
@@ -328,7 +328,7 @@ public class MongoGenerator {
             List<City> list1 = listService.findCitiesByLocation(loc.latitude, loc.longitude, 5);
             pPos.setNearestCities(list1);
             
-            projectPositionRepository.save(pPos);
+            projectPositionRepository.insert(pPos);
 
             LOGGER.info(xx +
                     "Project added, project: \uD83C\uDF4E " + p0.getName() + "\t \uD83C\uDF4E " + p0.getOrganizationName());
@@ -453,7 +453,7 @@ public class MongoGenerator {
             cs.setPopulation(getPopulation());
             cs.setCountryName("South Africa");
             cs.setVideos(new ArrayList<>());
-            Community sComm = communityRepository.save(cs);
+            Community sComm = communityRepository.insert(cs);
             LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS + E.RAIN_DROPS
                     .concat(" Community Generated " + E.LEMON + E.LEMON +
                             sComm.getName() + " " + E.LEMON + " on mongodb database "

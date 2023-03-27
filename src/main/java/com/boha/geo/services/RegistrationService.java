@@ -98,7 +98,7 @@ public class RegistrationService {
         pPos.setPosition(position);
         pPos.setNearestCities(list);
 
-        projectPositionRepository.save(pPos);
+        projectPositionRepository.insert(pPos);
         LOGGER.info(E.LEAF+E.LEAF+" Sample Organization Project Position added: " + p0.getName());
 
 

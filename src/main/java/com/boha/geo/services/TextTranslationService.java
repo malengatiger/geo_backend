@@ -207,30 +207,35 @@ public class TextTranslationService {
 
     private void setStrings() {
 
-        hashMap.put("signIn","Sign In");
-        hashMap.put("memberSignedIn","Member has been signed in");
-        hashMap.put("putInCode","Please put in the code that was sent to you");
-        hashMap.put("duplicateOrg","Duplicate organization name");
-        hashMap.put("memberNotExist","This member does not exist in the database");
-        hashMap.put("serverUnreachable","server cannot be reached");
-        hashMap.put("phoneSignIn","Phone Sign In");
-        hashMap.put("phoneAuth","Phone Authentication");
-        hashMap.put("enterPhone","Enter Phone Number");
-        hashMap.put("phoneNumber","Phone Number");
+//        hashMap.put("photoLocation","Photo was taken at this location");
+//        hashMap.put("videoLocation","Video was made at this location");
+//        hashMap.put("audioLocation","Audi clip was recorded at this location");
+//        hashMap.put("memberLocation","Member responded with their location");
 
-        hashMap.put("verifyPhone","Verify Phone Number");
-        hashMap.put("enterSMS","Enter SMS pin code sent to your device");
-        hashMap.put("sendCode","Send Code");
-        hashMap.put("verifyComplete","Verification completed. Thank you!");
-        hashMap.put("verifyFailed","Verification failed. Please try later");
-        hashMap.put("enterOrg","Enter Organization Name");
-
-        hashMap.put("orgName","Organization Name");
-
-        hashMap.put("enterAdmin","Enter Administrator Name");
-        hashMap.put("adminName","Administrator Name");
-        hashMap.put("enterEmail","Enter Email Address");
-        hashMap.put("emailAddress","Email Address");
+//        hashMap.put("signIn","Sign In");
+//        hashMap.put("memberSignedIn","Member has been signed in");
+//        hashMap.put("putInCode","Please put in the code that was sent to you");
+//        hashMap.put("duplicateOrg","Duplicate organization name");
+//        hashMap.put("memberNotExist","This member does not exist in the database");
+//        hashMap.put("serverUnreachable","server cannot be reached");
+//        hashMap.put("phoneSignIn","Phone Sign In");
+//        hashMap.put("phoneAuth","Phone Authentication");
+//        hashMap.put("enterPhone","Enter Phone Number");
+//        hashMap.put("phoneNumber","Phone Number");
+//
+//        hashMap.put("verifyPhone","Verify Phone Number");
+//        hashMap.put("enterSMS","Enter SMS pin code sent to your device");
+//        hashMap.put("sendCode","Send Code");
+//        hashMap.put("verifyComplete","Verification completed. Thank you!");
+//        hashMap.put("verifyFailed","Verification failed. Please try later");
+//        hashMap.put("enterOrg","Enter Organization Name");
+//
+//        hashMap.put("orgName","Organization Name");
+//
+//        hashMap.put("enterAdmin","Enter Administrator Name");
+//        hashMap.put("adminName","Administrator Name");
+//        hashMap.put("enterEmail","Enter Email Address");
+//        hashMap.put("emailAddress","Email Address");
 
 //        hashMap.put("Democratic Republic of Congo","Democratic Republic of Congo");
 //        hashMap.put("Lesotho","Lesotho");

@@ -431,7 +431,7 @@ public class DataService {
 
     public User addUser(User user) throws Exception {
 
-        User mUser = userRepository.save(user);
+        User mUser = userRepository.insert(user);
          messageService.sendMessage(user);
 
         ActivityModel am = new ActivityModel();
@@ -463,7 +463,8 @@ public class DataService {
         if (photo.getPhotoId() == null) {
             photo.setPhotoId(UUID.randomUUID().toString());
         }
-        photoRepository.save(photo);
+
+        photoRepository.insert(photo);
         messageService.sendMessage(photo);
 
         ActivityModel am = new ActivityModel();
@@ -524,7 +525,7 @@ public class DataService {
 
     public Audio addAudio(Audio audio) throws Exception {
 
-        audioRepository.save(audio);
+        audioRepository.insert(audio);
 
         ActivityModel am = new ActivityModel();
         am.setActivityType(ActivityType.audioAdded);
@@ -545,13 +546,13 @@ public class DataService {
     }
 
     public Condition addCondition(Condition condition) throws Exception {
-        conditionRepository.save(condition);
+        conditionRepository.insert(condition);
          messageService.sendMessage(condition);
          return condition;
     }
 
     public OrgMessage addOrgMessage(OrgMessage orgMessage) throws Exception {
-        orgMessageRepository.save(orgMessage);
+        orgMessageRepository.insert(orgMessage);
         messageService.sendMessage(orgMessage);
         orgMessage.setResult(null);
         User user = userRepository.findByUserId(orgMessage.getAdminId());
@@ -574,7 +575,7 @@ public class DataService {
     }
 
     public FieldMonitorSchedule addFieldMonitorSchedule(FieldMonitorSchedule fieldMonitorSchedule) throws Exception {
-        fieldMonitorScheduleRepository.save(fieldMonitorSchedule);
+        fieldMonitorScheduleRepository.insert(fieldMonitorSchedule);
         messageService.sendMessage(fieldMonitorSchedule);
 
         return fieldMonitorSchedule;
@@ -582,7 +583,7 @@ public class DataService {
 
     public ProjectPosition addProjectPosition(ProjectPosition projectPosition) throws Exception {
 
-        ProjectPosition m = projectPositionRepository.save(projectPosition);
+        ProjectPosition m = projectPositionRepository.insert(projectPosition);
 
         messageService.sendMessage(m);
         User user = userRepository.findByUserId(projectPosition.getUserId());
@@ -730,19 +731,19 @@ public class DataService {
 
     public Project updateProject(Project project) throws Exception {
 
-        Project m = projectRepository.save(project);
+        Project m = projectRepository.insert(project);
         return m;
     }
 
     public City addCity(City city) throws Exception {
         city.setCityId(UUID.randomUUID().toString());
-        City c = cityRepository.save(city);
+        City c = cityRepository.insert(city);
         return c;
     }
 
     public Community addCommunity(Community community) throws Exception {
         community.setCommunityId(UUID.randomUUID().toString());
-        Community cm = communityRepository.save(community);
+        Community cm = communityRepository.insert(community);
 
         return cm;
     }
@@ -750,7 +751,7 @@ public class DataService {
     public Country addCountry(Country country) throws Exception {
         country.setCountryId(UUID.randomUUID().toString());
 
-        Country m = countryRepository.save(country);
+        Country m = countryRepository.insert(country);
         return m;
     }
 
@@ -779,7 +780,7 @@ public class DataService {
         organization.setOrganizationId(UUID.randomUUID().toString());
         organization.setCreated(new DateTime().toDateTimeISO().toString());
 
-        Organization org = organizationRepository.save(organization);
+        Organization org = organizationRepository.insert(organization);
 
         return org;
     }
