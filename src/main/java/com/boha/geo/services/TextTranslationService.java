@@ -207,6 +207,16 @@ public class TextTranslationService {
 
     private void setStrings() {
 
+        hashMap.put("phoneAuth","Phone Authentication");
+        hashMap.put("emailAuth","Email Authentication");
+        hashMap.put("signInInstruction","Please sign in using the appropriate method. " +
+                "It is recommended to use phone authentication if your device can accept SMS messages. " +
+                "If your device does not support SMS messaging please use email authentication");
+
+//        hashMap.put("enterPassword","Enter Password");
+//        hashMap.put("password","Password");
+//        hashMap.put("signInOK","Sign in succeeded!");
+
 //        hashMap.put("photoLocation","Photo was taken at this location");
 //        hashMap.put("videoLocation","Video was made at this location");
 //        hashMap.put("audioLocation","Audi clip was recorded at this location");
