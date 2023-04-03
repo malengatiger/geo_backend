@@ -17,6 +17,8 @@ public class Project {
     private double monitorMaxDistanceInMetres;
     private String created;
     private List<City> nearestCities;
+    private String translatedMessage;
+    private String translatedTitle;
 
     public Project() {
     }

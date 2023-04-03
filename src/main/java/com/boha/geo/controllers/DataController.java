@@ -1,5 +1,6 @@
 package com.boha.geo.controllers;
 
+import com.boha.geo.models.AppError;
 import com.boha.geo.monitor.data.*;
 import com.boha.geo.monitor.services.DataService;
 import com.boha.geo.monitor.services.MessageService;
@@ -156,6 +157,20 @@ public class DataController {
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,
                             "addFieldMonitorSchedule failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+
+    }
+
+    @PostMapping("/addAppError")
+    public ResponseEntity<Object> addAppError(@RequestBody AppError appError) throws Exception {
+        try {
+            AppError ae = dataService.addAppError(appError);
+            return ResponseEntity.ok(ae);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "addAppError failed: " + e.getMessage(),
                             new DateTime().toDateTimeISO().toString()));
         }
 

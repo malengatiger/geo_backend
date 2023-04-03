@@ -14,4 +14,6 @@ public class LocationResponse {
             organizationName, locationResponseId,
             requesterId, requesterName;
     private Position position;
+    private String translatedMessage;
+    private String translatedTitle;
 }

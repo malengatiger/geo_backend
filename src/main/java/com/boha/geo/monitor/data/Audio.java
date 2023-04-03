@@ -23,6 +23,8 @@ public class Audio {
     private String  userUrl;
     private String  created;
     private int  durationInSeconds = 0;
+    private String translatedMessage;
+    private String translatedTitle;
 
 
 }

@@ -24,6 +24,8 @@ public class Video {
     private String  userUrl;
     private int durationInSeconds;
     private double size;
+    private String translatedMessage;
+    private String translatedTitle;
 
 
 }

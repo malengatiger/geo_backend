@@ -1,5 +1,6 @@
 package com.boha.geo.controllers;
 
+import com.boha.geo.models.AppError;
 import com.boha.geo.monitor.data.*;
 import com.boha.geo.monitor.services.ListService;
 import com.boha.geo.monitor.services.MessageService;
@@ -301,6 +302,32 @@ public class ListController {
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,
                             "findProjectsByOrganization failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+    }
+    @GetMapping("/findAppErrorsByOrganization")
+    public ResponseEntity<Object> findAppErrorsByOrganization(@RequestParam String organizationId) {
+        try {
+            List<AppError> users = listService.findAppErrorsByOrganization(organizationId);
+            return ResponseEntity.ok(users);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "findAppErrorsByOrganization failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+    }
+    @GetMapping("/findAppErrorsByUser")
+    public ResponseEntity<Object> findAppErrorsByUser(@RequestParam String userId) {
+        try {
+            List<AppError> users = listService.findAppErrorsByUser(userId);
+            return ResponseEntity.ok(users);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "findAppErrorsByUser failed: " + e.getMessage(),
                             new DateTime().toDateTimeISO().toString()));
         }
     }

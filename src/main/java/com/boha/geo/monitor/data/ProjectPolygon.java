@@ -9,16 +9,18 @@ import java.util.List;
 @Document(collection = "projectPolygons")
 public class ProjectPolygon {
 
-    private String projectId, projectPolygonId,
-            organizationId;
+    private String projectId;
+    private String projectPolygonId;
+    private String organizationId;
     private List<Position> positions;
     private String projectName, name;
     private String created;
     private List<City> nearestCities;
-    private String userId, userName;
+    private String userId;
+            private String userName;
+    private String translatedMessage;
+    private String translatedTitle;
 
-    public ProjectPolygon() {
-    }
 
 
 }

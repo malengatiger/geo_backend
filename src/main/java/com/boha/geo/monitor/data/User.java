@@ -9,18 +9,25 @@ public class User {
     String _partitionKey;
     @Id
     String _id;
-    String name, gender;
+    String name;
+    String gender;
     String email;
     String cellphone;
-    String userId, countryId;
+    String userId;
+    String countryId;
     String organizationId;
     String organizationName;
-    String created, fcmRegistration;
+    String created;
+    String fcmRegistration;
     String userType;
     String password;
     Position position;
     int active = 0;
-    String updated, imageUrl, thumbnailUrl;
+    String updated;
+    String imageUrl;
+    String thumbnailUrl;
+    private String translatedMessage;
+    private String translatedTitle;
 
 
 }

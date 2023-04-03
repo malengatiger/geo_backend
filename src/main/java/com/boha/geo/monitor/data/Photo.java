@@ -22,5 +22,7 @@ public class Photo {
     private String  userUrl;
     private int height, width;
     private int landscape;
+    private String translatedMessage;
+    private String translatedTitle;
 
 }

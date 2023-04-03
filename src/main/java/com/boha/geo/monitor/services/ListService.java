@@ -1,6 +1,7 @@
 package com.boha.geo.monitor.services;
 
 
+import com.boha.geo.models.AppError;
 import com.boha.geo.monitor.data.*;
 import com.boha.geo.repos.*;
 import com.boha.geo.util.E;
@@ -37,6 +38,9 @@ public class ListService {
     private static final Gson G = new GsonBuilder().setPrettyPrinting().create();
     @Autowired
     GeofenceEventRepository geofenceEventRepository;
+
+    @Autowired
+    AppErrorRepository appErrorRepository;
 
     @Autowired
     ActivityModelRepository activityModelRepository;
@@ -854,6 +858,16 @@ public class ListService {
     public List<Project> findProjectsByOrganization(String organizationId) {
 
         return projectRepository.findByOrganizationId(organizationId);
+    }
+
+    public List<AppError> findAppErrorsByOrganization(String organizationId) {
+
+        return appErrorRepository.findByOrganizationId(organizationId);
+    }
+
+    public List<AppError> findAppErrorsByUser(String userId) {
+
+        return appErrorRepository.findByUserId(userId);
     }
 
     //

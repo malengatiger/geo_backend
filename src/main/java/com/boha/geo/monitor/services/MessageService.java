@@ -19,7 +19,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,38 +39,6 @@ public class MessageService {
 
         setAPNSHeaders();
     }
-/*
-const admin = require("firebase-admin");
-
-admin.initializeApp({
-  credential: admin.credential.cert(require("./service-account-file.json")),
-  databaseURL: "https://....firebaseio.com",
-});
-
-admin.messaging().send({
-  token: "device token",
-  data: {
-    hello: "world",
-  },
-  // Set Android priority to "high"
-  android: {
-    priority: "high",
-  },
-  // Add APNS (Apple) config
-  apns: {
-    payload: {
-      aps: {
-        contentAvailable: true,
-      },
-    },
-    headers: {
-      "apns-push-type": "background",
-      "apns-priority": "5", // Must be `5` when `contentAvailable` is set to true.
-      "apns-topic": "io.flutter.plugins.firebase.messaging", // bundle identifier
-    },
-  },
-});
- */
 
     Map<String, String> apns = new HashMap<>();
 
@@ -122,8 +89,8 @@ admin.messaging().send({
         try {
             String topic = "projectPositions_" + projectPosition.getOrganizationId();
             Notification notification = Notification.builder()
-                    .setBody("A project location added by " + projectPosition.getUserName())
-                    .setTitle("Message from Geo")
+                    .setBody(projectPosition.getTranslatedMessage())
+                    .setTitle(projectPosition.getTranslatedTitle())
                     .build();
 
             ProjectPosition m = new ProjectPosition();
@@ -151,16 +118,14 @@ admin.messaging().send({
         String topic = "projectAssignments_" + projectAssignment.getOrganizationId();
         Message message = buildMessage("projectAssignment", topic, G.toJson(projectAssignment));
 
-        String response = FirebaseMessaging.getInstance().send(message);
-
-        return response;
+        return FirebaseMessaging.getInstance().send(message);
     }
 
     public void sendMessage(ProjectPolygon projectPolygon) throws FirebaseMessagingException {
         String topic = "projectPolygons_" + projectPolygon.getOrganizationId();
         Notification notification = Notification.builder()
-                .setBody("A project area has been added by " + projectPolygon.getUserName())
-                .setTitle("Message from Geo")
+                .setBody(projectPolygon.getTranslatedMessage())
+                .setTitle(projectPolygon.getTranslatedTitle())
                 .build();
         Message message = buildMessage("projectPolygon", topic, G.toJson(projectPolygon), notification);
         FirebaseMessaging.getInstance().send(message);
@@ -179,8 +144,8 @@ admin.messaging().send({
     public void sendMessage(Photo photo) throws FirebaseMessagingException {
         String topic = "photos_" + photo.getOrganizationId();
         Notification notification = Notification.builder()
-                .setBody("A photo from the field has arrived from " + photo.getUserName())
-                .setTitle("Message from Geo")
+                .setBody(photo.getTranslatedMessage())
+                .setTitle(photo.getTranslatedTitle())
                 .build();
         Message message = buildMessage("photo", topic, G.toJson(photo), notification);
 
@@ -190,7 +155,11 @@ admin.messaging().send({
 
     public void sendMessage(SettingsModel settingsModel) throws FirebaseMessagingException {
         String topic = "settings_" + settingsModel.getOrganizationId();
-        Message message = buildMessage("settings", topic, G.toJson(settingsModel));
+        Notification notification = Notification.builder()
+                .setBody(settingsModel.getTranslatedMessage())
+                .setTitle(settingsModel.getTranslatedTitle())
+                .build();
+        Message message = buildMessage("settings", topic, G.toJson(settingsModel), notification);
 
 
         FirebaseMessaging.getInstance().send(message);
@@ -201,8 +170,8 @@ admin.messaging().send({
         String topic = "geofenceEvents_" + geofenceEvent.getOrganizationId();
 
         Notification notification = Notification.builder()
-                .setBody("A member has arrived in the field: " + geofenceEvent.getUser().getName())
-                .setTitle("Message from Geo")
+                .setBody(geofenceEvent.getTranslatedMessage())
+                .setTitle(geofenceEvent.getTranslatedTitle())
                 .build();
 
         Message message = buildMessage("geofenceEvent", topic, G.toJson(geofenceEvent), notification);
@@ -215,8 +184,8 @@ admin.messaging().send({
         String topic = "audios_" + audio.getOrganizationId();
 
         Notification notification = Notification.builder()
-                .setBody("An audio clip from the field has arrived")
-                .setTitle("Message from Geo")
+                .setBody(audio.getTranslatedMessage())
+                .setTitle(audio.getTranslatedTitle())
                 .build();
         Message message = buildMessage("audio", topic, G.toJson(audio), notification);
 
@@ -227,8 +196,8 @@ admin.messaging().send({
         String topic = "locationRequests_" + locationRequest.getOrganizationId();
 
         Notification notification = Notification.builder()
-                .setBody("A request for location arrived")
-                .setTitle("Message from Geo")
+                .setBody(locationRequest.getTranslatedMessage())
+                .setTitle(locationRequest.getTranslatedTitle())
                 .build();
 
         Message message = buildMessage("locationRequest",
@@ -243,8 +212,8 @@ admin.messaging().send({
         String topic = "locationResponses_" + locationResponse.getOrganizationId();
 
         Notification notification = Notification.builder()
-                .setBody("A response to location request")
-                .setTitle("Message from Geo")
+                .setBody(locationResponse.getTranslatedMessage())
+                .setTitle(locationResponse.getTranslatedTitle())
                 .build();
 
         Message message = buildMessage("locationResponse", topic,
@@ -258,8 +227,8 @@ admin.messaging().send({
         String topic = "videos_" + video.getOrganizationId();
 
         Notification notification = Notification.builder()
-                .setBody("A video from the field has arrived")
-                .setTitle("Message from Geo")
+                .setBody(video.getTranslatedMessage())
+                .setTitle(video.getTranslatedTitle())
                 .build();
 
         Message message = buildMessage("video", topic, G.toJson(video), notification);
@@ -305,8 +274,8 @@ admin.messaging().send({
         String topic = "projects_" + project.getOrganizationId();
 
         Notification notification = Notification.builder()
-                .setBody("A project has been added: " + project.getName())
-                .setTitle("Message from Geo")
+                .setBody(project.getTranslatedMessage())
+                .setTitle(project.getTranslatedTitle())
                 .build();
         Message message = buildMessage("project", topic, G.toJson(project), notification);
 
@@ -317,8 +286,8 @@ admin.messaging().send({
     public void sendMessage(User user) throws FirebaseMessagingException {
         String topic = "users_" + user.getOrganizationId();
         Notification notification = Notification.builder()
-                .setBody("A member has been added or modified")
-                .setTitle("Message from Geo")
+                .setBody(user.getTranslatedMessage())
+                .setTitle(user.getTranslatedTitle())
                 .build();
         Message message = buildMessage("user", topic, G.toJson(user), notification);
 

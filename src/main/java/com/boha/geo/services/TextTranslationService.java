@@ -207,12 +207,38 @@ public class TextTranslationService {
 
     private void setStrings() {
 
-        hashMap.put("phoneAuth","Phone Authentication");
-        hashMap.put("emailAuth","Email Authentication");
-        hashMap.put("signInInstruction","Please sign in using the appropriate method. " +
-                "It is recommended to use phone authentication if your device can accept SMS messages. " +
-                "If your device does not support SMS messaging please use email authentication");
+        hashMap.put("memberProfilePicture","Member Profile Picture");
+        hashMap.put("useCamera","Use Camera");
+        hashMap.put("pickFromGallery","Pick from Photo Gallery");
+        hashMap.put("profileInstruction","Please set up your profile picture. You can use an existing photo or take a new one with the camera.");
 
+//        hashMap.put("audioArrived","An audio clip from the field has arrived.");
+//        hashMap.put("photoArrived","A photograph from the field has arrived.");
+//        hashMap.put("videoArrived","A video clip from the field has arrived.");
+//
+//        hashMap.put("locationRequestArrived","A request for location arrived.");
+//        hashMap.put("locationResponseArrived","A response to location request has arrived.");
+//
+//        hashMap.put("memberAddedChanged","A member has been added or modified.");
+//
+//        hashMap.put("projectAdded","Project $project has been added.");
+//        hashMap.put("settingsArrived","New project settings have arrived.");
+//
+//        hashMap.put("projectAreaAdded","A project area has been added to $project");
+//        hashMap.put("projectPositionAdded","A project location has been added to $project");
+//
+
+
+//        hashMap.put("geoRunning","$geo service is running.");
+//        hashMap.put("tapToReturn","Tap to return to $geo");
+
+//        hashMap.put("messageFromGeo","Message arrived from $geo");
+
+//        hashMap.put("phoneAuth","Phone Authentication");
+//        hashMap.put("emailAuth","Email Authentication");
+//        hashMap.put("signInInstruction","Please sign in using the appropriate method. " +
+//                "It is recommended to use phone authentication if your device can accept SMS messages. " +
+//                "If your device does not support SMS messaging please use email authentication");
 //        hashMap.put("enterPassword","Enter Password");
 //        hashMap.put("password","Password");
 //        hashMap.put("signInOK","Sign in succeeded!");
@@ -578,7 +604,6 @@ public class TextTranslationService {
 //        hashMap.put("endDate", "End Date");
 //        hashMap.put("numberOfDays", "Number of Days");
 //        hashMap.put("projectActivities", "Project Activities");
-
     }
 
     public String getEnglishKeys() {

@@ -17,6 +17,9 @@ public class GeofenceEvent {
             projectName, organizationId;
     private User user;
     private Position position;
+    private String translatedMessage;
+    private String translatedTitle;
+
 
 
 }

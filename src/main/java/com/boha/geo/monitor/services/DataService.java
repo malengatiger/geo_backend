@@ -1,6 +1,7 @@
 package com.boha.geo.monitor.services;
 
 
+import com.boha.geo.models.AppError;
 import com.boha.geo.monitor.data.*;
 import com.boha.geo.repos.*;
 import com.boha.geo.services.MailService;
@@ -43,6 +44,9 @@ public class DataService {
     //    @Value("${databaseUrl}")
     private static final String databaseUrl = "https://monitor-2021.firebaseio.com";
     final Environment env;
+
+    final AppErrorRepository appErrorRepository;
+
     final GeofenceEventRepository geofenceEventRepository;
 
     final SettingsModelRepository settingsModelRepository;
@@ -79,7 +83,7 @@ public class DataService {
     private final MailService mailService;
 
 
-    public DataService(Environment env, GeofenceEventRepository geofenceEventRepository,
+    public DataService(Environment env, AppErrorRepository appErrorRepository, GeofenceEventRepository geofenceEventRepository,
                        SettingsModelRepository settingsModelRepository, RatingRepository ratingRepository, MongoTemplate mongoTemplate, AudioRepository audioRepository, ProjectRepository projectRepository,
                        LocationResponseRepository locationResponseRepository, LocationRequestRepository locationRequestRepository, ProjectPolygonRepository projectPolygonRepository, CityRepository cityRepository,
                        PhotoRepository photoRepository,
@@ -94,6 +98,7 @@ public class DataService {
                        MessageService messageService,
                        FieldMonitorScheduleRepository fieldMonitorScheduleRepository, ProjectSummaryRepository projectSummaryRepository, MailService mailService) {
         this.env = env;
+        this.appErrorRepository = appErrorRepository;
         this.geofenceEventRepository = geofenceEventRepository;
         this.settingsModelRepository = settingsModelRepository;
         this.ratingRepository = ratingRepository;
@@ -451,13 +456,18 @@ public class DataService {
         return mUser;
     }
 
-    public Rating addRating(Rating rating) throws Exception {
+    public Rating addRating(Rating rating) {
         if (rating.getRatingId() == null) {
             rating.setRatingId(UUID.randomUUID().toString());
         }
         Rating res = ratingRepository.insert(rating);
         return res;
     }
+
+    public AppError addAppError(AppError appError) {
+        return appErrorRepository.insert(appError);
+    }
+
 
     public void addPhoto(Photo photo) throws Exception {
         if (photo.getPhotoId() == null) {

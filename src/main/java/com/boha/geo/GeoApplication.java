@@ -23,7 +23,9 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
+import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -53,26 +55,27 @@ public class GeoApplication implements ApplicationListener<ApplicationReadyEvent
 
 
     @Override
-    public void onApplicationEvent(ApplicationReadyEvent event) {
-//        logger.info(alien + " onApplicationEvent, MainApplicationClass: "
-//                + event.getSpringApplication().getMainApplicationClass());
+    public void onApplicationEvent(ApplicationReadyEvent event) throws RuntimeException {
+
         ApplicationContext applicationContext = event.getApplicationContext();
         RequestMappingHandlerMapping requestMappingHandlerMapping = applicationContext
                 .getBean("requestMappingHandlerMapping", RequestMappingHandlerMapping.class);
         Map<RequestMappingInfo, HandlerMethod> map = requestMappingHandlerMapping
                 .getHandlerMethods();
 
-//		map.forEach((key, value) -> {
-//			logger.info(E.PEAR + E.PEAR +
-//					" Endpoint: " + key);
-//		});
         logger.info(E.PEAR + E.PEAR + E.PEAR + E.PEAR +
                 " Total Endpoints: " + map.size() + "\n");
-        try {
+
             firebaseService.initializeFirebase();
             mongoService.initializeIndexes();
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+
+        try (final DatagramSocket datagramSocket = new DatagramSocket()) {
+            datagramSocket.connect(InetAddress.getByName("8.8.8.8"), 12345);
+            var addr = datagramSocket.getLocalAddress().getHostAddress();
+            logger.info(E.PEAR + E.PEAR + E.PEAR + E.PEAR
+                    + " datagramSocket: Current IP address : " + addr);
+        } catch (SocketException | UnknownHostException e) {
+           //
         }
 
         InetAddress ip;

@@ -8,16 +8,21 @@ import java.util.List;
 @Document(collection = "projectPositions")
 public class ProjectPosition {
 
-    private String projectId, projectPositionId,
-            organizationId;
+    private String projectId;
+    private String projectPositionId;
+    private String organizationId;
     private Position position;
     private String projectName;
-    private String caption, name;
+    private String caption;
+    private String name;
     private String created;
     private PlaceMark placemark;
     private List<City> nearestCities;
-    private String userId, userName;
+    private String userId;
+    private String userName;
     private String possibleAddress;
+    private String translatedMessage;
+    private String translatedTitle;
 
 
     public ProjectPosition() {
