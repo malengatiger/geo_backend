@@ -23,7 +23,13 @@ import com.boha.geo.monitor.data.OrganizationRegistrationBag;
 import com.boha.geo.monitor.data.SettingsModel;
 import com.boha.geo.monitor.data.User;
 import com.google.cloud.spring.secretmanager.SecretManagerTemplate;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.joda.time.DateTime;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -78,7 +84,7 @@ public class BaseAppIntegrationTests {
     @Test
     public void testApplicationStartup() {
         ResponseEntity<String> response = this.testRestTemplate.getForEntity("/geo/v1/", String.class);
-        System.out.println(response);
+        System.out.println("\uD83C\uDFB2\uD83C\uDFB2 " + response);
         assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
         assertThat(response.getBody()).contains("Khaya");
     }
@@ -87,6 +93,7 @@ public class BaseAppIntegrationTests {
     public void testReadSecret() {
         ResponseEntity<String> response = this.testRestTemplate.getForEntity("/geo/v1/getSecret?secretId=mongo", String.class);
         System.out.println("\uD83C\uDF50\uD83C\uDF50\uD83C\uDF50\uD83C\uDF50 " + response);
+
         assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
         assertThat(response.getBody()).contains("geomaster");
     }
@@ -131,9 +138,18 @@ public class BaseAppIntegrationTests {
         HttpEntity<Object> request = new HttpEntity<>(bag, headers);
 
         ResponseEntity<Object> result = this.testRestTemplate.postForEntity(uri, request, Object.class);
-        System.out.println(result.toString());
+        System.out.println(Objects.requireNonNull(result.getBody()));
         //Verify request succeed
         assertTrue(result.getStatusCode().is2xxSuccessful());
+    }
+    @Test
+    public void deleteTestOrganization() {
+        System.out.println("\uD83D\uDD37 clean up should happen here ....");
+        ResponseEntity<String> response = this.testRestTemplate.getForEntity("/geo/v1/deleteTestOrganization", String.class);
+        System.out.println("cleanUp response: \uD83C\uDFB2\uD83C\uDFB2 " + response);
+
+        assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
+
     }
 
 }

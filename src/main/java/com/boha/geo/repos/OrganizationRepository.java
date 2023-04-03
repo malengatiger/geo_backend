@@ -11,4 +11,5 @@ public interface OrganizationRepository extends MongoRepository<Organization, St
     List<Organization> findByCountryId(String countryId);
     Organization findByOrganizationId(String organizationId);
 
+
 }

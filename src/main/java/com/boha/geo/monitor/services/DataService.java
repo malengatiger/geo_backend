@@ -44,7 +44,6 @@ public class DataService {
     //    @Value("${databaseUrl}")
     private static final String databaseUrl = "https://monitor-2021.firebaseio.com";
     final Environment env;
-
     final AppErrorRepository appErrorRepository;
 
     final GeofenceEventRepository geofenceEventRepository;
@@ -793,6 +792,14 @@ public class DataService {
         Organization org = organizationRepository.insert(organization);
 
         return org;
+    }
+
+    public void deleteTestOrganization() {
+        Query query = Query.query(Criteria.where("name").is("Fake Test Organization"));
+        mongoTemplate.findAllAndRemove(query, "organizations");
+
+        Query query2 = Query.query(Criteria.where("name").is("John Q. Testerman"));
+        mongoTemplate.findAllAndRemove(query2, "users");
     }
 
     public User createUser(User user) throws Exception {

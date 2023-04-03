@@ -739,6 +739,20 @@ public class DataController {
 
     }
 
+    @GetMapping("/deleteTestOrganization")
+    public ResponseEntity<?> deleteTestOrganization() throws Exception {
+        try {
+            dataService.deleteTestOrganization();
+            return ResponseEntity.ok("Test Organization deleted");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "fix failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+
+    }
+
     @PostMapping("uploadFile")
     public ResponseEntity<Object> uploadFile(
             @RequestParam String objectName,
