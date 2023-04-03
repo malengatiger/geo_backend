@@ -207,10 +207,13 @@ public class TextTranslationService {
 
     private void setStrings() {
 
-        hashMap.put("memberProfilePicture","Member Profile Picture");
-        hashMap.put("useCamera","Use Camera");
-        hashMap.put("pickFromGallery","Pick from Photo Gallery");
-        hashMap.put("profileInstruction","Please set up your profile picture. You can use an existing photo or take a new one with the camera.");
+        hashMap.put("memberProfileUploaded","Member profile picture uploaded and database updated");
+        hashMap.put("memberProfileUploadFailed","Member profile picture upload failed. Please try again later");
+
+//        hashMap.put("memberProfilePicture","Member Profile Picture");
+//        hashMap.put("useCamera","Use Camera");
+//        hashMap.put("pickFromGallery","Pick from Photo Gallery");
+//        hashMap.put("profileInstruction","Please set up your profile picture. You can use an existing photo or take a new one with the camera.");
 
 //        hashMap.put("audioArrived","An audio clip from the field has arrived.");
 //        hashMap.put("photoArrived","A photograph from the field has arrived.");

@@ -47,6 +47,7 @@ public class RegistrationService {
             orgBag.getUser().setPassword(null);
             User u = dataService.addUser(orgBag.getUser());
             u.setPassword(password);
+
             MyProjectBag bag = addSampleProject(org, orgBag.getLatitude(), orgBag.getLongitude());
 
             OrganizationRegistrationBag registrationBag = new OrganizationRegistrationBag();

@@ -19,7 +19,12 @@ package com.boha.geo;
 
 
 import com.boha.geo.monitor.data.Organization;
+import com.boha.geo.monitor.data.OrganizationRegistrationBag;
+import com.boha.geo.monitor.data.SettingsModel;
+import com.boha.geo.monitor.data.User;
 import com.google.cloud.spring.secretmanager.SecretManagerTemplate;
+import org.joda.time.DateTime;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,11 +42,11 @@ import org.springframework.util.MultiValueMap;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Objects;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import static org.junit.Assume.assumeThat;
 
 /**
@@ -91,31 +96,44 @@ public class BaseAppIntegrationTests {
     @Test
     public void testRegisterOrganizationSuccess() throws URISyntaxException
     {
-        final String baseUrl = "http://localhost:"+randomServerPort+"/registerOrganization/";
+
+        final String baseUrl = "http://localhost:"+randomServerPort+"/geo/v1/registerOrganization";
         URI uri = new URI(baseUrl);
+
         Organization org = new Organization();
-        org.setName("Test Org");
+        org.setOrganizationId(UUID.randomUUID().toString());
+        org.setName("Fake Test Organization");
+
+        User user = new User();
+        user.setName("John Q. Testerman");
+        user.setUserId(UUID.randomUUID().toString());
+        user.setOrganizationId(org.getOrganizationId());
+
+        OrganizationRegistrationBag bag = new OrganizationRegistrationBag();
+        bag.setOrganization(org);
+        bag.setUser(user);
+
+        SettingsModel model = new SettingsModel();
+        model.setOrganizationId(org.getOrganizationId());
+        model.setCreated(DateTime.now().toDateTimeISO().toString());
+        model.setLocale("en");
+        model.setActivityStreamHours(39);
+        model.setDistanceFromProject(5000);
+        model.setThemeIndex(0);
+        model.setNumberOfDays(60);
+
+        bag.setSettings(model);
+
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("X-COM-PERSIST", "true");
 
-        HttpEntity<Organization> request = new HttpEntity<>(org, headers);
+        HttpEntity<Object> request = new HttpEntity<>(bag, headers);
 
-        URI createdEmployeeURL = testRestTemplate.postForLocation(uri, org);
-        System.out.println("\uD83C\uDF50\uD83C\uDF50\uD83C\uDF50\uD83C\uDF50 " +
-                "createdEmployeeURL: " + createdEmployeeURL.toString());
-
-        assertNotNull(createdEmployeeURL);
-
-        //ResponseEntity<Employee> result = restTemplate.postForEntity(uri, employee, Employee.class);
-        //
-        //Assertions.assertEquals(201, result.getStatusCodeValue());
-        //Assertions.assertNotNull(result.getBody().getId());
-        //ResponseEntity<?> result = this.testRestTemplate.postForEntity(uri, org, Organization.class);
-//        System.out.println("\uD83C\uDF50\uD83C\uDF50\uD83C\uDF50\uD83C\uDF50 " + result.getBody());
-
+        ResponseEntity<Object> result = this.testRestTemplate.postForEntity(uri, request, Object.class);
+        System.out.println(result.toString());
         //Verify request succeed
-//        assertEquals(200, result.getStatusCode().value());
+        assertTrue(result.getStatusCode().is2xxSuccessful());
     }
 
 }
