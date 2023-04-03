@@ -796,10 +796,12 @@ public class DataService {
 
     public void deleteTestOrganization() {
         Query query = Query.query(Criteria.where("name").is("Fake Test Organization"));
-        mongoTemplate.findAllAndRemove(query, "organizations");
+        mongoTemplate.findAndRemove(query, Organization.class);
 
         Query query2 = Query.query(Criteria.where("name").is("John Q. Testerman"));
-        mongoTemplate.findAllAndRemove(query2, "users");
+        mongoTemplate.findAndRemove(query2, User.class);
+
+        LOGGER.info(E.BUTTERFLY+E.BUTTERFLY+ " should have deleted test organization");
     }
 
     public User createUser(User user) throws Exception {

@@ -29,10 +29,10 @@ import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -63,6 +63,8 @@ import static org.junit.Assume.assumeThat;
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         classes = GeoApplication.class,
         properties = {"spring.cloud.gcp.secretmanager.enabled=true"})
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+
 public class BaseAppIntegrationTests {
 
     private static final String SECRET_TO_DELETE = "secret-manager-sample-delete-secret";
@@ -82,6 +84,7 @@ public class BaseAppIntegrationTests {
     }
 
     @Test
+    @Order(1)
     public void testApplicationStartup() {
         ResponseEntity<String> response = this.testRestTemplate.getForEntity("/geo/v1/", String.class);
         System.out.println("\uD83C\uDFB2\uD83C\uDFB2 " + response);
@@ -90,6 +93,7 @@ public class BaseAppIntegrationTests {
     }
 
     @Test
+    @Order(2)
     public void testReadSecret() {
         ResponseEntity<String> response = this.testRestTemplate.getForEntity("/geo/v1/getSecret?secretId=mongo", String.class);
         System.out.println("\uD83C\uDF50\uD83C\uDF50\uD83C\uDF50\uD83C\uDF50 " + response);
@@ -101,6 +105,7 @@ public class BaseAppIntegrationTests {
     int randomServerPort;
 
     @Test
+    @Order(3)
     public void testRegisterOrganizationSuccess() throws URISyntaxException
     {
 
@@ -143,13 +148,24 @@ public class BaseAppIntegrationTests {
         assertTrue(result.getStatusCode().is2xxSuccessful());
     }
     @Test
+    @Order(4)
     public void deleteTestOrganization() {
+        System.out.println("\uD83D\uDD37 deleteTestOrganization up should happen here ....");
+        ResponseEntity<String> response = this.testRestTemplate.getForEntity("/geo/v1/deleteTestOrganization", String.class);
+        System.out.println("deleteTestOrganization response: \uD83C\uDFB2\uD83C\uDFB2 " + response);
+
+        assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
+
+    }
+
+    @Test
+    @After
+    public void cleanUp() {
         System.out.println("\uD83D\uDD37 clean up should happen here ....");
         ResponseEntity<String> response = this.testRestTemplate.getForEntity("/geo/v1/deleteTestOrganization", String.class);
         System.out.println("cleanUp response: \uD83C\uDFB2\uD83C\uDFB2 " + response);
 
         assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
-
     }
 
 }
