@@ -1,23 +1,5 @@
 package com.boha.geo;
 
-
-/*
- * Copyright 2017-2020 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-
 import com.boha.geo.monitor.data.Organization;
 import com.boha.geo.monitor.data.OrganizationRegistrationBag;
 import com.boha.geo.monitor.data.SettingsModel;
@@ -55,14 +37,12 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 import static org.junit.Assume.assumeThat;
 
-/**
- * Application secret named "application-secret" must exist and have a value of "Hello world.".
- */
 @RunWith(SpringRunner.class)
 @SpringBootTest(
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         classes = GeoApplication.class,
         properties = {"spring.cloud.gcp.secretmanager.enabled=true"})
+
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 
 public class BaseAppIntegrationTests {
@@ -77,10 +57,12 @@ public class BaseAppIntegrationTests {
 
     @BeforeClass
     public static void prepare() {
-//        assumeThat(
-//                "Secret Manager integration tests are disabled. "
-//                        + "Please use '-Dit.secretmanager=true' to enable them.",
-//                System.getProperty("it.secretmanager"), is("true"));
+        System.out.println("\uD83C\uDFB2\uD83C\uDFB2 prepare running here ... \uD83C\uDF00 \uD83C\uDF00 \uD83C\uDF00 \uD83C\uDF00");
+
+    }
+    @AfterClass
+    public static void finish() {
+        System.out.println("\uD83C\uDFB2\uD83C\uDFB2 finish running here ... \uD83C\uDF00 \uD83C\uDF00 \uD83C\uDF00 \uD83C\uDF00");
     }
 
     @Test
@@ -159,6 +141,7 @@ public class BaseAppIntegrationTests {
     }
 
     @Test
+    @Order(5)
     @After
     public void cleanUp() {
         System.out.println("\uD83D\uDD37 clean up should happen here ....");
