@@ -1,0 +1,9 @@
+{
+  "map": {
+    "downloadExampleFiles": "Khuphela iifayile zomzekelo weLungu",
+    "uploadMemberBatchFile": "Layisha iFayile yeLungu",
+    "uploadInstruction": "Amalungu amaninzi anokufakwa kwi-spreadsheet ngefomathi ye-csv okanye ifayile ye-json. Unokukhuphela iifayile zemizekelo kwifomathi nganye",
+    "memberUploadFailed": "Ukulayishwa kweFayile yeLungu akuphumelelanga, amalungu ayenziwanga",
+    "pickMemberBatchFile": "Khetha ifayile yeLungu ukuze uyifake"
+  }
+}

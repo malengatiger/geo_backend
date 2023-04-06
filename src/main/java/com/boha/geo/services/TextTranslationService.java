@@ -207,8 +207,14 @@ public class TextTranslationService {
 
     private void setStrings() {
 
-        hashMap.put("memberProfileUploaded","Member profile picture uploaded and database updated");
-        hashMap.put("memberProfileUploadFailed","Member profile picture upload failed. Please try again later");
+        hashMap.put("uploadMemberBatchFile","Upload Member File");
+        hashMap.put("pickMemberBatchFile","Pick Member file for upload");
+        hashMap.put("memberUploadFailed","Member File upload failed, members not created");
+        hashMap.put("downloadExampleFiles","Download Member example files");
+        hashMap.put("uploadInstruction","Multiple members may be uploaded from either a spreadsheet in csv format or a json file. You can download example files in each format");
+
+//        hashMap.put("memberProfileUploaded","Member profile picture uploaded and database updated");
+//        hashMap.put("memberProfileUploadFailed","Member profile picture upload failed. Please try again later");
 
 //        hashMap.put("memberProfilePicture","Member Profile Picture");
 //        hashMap.put("useCamera","Use Camera");

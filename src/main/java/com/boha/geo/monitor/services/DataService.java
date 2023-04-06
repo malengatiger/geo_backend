@@ -2,6 +2,7 @@ package com.boha.geo.monitor.services;
 
 
 import com.boha.geo.models.AppError;
+import com.boha.geo.models.GioMediaInterface;
 import com.boha.geo.monitor.data.*;
 import com.boha.geo.repos.*;
 import com.boha.geo.services.MailService;
@@ -428,6 +429,8 @@ public class DataService {
         am.setUserThumbnailUrl(user.getThumbnailUrl());
         am.setProjectName(null);
         am.setUser(user);
+        am.setUserType(user.getUserType());
+        am.setTranslatedUserType(null);
 
         addActivityModel(am);
         return user;
@@ -449,6 +452,8 @@ public class DataService {
         am.setUserName(user.getName());
         am.setUserThumbnailUrl(user.getThumbnailUrl());
         am.setProjectName(null);
+        am.setUserType(user.getUserType());
+        am.setTranslatedUserType(null);
 
         addActivityModel(am);
 
@@ -459,8 +464,7 @@ public class DataService {
         if (rating.getRatingId() == null) {
             rating.setRatingId(UUID.randomUUID().toString());
         }
-        Rating res = ratingRepository.insert(rating);
-        return res;
+        return ratingRepository.insert(rating);
     }
 
     public AppError addAppError(AppError appError) {
@@ -472,25 +476,40 @@ public class DataService {
         if (photo.getPhotoId() == null) {
             photo.setPhotoId(UUID.randomUUID().toString());
         }
-
         photoRepository.insert(photo);
         messageService.sendMessage(photo);
+        ActivityModel am2 = buildActivityModel(photo,ActivityType.photoAdded);
+        addActivityModel(am2);
 
+    }
+
+    ActivityModel buildActivityModel(GioMediaInterface gio, ActivityType activityType) {
         ActivityModel am = new ActivityModel();
-        am.setActivityType(ActivityType.photoAdded);
+        am.setActivityType(activityType);
         am.setActivityModelId(UUID.randomUUID().toString());
         am.setDate(DateTime.now().toDateTimeISO().toString());
-        am.setProjectId(photo.getProjectId());
-        am.setUserId(photo.getUserId());
+        am.setProjectId(gio.getProjectId());
+        am.setUserId(gio.getUserId());
         am.setOrganizationName(null);
-        am.setOrganizationId(photo.getOrganizationId());
-        am.setUserName(photo.getUserName());
-        am.setProjectName(photo.getProjectName());
-        am.setUserThumbnailUrl(photo.getUserUrl());
-        am.setPhoto(photo);
+        am.setOrganizationId(gio.getOrganizationId());
+        am.setUserName(gio.getUserName());
+        am.setProjectName(gio.getProjectName());
+        am.setUserThumbnailUrl(gio.getUserUrl());
+        //
+        if (gio instanceof Photo) {
+            am.setPhoto((Photo) gio);
+        }
+        if (gio instanceof Video) {
+            am.setVideo((Video) gio);
+        }
+        if (gio instanceof Audio) {
+            am.setAudio((Audio) gio);
+        }
 
-        addActivityModel(am);
+        am.setUserType(gio.getUserType());
+        am.setTranslatedUserType(null);
 
+        return am;
     }
 
     public void addActivityModel(ActivityModel model) throws Exception {
@@ -508,56 +527,25 @@ public class DataService {
     }
 
 
-    public Video addVideo(Video video) throws Exception {
-        if (video.getVideoId() == null) {
-            video.setVideoId(UUID.randomUUID().toString());
-        }
+    public void addVideo(Video video) throws Exception {
         videoRepository.insert(video);
 
-        ActivityModel am = new ActivityModel();
-        am.setActivityType(ActivityType.videoAdded);
-        am.setActivityModelId(UUID.randomUUID().toString());
-        am.setDate(DateTime.now().toDateTimeISO().toString());
-        am.setProjectId(video.getProjectId());
-        am.setUserId(video.getUserId());
-        am.setOrganizationName(null);
-        am.setOrganizationId(video.getOrganizationId());
-        am.setUserName(video.getUserName());
-        am.setUserThumbnailUrl(video.getUserUrl());
-        am.setProjectName(video.getProjectName());
-        am.setVideo(video);
-
-        addActivityModel(am);
+        ActivityModel am2 = buildActivityModel(video,ActivityType.videoAdded);
+        addActivityModel(am2);
         messageService.sendMessage(video);
-        return video;
     }
 
-    public Audio addAudio(Audio audio) throws Exception {
+    public void addAudio(Audio audio) throws Exception {
 
         audioRepository.insert(audio);
-
-        ActivityModel am = new ActivityModel();
-        am.setActivityType(ActivityType.audioAdded);
-        am.setActivityModelId(UUID.randomUUID().toString());
-        am.setDate(DateTime.now().toDateTimeISO().toString());
-        am.setProjectId(audio.getProjectId());
-        am.setUserId(audio.getUserId());
-        am.setOrganizationName(null);
-        am.setOrganizationId(audio.getOrganizationId());
-        am.setUserName(audio.getUserName());
-        am.setUserThumbnailUrl(audio.getUserUrl());
-        am.setProjectName(audio.getProjectName());
-        am.setAudio(audio);
-
-        addActivityModel(am);
+        ActivityModel am2 = buildActivityModel(audio,ActivityType.audioAdded);
+        addActivityModel(am2);
         messageService.sendMessage(audio);
-        return audio;
     }
 
-    public Condition addCondition(Condition condition) throws Exception {
+    public void addCondition(Condition condition) throws Exception {
         conditionRepository.insert(condition);
          messageService.sendMessage(condition);
-         return condition;
     }
 
     public OrgMessage addOrgMessage(OrgMessage orgMessage) throws Exception {
@@ -805,38 +793,53 @@ public class DataService {
     }
 
     public User createUser(User user) throws Exception {
+        LOGGER.info("\uD83E\uDDE1\uD83E\uDDE1 create user : " + G.toJson(user));
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        LOGGER.info("\uD83E\uDDE1\uD83E\uDDE1 createRequest  .... ");
+        try {
+            UserRecord.CreateRequest createRequest = new UserRecord.CreateRequest();
+            createRequest.setPhoneNumber(user.getCellphone());
+            createRequest.setDisplayName(user.getName());
+            createRequest.setPassword(user.getPassword());
+            createRequest.setEmail(user.getEmail());
 
-        UserRecord.CreateRequest createRequest = new UserRecord.CreateRequest();
-        createRequest.setPhoneNumber(user.getCellphone());
-        createRequest.setDisplayName(user.getName());
-        createRequest.setPassword(user.getPassword());
-        createRequest.setEmail(user.getEmail());
+            LOGGER.info("\uD83E\uDDE1\uD83E\uDDE1 createUserAsync  .... ");
 
-        ApiFuture<UserRecord> userRecord = firebaseAuth.createUserAsync(createRequest);
-        String uid = userRecord.get().getUid();
-        user.setUserId(uid);
 
-        user.setPassword(null);
-        String message = "Dear " + user.getName() +
-                "      ,\n\nYou have been registered with GeoMonitor and the team is happy to send you the first time login password. '\n" +
-                "      \nPlease login on the web with your email and the attached password but use your cellphone number to sign in on the phone.\n" +
-                "      \n\nThank you for working with GeoMonitor. \nWelcome aboard!!\nBest Regards,\nThe GeoMonitor Team\ninfo@geomonitorapp.io\n\n";
+            ApiFuture<UserRecord> userRecord = firebaseAuth.createUserAsync(createRequest);
+            LOGGER.info("\uD83E\uDDE1\uD83E\uDDE1 userRecord : " + G.toJson(userRecord));
+            String uid = userRecord.get().getUid();
+            user.setUserId(uid);
 
-        mailService.sendHtmlEmail(user.getEmail(), message, "Welcome to GeoMonitor");
+            user.setPassword(null);
+            String message = "Dear " + user.getName() +
+                    "      ,\n\nYou have been registered with GeoMonitor and the team is happy to send you the first time login password. '\n" +
+                    "      \nPlease login on the web with your email and the attached password but use your cellphone number to sign in on the phone.\n" +
+                    "      \n\nThank you for working with GeoMonitor. \nWelcome aboard!!\nBest Regards,\nThe GeoMonitor Team\ninfo@geomonitorapp.io\n\n";
 
-        ActivityModel am = new ActivityModel();
-        am.setActivityType(ActivityType.userAddedOrModified);
-        am.setActivityModelId(UUID.randomUUID().toString());
-        am.setDate(DateTime.now().toDateTimeISO().toString());
-        am.setProjectId(null);
-        am.setUserId(user.getUserId());
-        am.setOrganizationName(user.getOrganizationName());
-        am.setOrganizationId(user.getOrganizationId());
-        am.setUserName(user.getName());
-        am.setProjectName(null);
+            LOGGER.info("\uD83E\uDDE1\uD83E\uDDE1 sending email  .... ");
 
-        addActivityModel(am);
+            mailService.sendHtmlEmail(user.getEmail(), message, "Welcome to GeoMonitor");
+            LOGGER.info("\uD83E\uDDE1\uD83E\uDDE1 sending activity object  .... ");
+            ActivityModel am = new ActivityModel();
+            am.setActivityType(ActivityType.userAddedOrModified);
+            am.setActivityModelId(UUID.randomUUID().toString());
+            am.setDate(DateTime.now().toDateTimeISO().toString());
+            am.setProjectId(null);
+            am.setUserId(user.getUserId());
+            am.setOrganizationName(user.getOrganizationName());
+            am.setOrganizationId(user.getOrganizationId());
+            am.setUserName(user.getName());
+            am.setProjectName(null);
+
+            addActivityModel(am);
+
+            LOGGER.info("\uD83E\uDDE1\uD83E\uDDE1 create user completed. ");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+
 
         return addUser(user);
     }

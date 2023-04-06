@@ -12,7 +12,8 @@ public class ActivityModel {
         ActivityType activityType;
         String date;
         String userId;
-        String userName, userThumbnailUrl;
+        String userName;
+        String userThumbnailUrl;
         String projectId;
         String projectName;
         String organizationName;
@@ -28,4 +29,6 @@ public class ActivityModel {
         GeofenceEvent geofenceEvent;
         LocationRequest locationRequest;
         LocationResponse locationResponse;
+        String userType;
+        String translatedUserType;
 }

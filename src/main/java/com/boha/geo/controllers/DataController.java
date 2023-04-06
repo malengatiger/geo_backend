@@ -9,6 +9,7 @@ import com.boha.geo.monitor.utils.MongoGenerator;
 import com.boha.geo.services.CloudStorageUploader;
 import com.boha.geo.services.RegistrationService;
 import com.boha.geo.services.TextTranslationService;
+import com.boha.geo.services.UserBatchService;
 import com.boha.geo.util.E;
 import com.google.common.io.Files;
 import com.google.firebase.messaging.FirebaseMessagingException;
@@ -31,6 +32,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -39,9 +42,10 @@ import java.time.Duration;
 public class DataController {
     private static final Logger LOGGER = LoggerFactory.getLogger(DataController.class);
 
-    public DataController(DataService dataService, CloudStorageUploader cloudStorageUploader, MongoGenerator mongoGenerator,
+    public DataController(DataService dataService, UserBatchService userBatchService, CloudStorageUploader cloudStorageUploader, MongoGenerator mongoGenerator,
                           MessageService messageService, RegistrationService registrationService, MongoDataService mongoDataService) {
         this.dataService = dataService;
+        this.userBatchService = userBatchService;
         this.cloudStorageUploader = cloudStorageUploader;
         this.mongoGenerator = mongoGenerator;
         this.messageService = messageService;
@@ -60,6 +64,7 @@ public class DataController {
 
     Bucket bucket;
     private final DataService dataService;
+    private final UserBatchService userBatchService;
 
     private final CloudStorageUploader cloudStorageUploader;
     private final MongoGenerator mongoGenerator;
@@ -525,7 +530,7 @@ public class DataController {
 
     })
     @PostMapping("/addUser")
-    public ResponseEntity<Object> addUser(@RequestBody User user) throws FirebaseMessagingException {
+    public ResponseEntity<Object> addUser(@RequestBody User user) {
         try {
             return ResponseEntity.ok(dataService.addUser(user));
         } catch (Exception e) {
@@ -538,7 +543,7 @@ public class DataController {
     }
 
     @PostMapping("/deleteAuthUser")
-    public ResponseEntity<Object> deleteAuthUser(@RequestBody String userId) throws FirebaseMessagingException {
+    public ResponseEntity<Object> deleteAuthUser(@RequestBody String userId) {
         try {
             int result = messageService.deleteAuthUser(userId);
             UserDeleteResponse m = new UserDeleteResponse(result, "User deleted from Firebase Auth");
@@ -772,6 +777,65 @@ public class DataController {
                     " cloud storage upload file deleted");
         }
         return ResponseEntity.ok(url);
+    }
+
+    @PostMapping("uploadMemberFile")
+    public ResponseEntity<Object> uploadMemberFile(
+            @RequestParam String organizationId,
+            @RequestParam String translatedTitle,  @RequestParam String translatedMessage,
+            @RequestPart MultipartFile document) throws IOException {
+
+        List<User> users = new ArrayList<>();
+        String doc = document.getOriginalFilename();
+        if (doc == null) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "Problem with user file ",
+                            new DateTime().toDateTimeISO().toString()));
+        }
+        File file = new File(doc);
+        Files.write(document.getBytes(), file);
+        LOGGER.info("\uD83C\uDF3C\uD83C\uDF3C we have a file: " + file.getName());
+        if (file.getName().contains(".csv")) {
+            LOGGER.info("\uD83C\uDF3C\uD83C\uDF3C csv file to process: " + file.getName());
+            try {
+                users = userBatchService.handleUsersFromCSV(file,organizationId,translatedTitle,translatedMessage);
+                return ResponseEntity.ok(users);
+            } catch (Exception e) {
+                return ResponseEntity.badRequest().body(
+                        new CustomErrorResponse(400,
+                                "Failed to create users: " + e.getMessage(),
+                                new DateTime().toDateTimeISO().toString()));
+            }
+        }
+        if (file.getName().contains(".json")) {
+            LOGGER.info("\uD83C\uDF3C\uD83C\uDF3C json file to process: " + file.getName());
+            try {
+                users = userBatchService.handleUsersFromJSON(file,organizationId,translatedTitle,translatedMessage);
+                return ResponseEntity.ok(users);
+            } catch (Exception e) {
+                return ResponseEntity.badRequest().body(
+                        new CustomErrorResponse(400,
+                                "Failed to create users: " + e.getMessage(),
+                                new DateTime().toDateTimeISO().toString()));
+            }
+        }
+        if (file.exists()) {
+            boolean ok = file.delete();
+            if (ok) {
+                LOGGER.info(E.RED_APPLE + E.RED_APPLE +
+                        " user batch file deleted");
+            }
+        }
+        if (users.isEmpty()) {
+            LOGGER.info("\uD83C\uDF3C\uD83C\uDF3C no users created ... wtf? " );
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "Failed to create users; no users in file or file is not .json or .csv ",
+                            new DateTime().toDateTimeISO().toString()));
+        }
+        LOGGER.info("\uD83C\uDF3C\uD83C\uDF3C Users created from batch file: " + users.size());
+        return ResponseEntity.ok(users);
     }
 
     static class UserDeleteResponse {

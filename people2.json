@@ -1,0 +1,30 @@
+[
+  {
+    "name": "John Q Washington",
+    "cellphone": "+19985550890",
+    "active": "0",
+    "userType": "ORG_ADMINISTRATOR",
+    "email": "john@email.com"
+  },
+  {
+    "name": "Nancy Petersen",
+    "cellphone": "+19985550891",
+    "active": "0",
+    "userType": "FIELD_MONITOR",
+    "email": "nancy@email.com"
+  },
+  {
+    "name": "Maria Jones-Mhinga",
+    "cellphone": "+19985550892",
+    "active": "0",
+    "userType": "ORG_EXECUTIVE",
+    "email": "maria@email.com"
+  },
+  {
+    "name": "Thembakazi Tracy Bongo",
+    "cellphone": "+19985550895",
+    "active": "0",
+    "userType": "FIELD_MONITOR",
+    "email": "thembekazi@email.com"
+  }
+]

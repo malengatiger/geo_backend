@@ -10,7 +10,6 @@ public class User {
     @Id
     String _id;
     String name;
-    String gender;
     String email;
     String cellphone;
     String userId;
@@ -20,6 +19,7 @@ public class User {
     String created;
     String fcmRegistration;
     String userType;
+    String gender;
     String password;
     Position position;
     int active = 0;
