@@ -1,8 +1,6 @@
-package com.boha.geo.services;
+package com.boha.geo.monitor.services;
 
 import com.boha.geo.monitor.data.*;
-import com.boha.geo.monitor.services.DataService;
-import com.boha.geo.monitor.services.ListService;
 import com.boha.geo.repos.OrganizationRepository;
 import com.boha.geo.repos.ProjectPositionRepository;
 import com.boha.geo.repos.ProjectRepository;

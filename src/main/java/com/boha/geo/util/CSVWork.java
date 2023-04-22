@@ -23,13 +23,13 @@ public class CSVWork {
     private static final Gson G = new GsonBuilder().setPrettyPrinting().create();
     private static final Logger LOGGER = LoggerFactory.getLogger(CSVWork.class);
 
-    public static void main(String[] args) {
-        try {
-            buildFiles();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    public static void main(String[] args) {
+//        try {
+//            buildFiles();
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
     public static void buildFiles() throws IOException {
         final String userType = "ORG_ADMINISTRATOR";

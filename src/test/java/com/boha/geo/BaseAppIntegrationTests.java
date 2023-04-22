@@ -70,6 +70,7 @@ public class BaseAppIntegrationTests {
     public void testApplicationStartup() {
         ResponseEntity<String> response = this.testRestTemplate.getForEntity("/geo/v1/", String.class);
         System.out.println("\uD83C\uDFB2\uD83C\uDFB2 " + response);
+
         assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
         assertThat(response.getBody()).contains("Khaya");
     }

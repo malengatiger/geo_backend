@@ -1,7 +1,7 @@
 package com.boha.geo.monitor.services;
 
 
-import com.boha.geo.models.AppError;
+import com.boha.geo.monitor.data.AppError;
 import com.boha.geo.models.GioMediaInterface;
 import com.boha.geo.monitor.data.*;
 import com.boha.geo.repos.*;
@@ -38,6 +38,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Service that adds data to the MongoDB database via repositories
+ */
 @Service
 public class DataService {
     public static final Logger LOGGER = LoggerFactory.getLogger(DataService.class.getSimpleName());
@@ -83,20 +86,11 @@ public class DataService {
     private final MailService mailService;
 
 
-    public DataService(Environment env, AppErrorRepository appErrorRepository, GeofenceEventRepository geofenceEventRepository,
-                       SettingsModelRepository settingsModelRepository, RatingRepository ratingRepository, MongoTemplate mongoTemplate, AudioRepository audioRepository, ProjectRepository projectRepository,
-                       LocationResponseRepository locationResponseRepository, LocationRequestRepository locationRequestRepository, ProjectPolygonRepository projectPolygonRepository, CityRepository cityRepository,
-                       PhotoRepository photoRepository,
-                       ActivityModelRepository activityModelRepository, ProjectAssignmentRepository projectAssignmentRepository, VideoRepository videoRepository,
-                       UserRepository userRepository,
-                       CommunityRepository communityRepository,
-                       ConditionRepository conditionRepository,
-                       CountryRepository countryRepository,
-                       OrganizationRepository organizationRepository,
-                       ProjectPositionRepository projectPositionRepository,
-                       OrgMessageRepository orgMessageRepository,
-                       MessageService messageService,
-                       FieldMonitorScheduleRepository fieldMonitorScheduleRepository, ProjectSummaryRepository projectSummaryRepository, MailService mailService) {
+
+
+    private static final String xx = E.COFFEE + E.COFFEE + E.COFFEE;
+
+    public DataService(Environment env, AppErrorRepository appErrorRepository, GeofenceEventRepository geofenceEventRepository, SettingsModelRepository settingsModelRepository, RatingRepository ratingRepository, MongoTemplate mongoTemplate, AudioRepository audioRepository, ProjectRepository projectRepository, LocationResponseRepository locationResponseRepository, LocationRequestRepository locationRequestRepository, ProjectPolygonRepository projectPolygonRepository, CityRepository cityRepository, PhotoRepository photoRepository, ActivityModelRepository activityModelRepository, ProjectAssignmentRepository projectAssignmentRepository, VideoRepository videoRepository, UserRepository userRepository, CommunityRepository communityRepository, ConditionRepository conditionRepository, CountryRepository countryRepository, OrganizationRepository organizationRepository, ProjectPositionRepository projectPositionRepository, OrgMessageRepository orgMessageRepository, MessageService messageService, FieldMonitorScheduleRepository fieldMonitorScheduleRepository, ProjectSummaryRepository projectSummaryRepository, MailService mailService) {
         this.env = env;
         this.appErrorRepository = appErrorRepository;
         this.geofenceEventRepository = geofenceEventRepository;
@@ -124,10 +118,7 @@ public class DataService {
         this.fieldMonitorScheduleRepository = fieldMonitorScheduleRepository;
         this.projectSummaryRepository = projectSummaryRepository;
         this.mailService = mailService;
-        LOGGER.info(xx + " DataService constructed and repos injected \uD83C\uDF4F");
     }
-
-    private static final String xx = E.COFFEE + E.COFFEE + E.COFFEE;
 
     public void initializeFirebase() throws Exception {
         String fbConfig = env.getProperty("FIREBASE_CONFIG");
@@ -471,7 +462,6 @@ public class DataService {
         return appErrorRepository.insert(appError);
     }
 
-
     public void addPhoto(Photo photo) throws Exception {
         if (photo.getPhotoId() == null) {
             photo.setPhotoId(UUID.randomUUID().toString());
@@ -495,6 +485,7 @@ public class DataService {
         am.setUserName(gio.getUserName());
         am.setProjectName(gio.getProjectName());
         am.setUserThumbnailUrl(gio.getUserUrl());
+        am.setUserType(gio.getUserType());
         //
         if (gio instanceof Photo) {
             am.setPhoto((Photo) gio);

@@ -1,6 +1,6 @@
 package com.boha.geo.controllers;
 
-import com.boha.geo.models.AppError;
+import com.boha.geo.monitor.data.AppError;
 import com.boha.geo.monitor.data.*;
 import com.boha.geo.monitor.services.ListService;
 import com.boha.geo.monitor.services.MessageService;

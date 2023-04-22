@@ -1,7 +1,7 @@
 package com.boha.geo.monitor.services;
 
 
-import com.boha.geo.models.AppError;
+import com.boha.geo.monitor.data.AppError;
 import com.boha.geo.monitor.data.*;
 import com.boha.geo.repos.*;
 import com.boha.geo.util.E;

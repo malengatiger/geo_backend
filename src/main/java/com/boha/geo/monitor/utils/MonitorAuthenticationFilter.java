@@ -75,12 +75,12 @@ public class MonitorAuthenticationFilter extends OncePerRequestFilter {
         }
         String token = m.substring(7);
         try {
-            //dataService.initializeFirebase();
             ApiFuture<FirebaseToken> future = FirebaseAuth.getInstance().verifyIdTokenAsync(token, true);
             FirebaseToken mToken = future.get();
             if (mToken != null) {
                 doFilter(httpServletRequest, httpServletResponse, filterChain);
             } else {
+                LOGGER.info("\uD83D\uDE21 \uD83D\uDE21 \uD83D\uDE21 request has been forbidden, token invalid");
                 httpServletResponse.sendError(403, "GTFO");
             }
 

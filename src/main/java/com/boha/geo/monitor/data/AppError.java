@@ -1,4 +1,4 @@
-package com.boha.geo.models;
+package com.boha.geo.monitor.data;
 
 import com.boha.geo.monitor.data.Position;
 import lombok.Data;

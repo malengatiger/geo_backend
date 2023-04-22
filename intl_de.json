@@ -1,9 +1,0 @@
-{
-  "map": {
-    "downloadExampleFiles": "Beispieldateien für Mitglieder herunterladen",
-    "uploadMemberBatchFile": "Mitgliedsdatei hochladen",
-    "uploadInstruction": "Mehrere Mitglieder können entweder aus einer Tabelle im CSV-Format oder einer JSON-Datei hochgeladen werden. Sie können Beispieldateien in jedem Format herunterladen",
-    "memberUploadFailed": "Hochladen der Mitgliedsdatei fehlgeschlagen, Mitglieder nicht erstellt",
-    "pickMemberBatchFile": "Mitgliedsdatei zum Hochladen auswählen"
-  }
-}
