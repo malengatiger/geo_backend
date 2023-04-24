@@ -30,32 +30,36 @@ public class RegistrationService {
 
     public OrganizationRegistrationBag registerOrganization(OrganizationRegistrationBag orgBag) throws Exception {
 
+        OrganizationRegistrationBag registrationBag = new OrganizationRegistrationBag();
+        registrationBag.setSettings(orgBag.getSettings());
+        registrationBag.setDate(DateTime.now().toDateTimeISO().toString());
+
+
         try {
             Organization org = organizationRepository.insert(orgBag.getOrganization());
-            SettingsModel m = dataService.addSettings(orgBag.getSettings());
-            String password = orgBag.getUser().getPassword();
-            orgBag.getUser().setPassword(null);
-            User u = dataService.addUser(orgBag.getUser());
-            u.setPassword(password);
+            if (org != null) {
+                dataService.addSettings(orgBag.getSettings());
+                String password = orgBag.getUser().getPassword();
+                orgBag.getUser().setPassword(null);
+                User u = dataService.addUser(orgBag.getUser());
+                u.setPassword(password);
+                MyProjectBag bag = addSampleProject(org, orgBag.getLatitude(), orgBag.getLongitude());
+                registrationBag.setOrganization(org);
+                registrationBag.setUser(u);
+                registrationBag.setProject(bag.project);
+                registrationBag.setProjectPosition(bag.projectPosition);
 
-            MyProjectBag bag = addSampleProject(org, orgBag.getLatitude(), orgBag.getLongitude());
-
-            OrganizationRegistrationBag registrationBag = new OrganizationRegistrationBag();
-            registrationBag.setOrganization(org);
-            registrationBag.setSettings(m);
-            registrationBag.setUser(u);
-            registrationBag.setProject(bag.project);
-            registrationBag.setProjectPosition(bag.projectPosition);
-            registrationBag.setDate(DateTime.now().toDateTimeISO().toString());
+                LOGGER.info(E.LEAF + E.LEAF + " Organization Registered: " + org.getName());
+                return registrationBag;
+            }
 
 
-            LOGGER.info(E.LEAF + E.LEAF + " Organization Registered: " + org.getName());
-            return registrationBag;
         } catch (Exception e) {
             LOGGER.severe(E.RED_DOT+E.RED_DOT+" We have some kinda problem ...");
             e.printStackTrace();
             throw e;
         }
+        return registrationBag;
     }
 
     private MyProjectBag addSampleProject(Organization organization, double latitude, double longitude) throws Exception {

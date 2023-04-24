@@ -424,18 +424,20 @@ public class DataService {
         return mUser;
     }
 
-    public Rating addRating(Rating rating) {
+    public int addRating(Rating rating) {
         if (rating.getRatingId() == null) {
             rating.setRatingId(UUID.randomUUID().toString());
         }
-        return ratingRepository.insert(rating);
+         ratingRepository.insert(rating);
+        return 0;
     }
 
-    public AppError addAppError(AppError appError) {
-        return appErrorRepository.insert(appError);
+    public int addAppError(AppError appError) {
+         appErrorRepository.insert(appError);
+         return 0;
     }
 
-    public void addPhoto(Photo photo) throws Exception {
+    public int addPhoto(Photo photo) throws Exception {
         if (photo.getPhotoId() == null) {
             photo.setPhotoId(UUID.randomUUID().toString());
         }
@@ -443,7 +445,7 @@ public class DataService {
         messageService.sendMessage(photo);
         ActivityModel am2 = buildActivityModel(photo,ActivityType.photoAdded);
         addActivityModel(am2);
-
+        return 0;
     }
 
     ActivityModel buildActivityModel(GioMediaInterface gio, ActivityType activityType) {
@@ -482,37 +484,41 @@ public class DataService {
         messageService.sendMessage(model);
     }
 
-    public String addProjectAssignment(ProjectAssignment projectAssignment) throws Exception {
+    public int addProjectAssignment(ProjectAssignment projectAssignment) throws Exception {
         if (projectAssignment.getProjectAssignmentId() == null) {
             projectAssignment.setProjectAssignmentId(UUID.randomUUID().toString());
         }
         projectAssignmentRepository.insert(projectAssignment);
-        return messageService.sendMessage(projectAssignment);
+        messageService.sendMessage(projectAssignment);
+        return 0;
     }
 
 
-    public void addVideo(Video video) throws Exception {
+    public int addVideo(Video video) throws Exception {
         videoRepository.insert(video);
 
         ActivityModel am2 = buildActivityModel(video,ActivityType.videoAdded);
         addActivityModel(am2);
         messageService.sendMessage(video);
+        return 0;
     }
 
-    public void addAudio(Audio audio) throws Exception {
+    public int addAudio(Audio audio) throws Exception {
 
         audioRepository.insert(audio);
         ActivityModel am2 = buildActivityModel(audio,ActivityType.audioAdded);
         addActivityModel(am2);
         messageService.sendMessage(audio);
+        return 0;
     }
 
-    public void addCondition(Condition condition) throws Exception {
+    public int addCondition(Condition condition) throws Exception {
         conditionRepository.insert(condition);
          messageService.sendMessage(condition);
+        return 0;
     }
 
-    public OrgMessage addOrgMessage(OrgMessage orgMessage) throws Exception {
+    public int addOrgMessage(OrgMessage orgMessage) throws Exception {
         orgMessageRepository.insert(orgMessage);
         messageService.sendMessage(orgMessage);
         orgMessage.setResult(null);
@@ -524,7 +530,9 @@ public class DataService {
         am.setDate(DateTime.now().toDateTimeISO().toString());
         am.setProjectId(orgMessage.getProjectId());
         am.setUserId(orgMessage.getUserId());
-        am.setUserThumbnailUrl(user.getThumbnailUrl());
+        if (user != null) {
+            am.setUserThumbnailUrl(user.getThumbnailUrl());
+        }
         am.setOrganizationName(null);
         am.setOrganizationId(orgMessage.getOrganizationId());
         am.setUserName(orgMessage.getAdminName());
@@ -532,17 +540,17 @@ public class DataService {
         am.setOrgMessage(orgMessage);
 
         addActivityModel(am);
-        return orgMessage;
+        return 0;
     }
 
-    public FieldMonitorSchedule addFieldMonitorSchedule(FieldMonitorSchedule fieldMonitorSchedule) throws Exception {
+    public int addFieldMonitorSchedule(FieldMonitorSchedule fieldMonitorSchedule) throws Exception {
         fieldMonitorScheduleRepository.insert(fieldMonitorSchedule);
         messageService.sendMessage(fieldMonitorSchedule);
 
-        return fieldMonitorSchedule;
+        return 0;
     }
 
-    public ProjectPosition addProjectPosition(ProjectPosition projectPosition) throws Exception {
+    public int addProjectPosition(ProjectPosition projectPosition) throws Exception {
 
         ProjectPosition m = projectPositionRepository.insert(projectPosition);
 
@@ -556,7 +564,9 @@ public class DataService {
         am.setDate(DateTime.now().toDateTimeISO().toString());
         am.setProjectId(projectPosition.getProjectId());
         am.setUserId(projectPosition.getUserId());
-        am.setUserThumbnailUrl(user.getThumbnailUrl());
+        if (user != null) {
+            am.setUserThumbnailUrl(user.getThumbnailUrl());
+        }
         am.setOrganizationName(null);
         am.setOrganizationId(projectPosition.getOrganizationId());
         am.setUserName(projectPosition.getUserName());
@@ -565,16 +575,17 @@ public class DataService {
 
         addActivityModel(am);
 
-        m = projectPositionRepository.findByProjectPositionId(projectPosition.getProjectPositionId());
-        return m;
+        return 0;
     }
 
-    public ProjectPolygon addProjectPolygon(ProjectPolygon projectPolygon) throws Exception {
+    public int addProjectPolygon(ProjectPolygon projectPolygon) throws Exception {
 
         ProjectPolygon m = projectPolygonRepository.insert(projectPolygon);
 
-        m.setNearestCities(null);
-        messageService.sendMessage(m);
+        if (m != null) {
+            m.setNearestCities(null);
+            messageService.sendMessage(m);
+        }
         User user = userRepository.findByUserId(projectPolygon.getUserId());
 
         ActivityModel am = new ActivityModel();
@@ -587,29 +598,31 @@ public class DataService {
         am.setOrganizationName(null);
         am.setOrganizationId(projectPolygon.getOrganizationId());
         am.setUserName(projectPolygon.getUserName());
-        am.setUserThumbnailUrl(user.getThumbnailUrl());
+        if (user != null) {
+            am.setUserThumbnailUrl(user.getThumbnailUrl());
+        }
         am.setProjectName(projectPolygon.getProjectName());
         am.setProjectPolygon(projectPolygon);
 
         addActivityModel(am);
 
-        m = projectPolygonRepository
-                .findByProjectPolygonId(projectPolygon.getProjectPolygonId());
-
-        return m;
+        return 0;
     }
 
-    public GeofenceEvent addGeofenceEvent(GeofenceEvent geofenceEvent) throws Exception {
+    public int addGeofenceEvent(GeofenceEvent geofenceEvent) throws Exception {
 
         GeofenceEvent m = geofenceEventRepository.insert(geofenceEvent);
 
-        messageService.sendMessage(m);
+        if (m != null) {
+            messageService.sendMessage(m);
+        }
 
         ActivityModel am = new ActivityModel();
         am.setActivityType(ActivityType.geofenceEventAdded);
         am.setActivityModelId(UUID.randomUUID().toString());
         am.setDate(DateTime.now().toDateTimeISO().toString());
         am.setProjectId(geofenceEvent.getProjectId());
+
         am.setUserId(geofenceEvent.getUser().getUserId());
         am.setOrganizationName(null);
         am.setOrganizationId(geofenceEvent.getOrganizationId());
@@ -619,10 +632,10 @@ public class DataService {
         am.setGeofenceEvent(geofenceEvent);
 
         addActivityModel(am);
-        return m;
+        return 0;
     }
 
-    public Project addProject(Project project) throws Exception {
+    public int addProject(Project project) throws Exception {
 
         Project m = projectRepository.insert(project);
 
@@ -632,7 +645,7 @@ public class DataService {
         am.setDate(DateTime.now().toDateTimeISO().toString());
         am.setProjectId(project.getProjectId());
         am.setUserId(null);
-        am.setOrganizationName(null);
+        am.setOrganizationName(project.getOrganizationName());
         am.setOrganizationId(project.getOrganizationId());
         am.setUserName(null);
         am.setProjectName(project.getName());
@@ -640,10 +653,10 @@ public class DataService {
 
         addActivityModel(am);
         messageService.sendMessage(m);
-        return project;
+        return 0;
     }
 
-    public LocationResponse addLocationResponse(LocationResponse locationResponse) throws Exception {
+    public int addLocationResponse(LocationResponse locationResponse) throws Exception {
 
         LocationResponse m = locationResponseRepository.insert(locationResponse);
 
@@ -661,17 +674,21 @@ public class DataService {
         am.setUserName(locationResponse.getUserName());
         am.setProjectName(null);
         am.setLocationResponse(locationResponse);
-        am.setUserThumbnailUrl(user.getThumbnailUrl());
+        if (user != null) {
+            am.setUserThumbnailUrl(user.getThumbnailUrl());
+        }
 
         addActivityModel(am);
-        return m;
+        return 0;
     }
 
-    public LocationRequest addLocationRequest(LocationRequest locationRequest) throws Exception {
+    public int addLocationRequest(LocationRequest locationRequest) throws Exception {
 
         LocationRequest m = locationRequestRepository.insert(locationRequest);
 
-        messageService.sendMessage(m);
+        if (m != null) {
+            messageService.sendMessage(m);
+        }
         User user = userRepository.findByUserId(locationRequest.getUserId());
 
         ActivityModel am = new ActivityModel();
@@ -685,9 +702,11 @@ public class DataService {
         am.setUserName(locationRequest.getUserName());
         am.setProjectName(null);
         am.setLocationRequest(locationRequest);
-        am.setUserThumbnailUrl(user.getThumbnailUrl());
+        if (user != null) {
+            am.setUserThumbnailUrl(user.getThumbnailUrl());
+        }
         addActivityModel(am);
-        return m;
+        return 0;
     }
 
     public Project updateProject(Project project) throws Exception {
@@ -709,14 +728,12 @@ public class DataService {
         return cm;
     }
 
-    public Country addCountry(Country country) throws Exception {
-        country.setCountryId(UUID.randomUUID().toString());
-
-        Country m = countryRepository.insert(country);
-        return m;
+    public int addCountry(Country country) throws Exception {
+        countryRepository.insert(country);
+        return 0;
     }
 
-    public SettingsModel addSettings(SettingsModel model) throws Exception {
+    public int addSettings(SettingsModel model) throws Exception {
 
         SettingsModel m = settingsModelRepository.insert(model);
         messageService.sendMessage(model);
@@ -733,18 +750,9 @@ public class DataService {
         am.setProjectName(null);
 
         addActivityModel(am);
-        return m;
+        return 0;
     }
 
-
-    public Organization addOrganization(Organization organization) throws Exception {
-        organization.setOrganizationId(UUID.randomUUID().toString());
-        organization.setCreated(new DateTime().toDateTimeISO().toString());
-
-        Organization org = organizationRepository.insert(organization);
-
-        return org;
-    }
 
     public void deleteTestOrganization() {
         Query query = Query.query(Criteria.where("name").is("Fake Test Organization"));

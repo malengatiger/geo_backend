@@ -103,7 +103,8 @@ public class DataController {
     public ResponseEntity<Object> addCountry(@RequestBody Country country) throws Exception {
 
         try {
-            return ResponseEntity.ok(dataService.addCountry(country));
+            dataService.addCountry(country);
+            return ResponseEntity.ok(country);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,
@@ -144,8 +145,8 @@ public class DataController {
     @PostMapping("/addAppError")
     public ResponseEntity<Object> addAppError(@RequestBody AppError appError) throws Exception {
         try {
-            AppError ae = dataService.addAppError(appError);
-            return ResponseEntity.ok(ae);
+            dataService.addAppError(appError);
+            return ResponseEntity.ok(appError);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,
@@ -158,8 +159,8 @@ public class DataController {
     @PostMapping("/addFieldMonitorSchedule")
     public ResponseEntity<Object> addFieldMonitorSchedule(@RequestBody FieldMonitorSchedule fieldMonitorSchedule) throws Exception {
         try {
-            FieldMonitorSchedule schedule = dataService.addFieldMonitorSchedule(fieldMonitorSchedule);
-            return ResponseEntity.ok(schedule);
+            dataService.addFieldMonitorSchedule(fieldMonitorSchedule);
+            return ResponseEntity.ok(fieldMonitorSchedule);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,
@@ -182,7 +183,7 @@ public class DataController {
     @PostMapping("/addProject")
     public ResponseEntity<Object> addProject(@RequestBody Project project) throws Exception {
         try {
-            Project result = dataService.addProject(project);
+            dataService.addProject(project);
             return ResponseEntity.ok(project);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
@@ -283,7 +284,8 @@ public class DataController {
     public ResponseEntity<Object> addProjectPosition(@RequestBody ProjectPosition projectPosition)
             throws Exception {
         try {
-            return ResponseEntity.ok(dataService.addProjectPosition(projectPosition));
+            dataService.addProjectPosition(projectPosition);
+            return ResponseEntity.ok(projectPosition);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,
@@ -304,7 +306,8 @@ public class DataController {
     public ResponseEntity<Object> addProjectPolygon(@RequestBody ProjectPolygon projectPolygon)
             throws Exception {
         try {
-            return ResponseEntity.ok(dataService.addProjectPolygon(projectPolygon));
+            dataService.addProjectPolygon(projectPolygon);
+            return ResponseEntity.ok(projectPolygon);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,
@@ -325,7 +328,8 @@ public class DataController {
     public ResponseEntity<Object> addGeofenceEvent(@RequestBody GeofenceEvent geofenceEvent)
             throws Exception {
         try {
-            return ResponseEntity.ok(dataService.addGeofenceEvent(geofenceEvent));
+            dataService.addGeofenceEvent(geofenceEvent);
+            return ResponseEntity.ok(geofenceEvent);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,
@@ -367,8 +371,8 @@ public class DataController {
     @PostMapping("/addLocationRequest")
     public ResponseEntity<Object> addLocationRequest(@RequestBody LocationRequest request) throws Exception {
         try {
-            LocationRequest result = dataService.addLocationRequest(request);
-            return ResponseEntity.ok(result);
+            dataService.addLocationRequest(request);
+            return ResponseEntity.ok(request);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,
@@ -378,19 +382,6 @@ public class DataController {
 
     }
 
-    //    @PostMapping("/addActivityModel")
-//    public ResponseEntity<Object> addActivityModel(@RequestBody ActivityModel model) throws Exception {
-//        try {
-//             dataService.addActivityModel(model);
-//            return ResponseEntity.ok(model);
-//        } catch (Exception e) {
-//            return ResponseEntity.badRequest().body(
-//                    new CustomErrorResponse(400,
-//                            "addPhoto failed: " + e.getMessage(),
-//                            new DateTime().toDateTimeISO().toString()));
-//        }
-//
-//    }
     @Operation(summary = "add ProjectAssignment")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "ProjectAssignment added",
@@ -401,7 +392,7 @@ public class DataController {
     @PostMapping("/addProjectAssignment")
     public ResponseEntity<Object> addProjectAssignment(@RequestBody ProjectAssignment projectAssignment) throws Exception {
         try {
-            String result = dataService.addProjectAssignment(projectAssignment);
+            dataService.addProjectAssignment(projectAssignment);
             return ResponseEntity.ok(projectAssignment);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
@@ -485,8 +476,8 @@ public class DataController {
     @PostMapping("/sendMessage")
     public ResponseEntity<Object> sendMessage(@RequestBody OrgMessage orgMessage) throws Exception {
         try {
-            OrgMessage result = dataService.addOrgMessage(orgMessage);
-            return ResponseEntity.ok(result);
+             dataService.addOrgMessage(orgMessage);
+            return ResponseEntity.ok(orgMessage);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,
@@ -506,7 +497,8 @@ public class DataController {
     @PostMapping("/addUser")
     public ResponseEntity<Object> addUser(@RequestBody User user) {
         try {
-            return ResponseEntity.ok(dataService.addUser(user));
+            dataService.addUser(user);
+            return ResponseEntity.ok(user);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,
@@ -577,7 +569,8 @@ public class DataController {
     public ResponseEntity<Object> addRating(@RequestBody Rating rating) throws Exception {
 
         try {
-            return ResponseEntity.ok(dataService.addRating(rating));
+            dataService.addRating(rating);
+            return ResponseEntity.ok(rating);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,

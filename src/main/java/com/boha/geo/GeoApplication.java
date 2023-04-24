@@ -38,11 +38,14 @@ public class GeoApplication implements ApplicationListener<ApplicationReadyEvent
     private static final Logger logger = Logger.getLogger(GeoApplication.class.getSimpleName());
     private static final String alien = E.ALIEN + E.ALIEN + E.ALIEN;
 
-    @Autowired
-    private MongoService mongoService;
+    private final MongoService mongoService;
 
-    @Autowired
-    private FirebaseService firebaseService;
+    private final FirebaseService firebaseService;
+
+    public GeoApplication(MongoService mongoService, FirebaseService firebaseService) {
+        this.mongoService = mongoService;
+        this.firebaseService = firebaseService;
+    }
 
 
     public static void main(String[] args) {

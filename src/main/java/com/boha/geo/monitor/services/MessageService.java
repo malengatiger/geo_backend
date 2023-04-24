@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+
 @RequiredArgsConstructor
 
 @Service
@@ -79,7 +80,7 @@ public class MessageService {
                 .build();
     }
 
-    public void sendMessage(ProjectPosition projectPosition) {
+    public int sendMessage(ProjectPosition projectPosition) {
         try {
             String topic = "projectPositions_" + projectPosition.getOrganizationId();
             Notification notification = Notification.builder()
@@ -106,16 +107,18 @@ public class MessageService {
             LOGGER.error("Failed to send projectPosition FCM message");
             e.printStackTrace();
         }
+        return 0;
     }
 
-    public String sendMessage(ProjectAssignment projectAssignment) throws FirebaseMessagingException {
+    public int sendMessage(ProjectAssignment projectAssignment) throws FirebaseMessagingException {
         String topic = "projectAssignments_" + projectAssignment.getOrganizationId();
         Message message = buildMessage("projectAssignment", topic, G.toJson(projectAssignment));
 
-        return FirebaseMessaging.getInstance().send(message);
+        FirebaseMessaging.getInstance().send(message);
+        return 0;
     }
 
-    public void sendMessage(ProjectPolygon projectPolygon) throws FirebaseMessagingException {
+    public int sendMessage(ProjectPolygon projectPolygon) throws FirebaseMessagingException {
         String topic = "projectPolygons_" + projectPolygon.getOrganizationId();
         Notification notification = Notification.builder()
                 .setBody(projectPolygon.getTranslatedMessage())
@@ -123,19 +126,19 @@ public class MessageService {
                 .build();
         Message message = buildMessage("projectPolygon", topic, G.toJson(projectPolygon), notification);
         FirebaseMessaging.getInstance().send(message);
-
+        return 0;
     }
 
-    public void sendMessage(ActivityModel activityModel) throws FirebaseMessagingException {
+    public int sendMessage(ActivityModel activityModel) throws FirebaseMessagingException {
         String topic = "activities_" + activityModel.getOrganizationId();
 
         Message message = buildMessage("activity",
                 topic, G.toJson(activityModel));
         FirebaseMessaging.getInstance().send(message);
-
+        return 0;
     }
 
-    public void sendMessage(Photo photo) throws FirebaseMessagingException {
+    public int sendMessage(Photo photo) throws FirebaseMessagingException {
         String topic = "photos_" + photo.getOrganizationId();
         Notification notification = Notification.builder()
                 .setBody(photo.getTranslatedMessage())
@@ -144,10 +147,10 @@ public class MessageService {
         Message message = buildMessage("photo", topic, G.toJson(photo), notification);
 
         FirebaseMessaging.getInstance().send(message);
-
+        return 0;
     }
 
-    public void sendMessage(SettingsModel settingsModel) throws FirebaseMessagingException {
+    public int sendMessage(SettingsModel settingsModel) throws FirebaseMessagingException {
         String topic = "settings_" + settingsModel.getOrganizationId();
         Notification notification = Notification.builder()
                 .setBody(settingsModel.getTranslatedMessage())
@@ -157,10 +160,10 @@ public class MessageService {
 
 
         FirebaseMessaging.getInstance().send(message);
-
+        return 0;
     }
 
-    public void sendMessage(GeofenceEvent geofenceEvent) throws FirebaseMessagingException {
+    public int sendMessage(GeofenceEvent geofenceEvent) throws FirebaseMessagingException {
         String topic = "geofenceEvents_" + geofenceEvent.getOrganizationId();
 
         Notification notification = Notification.builder()
@@ -171,10 +174,10 @@ public class MessageService {
         Message message = buildMessage("geofenceEvent", topic, G.toJson(geofenceEvent), notification);
 
         FirebaseMessaging.getInstance().send(message);
-
+        return 0;
     }
 
-    public void sendMessage(Audio audio) throws FirebaseMessagingException {
+    public int sendMessage(Audio audio) throws FirebaseMessagingException {
         String topic = "audios_" + audio.getOrganizationId();
 
         Notification notification = Notification.builder()
@@ -184,9 +187,10 @@ public class MessageService {
         Message message = buildMessage("audio", topic, G.toJson(audio), notification);
 
         FirebaseMessaging.getInstance().send(message);
+        return 0;
     }
 
-    public LocationRequest sendMessage(LocationRequest locationRequest) throws FirebaseMessagingException {
+    public int sendMessage(LocationRequest locationRequest) throws FirebaseMessagingException {
         String topic = "locationRequests_" + locationRequest.getOrganizationId();
 
         Notification notification = Notification.builder()
@@ -199,10 +203,10 @@ public class MessageService {
 
         FirebaseMessaging.getInstance().send(message);
 
-        return locationRequest;
+        return 0;
     }
 
-    public void sendMessage(LocationResponse locationResponse) throws FirebaseMessagingException {
+    public int sendMessage(LocationResponse locationResponse) throws FirebaseMessagingException {
         String topic = "locationResponses_" + locationResponse.getOrganizationId();
 
         Notification notification = Notification.builder()
@@ -213,11 +217,11 @@ public class MessageService {
         Message message = buildMessage("locationResponse", topic,
                 G.toJson(locationResponse), notification);
 
-         FirebaseMessaging.getInstance().send(message);
-
+        FirebaseMessaging.getInstance().send(message);
+        return 0;
     }
 
-    public void sendMessage(Video video) throws FirebaseMessagingException {
+    public int sendMessage(Video video) throws FirebaseMessagingException {
         String topic = "videos_" + video.getOrganizationId();
 
         Notification notification = Notification.builder()
@@ -228,26 +232,26 @@ public class MessageService {
         Message message = buildMessage("video", topic, G.toJson(video), notification);
 
         FirebaseMessaging.getInstance().send(message);
-
+        return 0;
     }
 
-    public void sendMessage(Condition condition) throws FirebaseMessagingException {
+    public int sendMessage(Condition condition) throws FirebaseMessagingException {
         String topic = "conditions_" + condition.getOrganizationId();
         Message message = buildMessage("condition", topic, G.toJson(condition));
 
-       FirebaseMessaging.getInstance().send(message);
-
+        FirebaseMessaging.getInstance().send(message);
+        return 0;
     }
 
-    public void sendMessage(FieldMonitorSchedule fieldMonitorSchedule) throws FirebaseMessagingException {
+    public int sendMessage(FieldMonitorSchedule fieldMonitorSchedule) throws FirebaseMessagingException {
         String topic = "fieldMonitorSchedules_" + fieldMonitorSchedule.getOrganizationId();
         Message message = buildMessage("fieldMonitorSchedule", topic, G.toJson(fieldMonitorSchedule));
 
         FirebaseMessaging.getInstance().send(message);
-
+        return 0;
     }
 
-    public void sendMessage(OrgMessage orgMessage) throws FirebaseMessagingException {
+    public int sendMessage(OrgMessage orgMessage) throws FirebaseMessagingException {
         assert (orgMessage.getOrganizationId() != null);
         Notification notification = Notification.builder()
                 .setBody(orgMessage.getMessage())
@@ -259,12 +263,12 @@ public class MessageService {
                 .setTopic(topic)
                 .setNotification(notification)
                 .build();
-         FirebaseMessaging.getInstance().send(message);
-
+        FirebaseMessaging.getInstance().send(message);
+        return 0;
 
     }
 
-    public void sendMessage(Project project) throws FirebaseMessagingException {
+    public int sendMessage(Project project) throws FirebaseMessagingException {
         String topic = "projects_" + project.getOrganizationId();
 
         Notification notification = Notification.builder()
@@ -272,12 +276,11 @@ public class MessageService {
                 .setTitle(project.getTranslatedTitle())
                 .build();
         Message message = buildMessage("project", topic, G.toJson(project), notification);
-
-         FirebaseMessaging.getInstance().send(message);
-
+        FirebaseMessaging.getInstance().send(message);
+        return 0;
     }
 
-    public void sendMessage(User user) throws FirebaseMessagingException {
+    public int sendMessage(User user) throws FirebaseMessagingException {
         String topic = "users_" + user.getOrganizationId();
         Notification notification = Notification.builder()
                 .setBody(user.getTranslatedMessage())
@@ -286,7 +289,7 @@ public class MessageService {
         Message message = buildMessage("user", topic, G.toJson(user), notification);
 
         FirebaseMessaging.getInstance().send(message);
-
+        return 0;
     }
 
     public KillResponse sendKillMessage(String userId, String killerId) throws Exception {

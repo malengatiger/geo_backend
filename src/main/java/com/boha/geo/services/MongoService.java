@@ -35,7 +35,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 @RequiredArgsConstructor
-
 @Service
 public class MongoService {
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
