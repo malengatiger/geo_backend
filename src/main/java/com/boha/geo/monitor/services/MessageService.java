@@ -10,6 +10,7 @@ import com.google.firebase.messaging.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mongodb.client.result.UpdateResult;
+import lombok.RequiredArgsConstructor;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+@RequiredArgsConstructor
 
 @Service
 public class MessageService {
@@ -31,14 +33,6 @@ public class MessageService {
     private final UserRepository userRepository;
     private final KillResponseRepository killResponseRepository;
     private final MongoTemplate mongoTemplate;
-
-    public MessageService(UserRepository userRepository, KillResponseRepository killResponseRepository, MongoTemplate mongoTemplate) {
-        this.userRepository = userRepository;
-        this.killResponseRepository = killResponseRepository;
-        this.mongoTemplate = mongoTemplate;
-
-        setAPNSHeaders();
-    }
 
     Map<String, String> apns = new HashMap<>();
 

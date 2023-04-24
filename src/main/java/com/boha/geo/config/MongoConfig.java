@@ -1,21 +1,19 @@
-package com.boha.geo.util;
+package com.boha.geo.config;
 
-import com.boha.geo.controllers.ListController;
+import com.boha.geo.services.SecretManagerService;
+import com.boha.geo.util.E;
 import com.google.cloud.spring.secretmanager.SecretManagerTemplate;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
-import com.mongodb.client.ListIndexesIterable;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoCollection;
-import org.bson.Document;
+import lombok.RequiredArgsConstructor;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -27,13 +25,9 @@ import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
 
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
-
+@RequiredArgsConstructor
 @EnableCaching
 @Configuration
 public class MongoConfig {
@@ -41,7 +35,7 @@ public class MongoConfig {
     private static final Gson G = new GsonBuilder().setPrettyPrinting().create();
     private static String mm = E.AMP + E.AMP + E.AMP;
 
-    final SecretMgr secretMgr;
+    final SecretManagerService secretManagerService;
 
     @Value("${mongoString}")
     private String mongoString;
@@ -51,13 +45,6 @@ public class MongoConfig {
 
     @Value("${spring.data.mongodb.database}")
     private String databaseName;
-
-
-
-
-    public MongoConfig(SecretMgr secretMgr) {
-        this.secretMgr = secretMgr;
-    }
 
     @Bean
     public MongoClient mongo() {
@@ -74,7 +61,7 @@ public class MongoConfig {
         } else {
             try {
 
-                uri = secretMgr.getMongoString();
+                uri = secretManagerService.getMongoString();
                 int index = uri.indexOf("@");
                 if (index > -1) {
                     mString = uri.substring(index);
@@ -120,8 +107,7 @@ public class MongoConfig {
 
     }
 
-    @Autowired
-    SecretManagerTemplate secretManagerTemplate;
+    private final SecretManagerTemplate secretManagerTemplate;
     @Bean
     public MongoTemplate mongoTemplate() throws Exception {
         MongoTemplate t = new MongoTemplate(mongo(), databaseName);

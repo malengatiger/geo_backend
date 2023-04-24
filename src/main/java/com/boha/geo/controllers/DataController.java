@@ -6,20 +6,20 @@ import com.boha.geo.monitor.services.DataService;
 import com.boha.geo.monitor.services.MessageService;
 import com.boha.geo.monitor.services.MongoDataService;
 import com.boha.geo.monitor.utils.MongoGenerator;
-import com.boha.geo.services.CloudStorageUploader;
+import com.boha.geo.services.CloudStorageUploaderService;
 import com.boha.geo.monitor.services.RegistrationService;
 import com.boha.geo.services.TextTranslationService;
 import com.boha.geo.services.UserBatchService;
 import com.boha.geo.util.E;
+import com.boha.geo.util.JsonGen;
 import com.google.common.io.Files;
-import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
-import io.github.bucket4j.Refill;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.RequiredArgsConstructor;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,47 +30,22 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@RequiredArgsConstructor
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 
 public class DataController {
     private static final Logger LOGGER = LoggerFactory.getLogger(DataController.class);
 
-    public DataController(DataService dataService, UserBatchService userBatchService, CloudStorageUploader cloudStorageUploader, MongoGenerator mongoGenerator,
-                          MessageService messageService, RegistrationService registrationService, MongoDataService mongoDataService) {
-        this.dataService = dataService;
-        this.userBatchService = userBatchService;
-        this.cloudStorageUploader = cloudStorageUploader;
-        this.mongoGenerator = mongoGenerator;
-        this.messageService = messageService;
-        this.registrationService = registrationService;
-        this.mongoDataService = mongoDataService;
-
-        Bandwidth limit = Bandwidth.classic(50, Refill.greedy(50, Duration.ofMinutes(1)));
-        this.bucket = Bucket.builder()
-                .addLimit(limit)
-                .build();
-
-        LOGGER.info(E.PANDA.concat(E.PANDA) +
-                "DataController ready to write data, services injected "
-                        .concat(E.PANDA.concat(E.PANDA)));
-    }
-
     Bucket bucket;
     private final DataService dataService;
     private final UserBatchService userBatchService;
-
-    private final CloudStorageUploader cloudStorageUploader;
+    private final CloudStorageUploaderService cloudStorageUploaderService;
     private final MongoGenerator mongoGenerator;
-
-
     private final MessageService messageService;
-
     private final RegistrationService registrationService;
 
 
@@ -700,6 +675,8 @@ public class DataController {
 
     @Autowired
     TextTranslationService textTranslationService;
+    @Autowired
+    JsonGen jsonGen;
 
     @GetMapping("/getEnglishKeys")
     public ResponseEntity<?> getEnglishKeys() throws Exception {
@@ -732,7 +709,7 @@ public class DataController {
     @GetMapping("/getSignedUrl")
     public ResponseEntity<?> getSignedUrl(String objectName, String contentType  ) throws Exception {
         try {
-            String url =cloudStorageUploader.getSignedUrl(objectName,contentType);
+            String url = cloudStorageUploaderService.getSignedUrl(objectName,contentType);
             return ResponseEntity.ok(url);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
@@ -757,6 +734,20 @@ public class DataController {
 
     }
 
+    @GetMapping("/startTestDataGeneration")
+    public ResponseEntity<?> startTestDataGeneration() throws Exception {
+        try {
+            jsonGen.startTestDataGeneration();
+            return ResponseEntity.ok("startTestDataGeneration done");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new CustomErrorResponse(400,
+                            "TestDataGeneration failed: " + e.getMessage(),
+                            new DateTime().toDateTimeISO().toString()));
+        }
+
+    }
+
     @PostMapping("uploadFile")
     public ResponseEntity<Object> uploadFile(
             @RequestParam String objectName,
@@ -769,7 +760,7 @@ public class DataController {
         byte[] bytes = document.getBytes();
 
         Files.write(bytes, file);
-        String url = cloudStorageUploader.uploadFile(doc, file);
+        String url = cloudStorageUploaderService.uploadFile(doc, file);
         boolean ok = file.delete();
         if (ok) {
             LOGGER.info(E.RED_APPLE +E.RED_APPLE +

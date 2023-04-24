@@ -16,14 +16,14 @@ import java.util.Date;
 public class ControllerToTypescript {
     static final Logger logger = LoggerFactory.getLogger(ControllerToTypescript.class);
 
-    public static void main(String[] args) throws Exception {
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-        Path dirPath = Files.createDirectory(Path.of("controllers_" + sdf.format(new Date())));
-
-
-        convertToTypeScript(dirPath);
-
-    }
+//    public static void main(String[] args) throws Exception {
+//        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+//        Path dirPath = Files.createDirectory(Path.of("controllers_" + sdf.format(new Date())));
+//
+//
+//        convertToTypeScript(dirPath);
+//
+//    }
 
     private static void convertToTypeScript(Path dirPath) throws Exception {
 
@@ -86,7 +86,7 @@ public ping = async (req: Request, res: Response, next: NextFunction) => {
                     sb.append("req.params.").append(pt.getName()).append(";\n");
                 }
             }
-            
+
             sb.append("\t\t\tres.status(200).json({ });\n");
             sb.append("\t\t } catch (error) {\n");
             sb.append("\t\t\tnext(error);\n");

@@ -7,6 +7,7 @@ import com.boha.geo.repos.UserRepo;
 import com.boha.geo.util.E;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import lombok.RequiredArgsConstructor;
 import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.logging.Logger;
+@RequiredArgsConstructor
 
 @Service
 public class UserService {
@@ -29,17 +31,6 @@ public class UserService {
     final UserRepo userRepo;
 
 
-    public UserService(MongoService mongoService, CityRepo cityRepo,
-                       StorageService storageService,
-                       UserRepo userRepo) {
-        this.mongoService = mongoService;
-        this.cityRepo = cityRepo;
-        this.storageService = storageService;
-        this.userRepo = userRepo;
-
-        logger.info(xx
-                + " UserService constructed and services injected");
-    }
     @Value("${surnames}")
     private String surnamesFile;
     @Value("${firstNames}")

@@ -5,6 +5,7 @@ import com.boha.geo.util.E;
 import com.google.cloud.storage.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,10 +17,10 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.concurrent.TimeUnit;
-
+@RequiredArgsConstructor
 @Service
-public class CloudStorageUploader {
-    public static final Logger LOGGER = LoggerFactory.getLogger(CloudStorageUploader.class.getSimpleName());
+public class CloudStorageUploaderService {
+    public static final Logger LOGGER = LoggerFactory.getLogger(CloudStorageUploaderService.class.getSimpleName());
     private static final Gson G = new GsonBuilder().setPrettyPrinting().create();
 
     @Value("${storageBucket}")

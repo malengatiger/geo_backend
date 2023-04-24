@@ -1,0 +1,1045 @@
+[
+  {
+    "projectId": "ea8ba35a-5354-4244-8140-9ca44b27a69b",
+    "projectPolygonId": "b6ec7cd3-84bb-4e73-8c79-ef1e0daf265c",
+    "organizationId": "8b6af025-1821-4f29-995a-77c80e9b0996",
+    "positions": [
+      {
+        "type": "Point",
+        "coordinates": [
+          27.839368544518948,
+          -25.731100371926104
+        ]
+      },
+      {
+        "type": "Point",
+        "coordinates": [
+          27.795538902282715,
+          -25.760173607737435
+        ]
+      },
+      {
+        "type": "Point",
+        "coordinates": [
+          27.85250600427389,
+          -25.777716300430196
+        ]
+      },
+      {
+        "type": "Point",
+        "coordinates": [
+          27.87334475666285,
+          -25.820643752891332
+        ]
+      },
+      {
+        "type": "Point",
+        "coordinates": [
+          27.933029606938362,
+          -25.758133570417925
+        ]
+      },
+      {
+        "type": "Point",
+        "coordinates": [
+          27.884469889104366,
+          -25.710867732011643
+        ]
+      }
+    ],
+    "projectName": "Pecanwood Facilty Services ",
+    "created": "2023-02-10T17:02:45.254111Z",
+    "nearestCities": [
+      {
+        "name": "Hartbeespoort",
+        "cityId": "873e54f7-919a-4a87-a993-7f1d38102437",
+        "country": "South Africa",
+        "province": "North West",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            27.85,
+            -25.733333
+          ]
+        }
+      },
+      {
+        "name": "Hartebeestpoort",
+        "cityId": "9d6b8cbb-261f-4f42-94ba-7b698ee81ed7",
+        "country": "South Africa",
+        "province": "North West",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            27.85,
+            -25.733333
+          ]
+        }
+      },
+      {
+        "name": "Kosmos",
+        "cityId": "afe31f4d-f44c-4f00-a360-b18e61ca7981",
+        "country": "South Africa",
+        "province": "North West",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            27.852025,
+            -25.739123
+          ]
+        }
+      },
+      {
+        "name": "Schoemanville",
+        "cityId": "130d8098-bef4-468f-ae8a-195757573fd6",
+        "country": "South Africa",
+        "province": "North West",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            27.873882,
+            -25.728685
+          ]
+        }
+      },
+      {
+        "name": "Schoemansville",
+        "cityId": "5290cb5a-00ae-4722-a96d-ba66645e16e8",
+        "country": "South Africa",
+        "province": "North West",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            27.873882,
+            -25.728685
+          ]
+        }
+      }
+    ],
+    "userId": "T7aSg6QV4VSYWcpueSLlUwmx5Y62",
+    "userName": "Reginah M Willams"
+  },
+  {
+    "projectId": "1facff9a-0ee9-48d8-a6ac-37104177eee0",
+    "projectPolygonId": "22f074c8-3441-4dd1-831c-fee9a1c4f950",
+    "organizationId": "8b6af025-1821-4f29-995a-77c80e9b0996",
+    "positions": [
+      {
+        "type": "Point",
+        "coordinates": [
+          28.114876337349415,
+          -26.084396509945822
+        ]
+      },
+      {
+        "type": "Point",
+        "coordinates": [
+          28.1038873270154,
+          -26.092218332980995
+        ]
+      },
+      {
+        "type": "Point",
+        "coordinates": [
+          28.115193843841553,
+          -26.11168419928078
+        ]
+      },
+      {
+        "type": "Point",
+        "coordinates": [
+          28.12960870563984,
+          -26.110774100059423
+        ]
+      },
+      {
+        "type": "Point",
+        "coordinates": [
+          28.13856527209282,
+          -26.124358618943926
+        ]
+      },
+      {
+        "type": "Point",
+        "coordinates": [
+          28.149173073470592,
+          -26.104266518601644
+        ]
+      },
+      {
+        "type": "Point",
+        "coordinates": [
+          28.132565170526505,
+          -26.07754837219672
+        ]
+      }
+    ],
+    "projectName": "Alexander Community Project",
+    "created": "2023-02-23T12:50:12.198666Z",
+    "nearestCities": [
+      {
+        "name": "Avalon",
+        "cityId": "f83e88c4-95eb-4a34-a31c-155a9058ced2",
+        "country": "South Africa",
+        "province": "Gauteng",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            28.133333,
+            -26.1
+          ]
+        }
+      },
+      {
+        "name": "Alexandra",
+        "cityId": "c92c19d6-f2b9-41ad-a834-1294583bb0f1",
+        "country": "South Africa",
+        "province": "Gauteng",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            28.098836,
+            -26.105284
+          ]
+        }
+      },
+      {
+        "name": "Wynberg",
+        "cityId": "c703424b-e2ec-43d5-9e61-33be3eedb1e0",
+        "country": "South Africa",
+        "province": "Gauteng",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            28.083333,
+            -26.1
+          ]
+        }
+      },
+      {
+        "name": "Lakeside",
+        "cityId": "10485ce0-7e74-4fa0-96ec-e24fd47592ef",
+        "country": "South Africa",
+        "province": "Gauteng",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            28.146984,
+            -26.099343
+          ]
+        }
+      },
+      {
+        "name": "Lombardy East",
+        "cityId": "1a8eedc8-2d65-4cd0-9521-b12e87fe6b4d",
+        "country": "South Africa",
+        "province": "Gauteng",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            28.124729,
+            -26.118323
+          ]
+        }
+      },
+      {
+        "name": "Kew",
+        "cityId": "19f07be3-5578-4c0b-9a47-5bfeca0147ee",
+        "country": "South Africa",
+        "province": "Gauteng",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            28.095734,
+            -26.121325
+          ]
+        }
+      },
+      {
+        "name": "Antwerp",
+        "cityId": "f12a628d-6153-449c-8ec0-84e25d69e424",
+        "country": "South Africa",
+        "province": "Gauteng",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            28.154828,
+            -26.105248
+          ]
+        }
+      },
+      {
+        "name": "Lyndhurst",
+        "cityId": "1b7486e2-5cdd-4fcb-9a0c-cdaa6370b5e6",
+        "country": "South Africa",
+        "province": "Gauteng",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            28.109052,
+            -26.127517
+          ]
+        }
+      }
+    ],
+    "userId": "OYMZvjq7SpXFxoKOBBEGTFjFuD32",
+    "userName": "Thabo John Mkhwanazi "
+  },
+  {
+    "projectId": "826a9228-650f-42e8-87bb-a3178324e533",
+    "projectPolygonId": "20b0ecb6-2f03-448b-a85f-ec83aa3affa8",
+    "organizationId": "8b6af025-1821-4f29-995a-77c80e9b0996",
+    "positions": [
+      {
+        "type": "Point",
+        "coordinates": [
+          28.05429697036743,
+          -25.73302912399785
+        ]
+      },
+      {
+        "type": "Point",
+        "coordinates": [
+          27.934022024273872,
+          -25.88908338781561
+        ]
+      },
+      {
+        "type": "Point",
+        "coordinates": [
+          27.86720283329487,
+          -26.075891761922946
+        ]
+      },
+      {
+        "type": "Point",
+        "coordinates": [
+          28.037586472928524,
+          -26.17887466429994
+        ]
+      },
+      {
+        "type": "Point",
+        "coordinates": [
+          28.266828171908855,
+          -26.135012292232034
+        ]
+      },
+      {
+        "type": "Point",
+        "coordinates": [
+          28.291496112942696,
+          -25.707539949839763
+        ]
+      }
+    ],
+    "projectName": "Sample Project",
+    "created": "2023-02-23T13:27:28.767265Z",
+    "nearestCities": [
+      {
+        "name": "Mooka",
+        "cityId": "2426b518-e5cd-4bcb-aa02-c72d59f8b642",
+        "country": "South Africa",
+        "province": "Gauteng",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            28.073056,
+            -25.715278
+          ]
+        }
+      },
+      {
+        "name": "West Fort",
+        "cityId": "1b16309d-5286-4000-b4f7-9b8f8ad927c5",
+        "country": "South Africa",
+        "province": "Gauteng",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            28.090592,
+            -25.735225
+          ]
+        }
+      },
+      {
+        "name": "Westford",
+        "cityId": "818bfd12-e224-44d8-9a04-1b014b2c7b0d",
+        "country": "South Africa",
+        "province": "Gauteng",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            28.090592,
+            -25.735225
+          ]
+        }
+      },
+      {
+        "name": "Swartspruit",
+        "cityId": "534219d4-41c0-4f99-aab4-9ea26091a687",
+        "country": "South Africa",
+        "province": "Gauteng",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            28.012323,
+            -25.72071
+          ]
+        }
+      },
+      {
+        "name": "Saulsville",
+        "cityId": "b0d4f5bd-ad4d-4e56-aab1-728aa0a9fdb3",
+        "country": "South Africa",
+        "province": "Gauteng",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            28.057561,
+            -25.774195
+          ]
+        }
+      },
+      {
+        "name": "Wylies Farm",
+        "cityId": "aef2d2d8-3696-4584-b5f4-59ed0797c1a5",
+        "country": "South Africa",
+        "province": "Gauteng",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            28.09509,
+            -25.75621
+          ]
+        }
+      },
+      {
+        "name": "Atteridgeville",
+        "cityId": "b7666825-056f-433a-8b92-aa0693b474c1",
+        "country": "South Africa",
+        "province": "Gauteng",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            28.080728,
+            -25.770373
+          ]
+        }
+      }
+    ],
+    "userId": "OYMZvjq7SpXFxoKOBBEGTFjFuD32",
+    "userName": "Thabo John Mkhwanazi "
+  },
+  {
+    "projectId": "03ca3d45-a2ce-43e9-8928-0ecdf6236ca2",
+    "projectPolygonId": "a5b893cd-a992-4542-bc32-8ee1d6e63c9c",
+    "organizationId": "8b6af025-1821-4f29-995a-77c80e9b0996",
+    "positions": [
+      {
+        "type": "Point",
+        "coordinates": [
+          28.047228008508682,
+          -26.135216970023713
+        ]
+      },
+      {
+        "type": "Point",
+        "coordinates": [
+          28.04020296782255,
+          -26.141334262412474
+        ]
+      },
+      {
+        "type": "Point",
+        "coordinates": [
+          28.04390475153923,
+          -26.15138327505867
+        ]
+      },
+      {
+        "type": "Point",
+        "coordinates": [
+          28.051171526312828,
+          -26.15371173916262
+        ]
+      },
+      {
+        "type": "Point",
+        "coordinates": [
+          28.06278884410858,
+          -26.13811161737653
+        ]
+      },
+      {
+        "type": "Point",
+        "coordinates": [
+          28.06035440415144,
+          -26.123018751336623
+        ]
+      },
+      {
+        "type": "Point",
+        "coordinates": [
+          28.036846853792667,
+          -26.122843552953437
+        ]
+      }
+    ],
+    "projectName": "SANDTON Residential Jobs",
+    "created": "2023-02-23T13:29:27.640662Z",
+    "nearestCities": [
+      {
+        "name": "Dunkeld",
+        "cityId": "a16503e2-937c-4727-bb4b-bfc20570ee17",
+        "country": "South Africa",
+        "province": "Gauteng",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            28.041183,
+            -26.137843
+          ]
+        }
+      },
+      {
+        "name": "Hyde Park",
+        "cityId": "25a2e038-eac0-4c35-9199-c8a71b530a1e",
+        "country": "South Africa",
+        "province": "Gauteng",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            28.03788,
+            -26.120694
+          ]
+        }
+      },
+      {
+        "name": "Inanda",
+        "cityId": "8f5960c0-c74d-4605-833e-9795a7ad0662",
+        "country": "South Africa",
+        "province": "Gauteng",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            28.058779,
+            -26.119772
+          ]
+        }
+      },
+      {
+        "name": "Craighall Park",
+        "cityId": "4696ee87-ae5b-4b6c-8c9d-44dc6c5357a3",
+        "country": "South Africa",
+        "province": "Gauteng",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            28.023821,
+            -26.125284
+          ]
+        }
+      },
+      {
+        "name": "Sandhurst",
+        "cityId": "cc96ee09-4d06-4703-babf-43f5c8a5ad4c",
+        "country": "South Africa",
+        "province": "Gauteng",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            28.043438,
+            -26.109865
+          ]
+        }
+      },
+      {
+        "name": "Parkhurst",
+        "cityId": "0545112a-a568-45fe-9647-3d7af57d2f24",
+        "country": "South Africa",
+        "province": "Gauteng",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            28.018238,
+            -26.138139
+          ]
+        }
+      },
+      {
+        "name": "Houghton",
+        "cityId": "cf3241a2-b44d-46b1-8838-a7bf0685321f",
+        "country": "South Africa",
+        "province": "Gauteng",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            28.051305,
+            -26.16242
+          ]
+        }
+      },
+      {
+        "name": "Houghton Estate",
+        "cityId": "2aea291c-688b-4e0f-905e-fe7b3c48a950",
+        "country": "South Africa",
+        "province": "Gauteng",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            28.051305,
+            -26.16242
+          ]
+        }
+      },
+      {
+        "name": "Waverly",
+        "cityId": "2d92c593-0b83-4f6b-a897-d78983d095d7",
+        "country": "South Africa",
+        "province": "Gauteng",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            28.078383,
+            -26.135274
+          ]
+        }
+      },
+      {
+        "name": "Craighall",
+        "cityId": "7613cac1-c7d4-447f-8c86-f3e2a37a0de7",
+        "country": "South Africa",
+        "province": "Gauteng",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            28.016667,
+            -26.116667
+          ]
+        }
+      },
+      {
+        "name": "Parkview",
+        "cityId": "351d4177-4c75-4df7-91d6-e5be9619bb71",
+        "country": "South Africa",
+        "province": "Gauteng",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            28.024387,
+            -26.165288
+          ]
+        }
+      },
+      {
+        "name": "Sandown",
+        "cityId": "bbe0329d-edd8-4ae4-bb90-3ad82715ceae",
+        "country": "South Africa",
+        "province": "Gauteng",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            28.066667,
+            -26.1
+          ]
+        }
+      },
+      {
+        "name": "Strathavon",
+        "cityId": "5c8eea4e-e697-4ee1-8131-d25111d22528",
+        "country": "South Africa",
+        "province": "Gauteng",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            28.066667,
+            -26.1
+          ]
+        }
+      },
+      {
+        "name": "Parkmore",
+        "cityId": "2880d4f7-9c55-42e7-ae7f-f377b39aafd5",
+        "country": "South Africa",
+        "province": "Gauteng",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            28.037448,
+            -26.095959
+          ]
+        }
+      },
+      {
+        "name": "Westcliffe",
+        "cityId": "59aaff93-2879-4d50-9c35-23a62f83b476",
+        "country": "South Africa",
+        "province": "Gauteng",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            28.026845,
+            -26.172102
+          ]
+        }
+      },
+      {
+        "name": "Westcliff",
+        "cityId": "50f44dc8-c51f-4d67-9002-6bee74b15987",
+        "country": "South Africa",
+        "province": "Gauteng",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            28.026845,
+            -26.172102
+          ]
+        }
+      },
+      {
+        "name": "Emmarentia",
+        "cityId": "97385ecd-4232-4433-9cc2-620a59587506",
+        "country": "South Africa",
+        "province": "Gauteng",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            28.011657,
+            -26.166003
+          ]
+        }
+      }
+    ],
+    "userId": "OYMZvjq7SpXFxoKOBBEGTFjFuD32",
+    "userName": "Thabo John Mkhwanazi "
+  },
+  {
+    "projectId": "5b58e532-aae5-49d6-8f5f-21ef0a517574",
+    "projectPolygonId": "13390fb2-a639-4673-bf7d-d3224b392006",
+    "organizationId": "8b6af025-1821-4f29-995a-77c80e9b0996",
+    "positions": [
+      {
+        "type": "Point",
+        "coordinates": [
+          28.010625578463078,
+          -25.774897917309808
+        ]
+      },
+      {
+        "type": "Point",
+        "coordinates": [
+          28.051283843815327,
+          -25.799576044352225
+        ]
+      },
+      {
+        "type": "Point",
+        "coordinates": [
+          28.095453120768074,
+          -25.7993722910596
+        ]
+      },
+      {
+        "type": "Point",
+        "coordinates": [
+          28.134752176702026,
+          -25.785402130206716
+        ]
+      },
+      {
+        "type": "Point",
+        "coordinates": [
+          28.16499140113592,
+          -25.772756082519294
+        ]
+      },
+      {
+        "type": "Point",
+        "coordinates": [
+          28.148909211158752,
+          -25.723791609676717
+        ]
+      }
+    ],
+    "projectName": "Atteridgeville Community Project ",
+    "created": "2023-02-24T20:02:24.452239Z",
+    "nearestCities": [
+      {
+        "name": "Saulsville",
+        "cityId": "b0d4f5bd-ad4d-4e56-aab1-728aa0a9fdb3",
+        "country": "South Africa",
+        "province": "Gauteng",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            28.057561,
+            -25.774195
+          ]
+        }
+      }
+    ],
+    "userId": "T7aSg6QV4VSYWcpueSLlUwmx5Y62",
+    "userName": "Reginah M Willams"
+  },
+  {
+    "projectId": "59995cfb-56fa-43ec-ae8c-f31bff6efee8",
+    "projectPolygonId": "2a610148-82b6-4073-ac37-02c42a65a25d",
+    "organizationId": "8b6af025-1821-4f29-995a-77c80e9b0996",
+    "positions": [
+      {
+        "type": "Point",
+        "coordinates": [
+          27.850325368344784,
+          -25.707010686146354
+        ]
+      },
+      {
+        "type": "Point",
+        "coordinates": [
+          27.846588045358658,
+          -25.7322130476262
+        ]
+      },
+      {
+        "type": "Point",
+        "coordinates": [
+          27.79490254819393,
+          -25.74399034104088
+        ]
+      },
+      {
+        "type": "Point",
+        "coordinates": [
+          27.795846685767174,
+          -25.779780153734418
+        ]
+      },
+      {
+        "type": "Point",
+        "coordinates": [
+          27.832195982336998,
+          -25.7782343804979
+        ]
+      },
+      {
+        "type": "Point",
+        "coordinates": [
+          27.860906347632408,
+          -25.80296433479795
+        ]
+      },
+      {
+        "type": "Point",
+        "coordinates": [
+          27.89601109921932,
+          -25.79653087716266
+        ]
+      }
+    ],
+    "projectName": "Pecanwood Boat Club Renovation ",
+    "created": "2023-03-16T20:14:54.335056Z",
+    "nearestCities": [
+      {
+        "name": "Hartbeespoort",
+        "cityId": "873e54f7-919a-4a87-a993-7f1d38102437",
+        "country": "South Africa",
+        "province": "North West",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            27.85,
+            -25.733333
+          ]
+        }
+      },
+      {
+        "name": "Hartebeestpoort",
+        "cityId": "9d6b8cbb-261f-4f42-94ba-7b698ee81ed7",
+        "country": "South Africa",
+        "province": "North West",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            27.85,
+            -25.733333
+          ]
+        }
+      },
+      {
+        "name": "Schoemanville",
+        "cityId": "130d8098-bef4-468f-ae8a-195757573fd6",
+        "country": "South Africa",
+        "province": "North West",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            27.873882,
+            -25.728685
+          ]
+        }
+      },
+      {
+        "name": "Schoemansville",
+        "cityId": "5290cb5a-00ae-4722-a96d-ba66645e16e8",
+        "country": "South Africa",
+        "province": "North West",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            27.873882,
+            -25.728685
+          ]
+        }
+      },
+      {
+        "name": "Kosmos",
+        "cityId": "afe31f4d-f44c-4f00-a360-b18e61ca7981",
+        "country": "South Africa",
+        "province": "North West",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            27.852025,
+            -25.739123
+          ]
+        }
+      }
+    ],
+    "userId": "T7aSg6QV4VSYWcpueSLlUwmx5Y62",
+    "userName": "Reginah M Willams"
+  },
+  {
+    "projectId": "ea8ba35a-5354-4244-8140-9ca44b27a69b",
+    "projectPolygonId": "23e46da5-53d8-4021-9519-b6024d6ec2f0",
+    "organizationId": "8b6af025-1821-4f29-995a-77c80e9b0996",
+    "positions": [
+      {
+        "type": "Point",
+        "coordinates": [
+          27.86434728652239,
+          -25.714643697472276
+        ]
+      },
+      {
+        "type": "Point",
+        "coordinates": [
+          27.835394516587257,
+          -25.732589977749427
+        ]
+      },
+      {
+        "type": "Point",
+        "coordinates": [
+          27.835394516587257,
+          -25.77282310979311
+        ]
+      },
+      {
+        "type": "Point",
+        "coordinates": [
+          27.85964235663414,
+          -25.786738299146347
+        ]
+      },
+      {
+        "type": "Point",
+        "coordinates": [
+          27.885458953678608,
+          -25.76738683337135
+        ]
+      },
+      {
+        "type": "Point",
+        "coordinates": [
+          27.912902310490608,
+          -25.73182916964573
+        ]
+      }
+    ],
+    "projectName": "Pecanwood Facilty Services ",
+    "created": "2023-03-23T13:23:11.032649Z",
+    "nearestCities": [
+      {
+        "name": "Schoemansville",
+        "cityId": "5290cb5a-00ae-4722-a96d-ba66645e16e8",
+        "country": "South Africa",
+        "province": "North West",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            27.873882,
+            -25.728685
+          ]
+        }
+      },
+      {
+        "name": "Schoemanville",
+        "cityId": "130d8098-bef4-468f-ae8a-195757573fd6",
+        "country": "South Africa",
+        "province": "North West",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            27.873882,
+            -25.728685
+          ]
+        }
+      },
+      {
+        "name": "Hartebeestpoort",
+        "cityId": "9d6b8cbb-261f-4f42-94ba-7b698ee81ed7",
+        "country": "South Africa",
+        "province": "North West",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            27.85,
+            -25.733333
+          ]
+        }
+      },
+      {
+        "name": "Hartbeespoort",
+        "cityId": "873e54f7-919a-4a87-a993-7f1d38102437",
+        "country": "South Africa",
+        "province": "North West",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            27.85,
+            -25.733333
+          ]
+        }
+      },
+      {
+        "name": "Kosmos",
+        "cityId": "afe31f4d-f44c-4f00-a360-b18e61ca7981",
+        "country": "South Africa",
+        "province": "North West",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            27.852025,
+            -25.739123
+          ]
+        }
+      },
+      {
+        "name": "Lone Star Texas",
+        "cityId": "0b077698-c519-427b-b035-3410a2836897",
+        "country": "South Africa",
+        "province": "North West",
+        "cityLocation": {
+          "type": "Point",
+          "coordinates": [
+            27.9,
+            -25.733333
+          ]
+        }
+      }
+    ],
+    "userId": "OYMZvjq7SpXFxoKOBBEGTFjFuD32",
+    "userName": "Thabo John Mkhwanazi "
+  }
+]

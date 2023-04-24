@@ -8,6 +8,7 @@ import com.boha.geo.util.E;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mongodb.client.MongoClient;
+import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -29,69 +30,57 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 ;
-
+@RequiredArgsConstructor
 @Service
 public class ListService {
     public static final Logger LOGGER = LoggerFactory.getLogger(ListService.class.getSimpleName());
     private static final String xx = E.COFFEE + E.COFFEE + E.COFFEE;
-
     private static final Gson G = new GsonBuilder().setPrettyPrinting().create();
-    @Autowired
-    GeofenceEventRepository geofenceEventRepository;
+   
+    private final GeofenceEventRepository geofenceEventRepository;
 
-    @Autowired
-    AppErrorRepository appErrorRepository;
+    private final AppErrorRepository appErrorRepository;
 
-    @Autowired
-    ActivityModelRepository activityModelRepository;
+    private final ActivityModelRepository activityModelRepository;
 
-    @Autowired
-    ProjectSummaryRepository projectSummaryRepository;
-    @Autowired
-    CountryRepository countryRepository;
-    @Autowired
-    CityRepository cityRepository;
-    @Autowired
-    OrganizationRepository organizationRepository;
+    private final ProjectSummaryRepository projectSummaryRepository;
 
-    @Autowired
-    ProjectPolygonRepository projectPolygonRepository;
-    @Autowired
-    ProjectRepository projectRepository;
-    @Autowired
-    CommunityRepository communityRepository;
+    private final CountryRepository countryRepository;
 
-    @Autowired
-    SettingsModelRepository settingsModelRepository;
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    MonitorReportRepository monitorReportRepository;
-    @Autowired
-    QuestionnaireRepository questionnaireRepository;
-    @Autowired
-    PhotoRepository photoRepository;
+    private final CityRepository cityRepository;
 
-    @Autowired
-    ProjectAssignmentRepository projectAssignmentRepository;
-    @Autowired
-    VideoRepository videoRepository;
-    @Autowired
-    DataService dataService;
-    @Autowired
-    AudioRepository audioRepository;
-    @Autowired
-    ConditionRepository conditionRepository;
+    private final OrganizationRepository organizationRepository;
 
-    @Autowired
-    FieldMonitorScheduleRepository fieldMonitorScheduleRepository;
-    @Autowired
-    MongoTemplate mongoTemplate;
+    private final ProjectPolygonRepository projectPolygonRepository;
 
-    public ListService() {
+    private final ProjectRepository projectRepository;
 
-        LOGGER.info(xx + " ListService constructed ");
-    }
+    private final CommunityRepository communityRepository;
+
+    private final SettingsModelRepository settingsModelRepository;
+
+    private final UserRepository userRepository;
+
+    private final MonitorReportRepository monitorReportRepository;
+
+    private final QuestionnaireRepository questionnaireRepository;
+
+    private final PhotoRepository photoRepository;
+
+    private final ProjectAssignmentRepository projectAssignmentRepository;
+
+    private final VideoRepository videoRepository;
+
+    private final DataService dataService;
+
+    private final AudioRepository audioRepository;
+
+    private final ConditionRepository conditionRepository;
+
+
+    private final FieldMonitorScheduleRepository fieldMonitorScheduleRepository;
+
+    private final MongoTemplate mongoTemplate;
 
     static final double lat = 0.0144927536231884; // degrees latitude per mile
     static final double lon = 0.0181818181818182; // degrees longitude per mile
@@ -368,7 +357,7 @@ public class ListService {
 
         DataBag bag = getOrganizationData(organizationId, startDate, endDate);
         String json = G.toJson(bag);
-        LOGGER.info(mm + " Before zip: " + decimalFormat.format(json.length()) + " bytes in file");
+        LOGGER.info(mm + E.RED_DOT+E.RED_DOT+" Before zip: " + decimalFormat.format(json.length()) + " bytes in file");
         File dir = new File("zipDirectory");
         if (!dir.exists()) {
             dir.mkdir();
@@ -387,7 +376,7 @@ public class ListService {
         long ms = (end - start);
         double elapsed = Double.parseDouble(""+ms) / Double.parseDouble("1000");
 
-        LOGGER.info(mm + " After zip: "
+        LOGGER.info(mm + E.RED_DOT+E.RED_DOT+" After zip: "
                 + decimalFormat.format(zippedFile.length()) +
                 " bytes, elapsed: " + elapsed + " seconds");
         return zippedFile;
@@ -402,7 +391,7 @@ public class ListService {
         decimalFormat.setGroupingUsed(true);
         decimalFormat.setGroupingSize(3);
 
-        LOGGER.info(mm + " Before zip: " + decimalFormat.format( json.length()) + " bytes in json");
+        LOGGER.info(mm + E.RED_DOT+E.RED_DOT+ " Before zip: " + decimalFormat.format( json.length()) + " bytes in json");
 
         File dir = new File("zipDirectory");
         if (!dir.exists()) {
@@ -423,7 +412,7 @@ public class ListService {
         long ms = (end - start);
         double elapsed = Double.parseDouble(""+ms) / Double.parseDouble("1000");
 
-        LOGGER.info(mm + " After zip: "
+        LOGGER.info(mm + E.RED_DOT+E.RED_DOT+ " After zip: "
                 + decimalFormat.format(zippedFile.length()) + " bytes in file, elapsed: "
                 + E.RED_APPLE + " " + elapsed + " seconds");
         return zippedFile;
@@ -435,7 +424,7 @@ public class ListService {
         decimalFormat.setGroupingSize(3);
         DataBag bag = getUserData(userId, startDate, endDate);
         String json = G.toJson(bag);
-        LOGGER.info(mm + " getUserDataZippedFile: Before zip: " + decimalFormat.format(json.length()) + " bytes");
+        LOGGER.info(mm + E.RED_DOT+E.RED_DOT+ " getUserDataZippedFile: Before zip: " + decimalFormat.format(json.length()) + " bytes");
 
         File dir = new File("zipDirectory");
         if (!dir.exists()) {
@@ -452,7 +441,7 @@ public class ListService {
         out.closeEntry();
 
         out.close();
-        LOGGER.info(mm + " After zipping: " + decimalFormat.format(zippedFile.length()) + " bytes in file");
+        LOGGER.info(mm + E.RED_DOT+E.RED_DOT+ " After zipping: " + decimalFormat.format(zippedFile.length()) + " bytes in file");
         return zippedFile;
     }
 
@@ -551,7 +540,7 @@ public class ListService {
         return mList;
     }
 
-    @Autowired
+   
     ProjectPositionRepository projectPositionRepository;
 
     public List<Project> findProjectsByLocation(String organizationId, double latitude, double longitude, double radiusInKM) {
@@ -586,7 +575,7 @@ public class ListService {
         return mList;
     }
 
-    @Autowired
+   
     MongoClient mongoClient;
 
     public int countPhotosByProject(String projectId) {

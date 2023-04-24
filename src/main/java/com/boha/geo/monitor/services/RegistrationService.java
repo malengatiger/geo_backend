@@ -8,6 +8,7 @@ import com.boha.geo.repos.UserRepository;
 import com.boha.geo.util.E;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import lombok.RequiredArgsConstructor;
 import org.joda.time.DateTime;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
-
+@RequiredArgsConstructor
 @Service
 public class RegistrationService {
     private static final Logger LOGGER = Logger.getLogger(RegistrationService.class.getSimpleName());
@@ -26,15 +27,6 @@ public class RegistrationService {
     final ProjectPositionRepository projectPositionRepository;
     final DataService dataService;
     final ListService listService;
-
-    public RegistrationService(OrganizationRepository organizationRepository, UserRepository userRepository, ProjectRepository projectRepository, ProjectPositionRepository projectPositionRepository, DataService dataService, ListService listService) {
-        this.organizationRepository = organizationRepository;
-        this.userRepository = userRepository;
-        this.projectRepository = projectRepository;
-        this.projectPositionRepository = projectPositionRepository;
-        this.dataService = dataService;
-        this.listService = listService;
-    }
 
     public OrganizationRegistrationBag registerOrganization(OrganizationRegistrationBag orgBag) throws Exception {
 

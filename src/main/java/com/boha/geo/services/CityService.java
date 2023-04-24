@@ -11,6 +11,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.geojson.Point;
 import com.mongodb.client.model.geojson.Position;
+import lombok.RequiredArgsConstructor;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import static com.mongodb.client.model.Filters.near;
-
+@RequiredArgsConstructor
 @Service
 public class CityService {
 
@@ -32,12 +33,6 @@ public class CityService {
 
     private static final String xx = E.COFFEE+E.COFFEE+E.COFFEE;
 
-    public CityService(MongoClient mongoClient, CityRepository cityRepo) {
-        this.mongoClient = mongoClient;
-        this.cityRepo = cityRepo;
-
-        logger.info(xx+" CityService constructed and services injected");
-    }
     private static final Logger logger
             = Logger.getLogger(CityService.class.getSimpleName());
     private static final Gson gson = new GsonBuilder()

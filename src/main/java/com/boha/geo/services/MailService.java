@@ -5,21 +5,19 @@ import com.boha.geo.util.E;
 import jakarta.mail.Message;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+@RequiredArgsConstructor
 
 @Service
 public class MailService {
 
     private final JavaMailSender mailSender;
     public static final Logger LOGGER = LoggerFactory.getLogger(MailService.class.getSimpleName());
-
-    public MailService(JavaMailSender mailSender) {
-        this.mailSender = mailSender;
-    }
 
     @Value("${email}")
     private String email;

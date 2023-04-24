@@ -1,4 +1,4 @@
-package com.boha.geo.services;
+package com.boha.geo.filters;
 
 
 import com.boha.geo.util.E;
@@ -73,7 +73,6 @@ public class RequestThrottleFilter implements Filter {
         }
         requests++;
 
-        LOGGER.info(E.PANDA+E.PANDA+E.PANDA+E.PANDA+ " RequestThrottleFilter: isMaximumRequestsPerSecondExceeded: " + requests + " from " + clientIpAddress);
         requestCountsPerIpAddress.put(clientIpAddress, requests);
         return false;
     }

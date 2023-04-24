@@ -17,14 +17,14 @@ import java.util.List;
 public class JavaToTypescript {
     static final Logger logger = LoggerFactory.getLogger(JavaToTypescript.class);
 
-    public static void main(String[] args) throws Exception {
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-        Path dirPath = Files.createDirectory(Path.of("conversions_" + sdf.format(new Date())));
-
-
-        convertToTypeScriptInterfaces(dirPath);
-
-    }
+//    public static void main(String[] args) throws Exception {
+//        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+//        Path dirPath = Files.createDirectory(Path.of("conversions_" + sdf.format(new Date())));
+//
+//
+//        convertToTypeScriptInterfaces(dirPath);
+//
+//    }
 
     private static void convertToTypeScriptInterfaces(Path outputPath) throws Exception {
 

@@ -1,10 +1,11 @@
-package com.boha.geo.util;
+package com.boha.geo.services;
 
+import com.boha.geo.util.E;
 import com.google.cloud.secretmanager.v1.AccessSecretVersionResponse;
 import com.google.cloud.secretmanager.v1.SecretManagerServiceClient;
 import com.google.cloud.secretmanager.v1.SecretVersionName;
 import com.google.cloud.spring.secretmanager.SecretManagerTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -16,9 +17,10 @@ import java.util.zip.Checksum;
 /**
  * Works with the GCP Secret Manager to retrieve keys
  */
+@RequiredArgsConstructor
 @Service
-public class SecretMgr {
-    static final Logger LOGGER = Logger.getLogger(SecretMgr.class.getSimpleName());
+public class SecretManagerService {
+    static final Logger LOGGER = Logger.getLogger(SecretManagerService.class.getSimpleName());
 
     private String projectId;
     @Value("${placesAPIKeyName}")
@@ -31,11 +33,9 @@ public class SecretMgr {
 
     @Value("${mongoSecretsVersion}")
     private String mongoSecretsVersion;
-    @Autowired
-    private Environment environment;
 
-    @Autowired
-    private SecretManagerTemplate secretManagerTemplate;
+    private final Environment environment;
+    private final SecretManagerTemplate secretManagerTemplate;
 
     void setProjectId() {
         projectId = environment.getProperty("PROJECT_ID");

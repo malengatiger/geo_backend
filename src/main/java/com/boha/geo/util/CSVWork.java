@@ -80,7 +80,8 @@ public class CSVWork {
                 StandardOpenOption.TRUNCATE_EXISTING);
 
         List<User> list = FileToUsers.getUsersFromJSONFile(file);
-        LOGGER.info("Users created from JSON file: \uD83C\uDF4E\uD83C\uDF4E\uD83C\uDF4E " + list.size());
+        LOGGER.info("Users created from JSON file: \uD83C\uDF4E\uD83C\uDF4E\uD83C\uDF4E "
+                + list.size());
     }
 
     private static void createCSV(List<User> users) {
@@ -99,7 +100,8 @@ public class CSVWork {
 
             FileUtils.writeByteArrayToFile(file, csvString.getBytes());
             List<User> list = FileToUsers.getUsersFromCSVFile(file);
-            LOGGER.info("Users created from CSV file: \uD83C\uDF4E\uD83C\uDF4E\uD83C\uDF4E " + list.size());
+            LOGGER.info("Users created from CSV file: \uD83C\uDF4E\uD83C\uDF4E\uD83C\uDF4E "
+                    + list.size());
         }
         catch (Exception e) {
             e.printStackTrace();

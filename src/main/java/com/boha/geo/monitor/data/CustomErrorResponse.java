@@ -13,6 +13,4 @@ public class CustomErrorResponse {
         this.date = date;
     }
 
-    public CustomErrorResponse() {
-    }
 }

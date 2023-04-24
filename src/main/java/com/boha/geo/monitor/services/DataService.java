@@ -19,6 +19,7 @@ import com.google.firebase.auth.UserRecord;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mongodb.client.result.UpdateResult;
+import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -41,6 +42,8 @@ import java.util.UUID;
 /**
  * Service that adds data to the MongoDB database via repositories
  */
+@RequiredArgsConstructor
+
 @Service
 public class DataService {
     public static final Logger LOGGER = LoggerFactory.getLogger(DataService.class.getSimpleName());
@@ -89,36 +92,6 @@ public class DataService {
 
 
     private static final String xx = E.COFFEE + E.COFFEE + E.COFFEE;
-
-    public DataService(Environment env, AppErrorRepository appErrorRepository, GeofenceEventRepository geofenceEventRepository, SettingsModelRepository settingsModelRepository, RatingRepository ratingRepository, MongoTemplate mongoTemplate, AudioRepository audioRepository, ProjectRepository projectRepository, LocationResponseRepository locationResponseRepository, LocationRequestRepository locationRequestRepository, ProjectPolygonRepository projectPolygonRepository, CityRepository cityRepository, PhotoRepository photoRepository, ActivityModelRepository activityModelRepository, ProjectAssignmentRepository projectAssignmentRepository, VideoRepository videoRepository, UserRepository userRepository, CommunityRepository communityRepository, ConditionRepository conditionRepository, CountryRepository countryRepository, OrganizationRepository organizationRepository, ProjectPositionRepository projectPositionRepository, OrgMessageRepository orgMessageRepository, MessageService messageService, FieldMonitorScheduleRepository fieldMonitorScheduleRepository, ProjectSummaryRepository projectSummaryRepository, MailService mailService) {
-        this.env = env;
-        this.appErrorRepository = appErrorRepository;
-        this.geofenceEventRepository = geofenceEventRepository;
-        this.settingsModelRepository = settingsModelRepository;
-        this.ratingRepository = ratingRepository;
-        this.mongoTemplate = mongoTemplate;
-        this.audioRepository = audioRepository;
-        this.projectRepository = projectRepository;
-        this.locationResponseRepository = locationResponseRepository;
-        this.locationRequestRepository = locationRequestRepository;
-        this.projectPolygonRepository = projectPolygonRepository;
-        this.cityRepository = cityRepository;
-        this.photoRepository = photoRepository;
-        this.activityModelRepository = activityModelRepository;
-        this.projectAssignmentRepository = projectAssignmentRepository;
-        this.videoRepository = videoRepository;
-        this.userRepository = userRepository;
-        this.communityRepository = communityRepository;
-        this.conditionRepository = conditionRepository;
-        this.countryRepository = countryRepository;
-        this.organizationRepository = organizationRepository;
-        this.projectPositionRepository = projectPositionRepository;
-        this.orgMessageRepository = orgMessageRepository;
-        this.messageService = messageService;
-        this.fieldMonitorScheduleRepository = fieldMonitorScheduleRepository;
-        this.projectSummaryRepository = projectSummaryRepository;
-        this.mailService = mailService;
-    }
 
     public void initializeFirebase() throws Exception {
         String fbConfig = env.getProperty("FIREBASE_CONFIG");

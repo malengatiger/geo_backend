@@ -8,6 +8,7 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.UserRecord;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -18,15 +19,13 @@ import java.util.logging.Logger;
 /**
  * Initializes Firebase
  */
+@RequiredArgsConstructor
+
 @Service
 public class FirebaseService {
     final DataService dataService;
     private static final Logger LOGGER = Logger.getLogger(FirebaseService.class.getSimpleName());
 
-    public FirebaseService(DataService dataService) {
-        this.dataService = dataService;
-        LOGGER.info(E.AMP+E.AMP+E.AMP + " FirebaseService constructed");
-    }
     @Value("${storageBucket}")
     private String storageBucket;
     private FirebaseApp app;

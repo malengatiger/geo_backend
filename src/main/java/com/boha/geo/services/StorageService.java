@@ -9,6 +9,7 @@ import com.google.api.gax.paging.Page;
 import com.google.cloud.storage.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FileUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,16 +24,11 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+@RequiredArgsConstructor
 
 @Service
 public class StorageService {
     private static final Logger LOGGER = Logger.getLogger(StorageService.class.getSimpleName());
-
-    public StorageService(PhotoRepository photoRepository) {
-        this.photoRepository = photoRepository;
-        LOGGER.info(xx +
-                " StorageService constructed and photoRepository injected ");
-    }
 
     final PhotoRepository photoRepository;
 

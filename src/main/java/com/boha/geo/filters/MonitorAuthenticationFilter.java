@@ -1,15 +1,19 @@
-package com.boha.geo.monitor.utils;
+package com.boha.geo.filters;
 
+import com.boha.geo.monitor.data.CustomErrorResponse;
 import com.boha.geo.monitor.services.DataService;
 import com.boha.geo.util.E;
 import com.google.api.core.ApiFuture;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseToken;
 import com.google.firebase.database.annotations.NotNull;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +34,7 @@ public class MonitorAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MonitorAuthenticationFilter.class);
-
+    private static final Gson G = new GsonBuilder().setPrettyPrinting().create();
     @Autowired
     private DataService dataService;
 
@@ -40,9 +44,8 @@ public class MonitorAuthenticationFilter extends OncePerRequestFilter {
                                     @NotNull FilterChain filterChain) throws ServletException, IOException {
 
         String url = httpServletRequest.getRequestURL().toString();
-        //LOGGER.info(mm+ " url: " + url);
-        //        if (url.contains("192.168.86.230:8080") || url.contains("172.20.10.4:8080")|| url.contains("localhost:8080")) {   //this is my local machine
-        if (url.contains("localhost:") || url.contains("uploadFile")) {   //this is my local machine
+
+        if (url.contains("localhost:8177") || url.contains("uploadFile")) {   //this is my local machine
             LOGGER.info(E.ANGRY + E.ANGRY + "this request is not subject to authentication: "
                     + E.HAND2 + url);
             doFilter(httpServletRequest, httpServletResponse, filterChain);
@@ -70,37 +73,45 @@ public class MonitorAuthenticationFilter extends OncePerRequestFilter {
 
         String m = httpServletRequest.getHeader("Authorization");
         if (m == null) {
-            httpServletResponse.sendError(403, "GTFO");
+            sendError(httpServletResponse, "Authentication token missing");
             return;
         }
         String token = m.substring(7);
         try {
             ApiFuture<FirebaseToken> future = FirebaseAuth.getInstance().verifyIdTokenAsync(token, true);
             FirebaseToken mToken = future.get();
+
             if (mToken != null) {
+                String uid = mToken.getUid();
+                String email = mToken.getEmail();
+//                LOGGER.info("\uD83D\uDE21 \uD83D\uDE21 \uD83D\uDE21 uid let in by the bouncers, uid: " + uid + " email: " + email);
                 doFilter(httpServletRequest, httpServletResponse, filterChain);
             } else {
                 LOGGER.info("\uD83D\uDE21 \uD83D\uDE21 \uD83D\uDE21 request has been forbidden, token invalid");
-                httpServletResponse.sendError(403, "GTFO");
+                sendError(httpServletResponse, "request has been forbidden, token invalid");
             }
 
         } catch (Exception e) {
-            String msg = "\uD83D\uDD06 \uD83D\uDD06 \uD83D\uDD06 " +
-                    "FirebaseAuthException happened: \uD83C\uDF4E " + e.getMessage();
-            LOGGER.info("\uD83D\uDE21 \uD83D\uDE21 \uD83D\uDE21 " + msg);
-            httpServletResponse.sendError(403, "GTFO");
+            String msg = "FirebaseAuthException happened: \uD83C\uDF4E " + e.getMessage();
+            LOGGER.info(E.RED_DOT+E.RED_DOT+E.RED_DOT+E.RED_DOT+E.RED_DOT+E.RED_DOT+E.RED_DOT+" " + msg);
+            sendError(httpServletResponse, e.getMessage());
         }
 
+    }
+
+    private static void sendError(HttpServletResponse httpServletResponse, String message) throws IOException {
+        CustomErrorResponse er = new CustomErrorResponse(403, message, DateTime.now().toDateTimeISO().toString());
+        httpServletResponse.setStatus(403);
+        httpServletResponse.getWriter().write(G.toJson(er));
     }
 
     private void doFilter(@NotNull HttpServletRequest httpServletRequest,
                           @NotNull HttpServletResponse httpServletResponse,
                           FilterChain filterChain) throws IOException, ServletException {
         filterChain.doFilter(httpServletRequest, httpServletResponse);
-        String url = httpServletRequest.getRequestURL().toString();
-        LOGGER.info("\uD83D\uDD37\uD83D\uDD37\uD83D\uDD37 Status Code: "
-                + httpServletResponse.getStatus() + "  \uD83D\uDD37 "
-                + httpServletRequest.getRequestURI() + "  \uD83D\uDD37 \uD83D\uDD37 \uD83D\uDD37 ");
+        LOGGER.info("\uD83D\uDD37\uD83D\uDD37\uD83D\uDD37\uD83D\uDD37"
+                + httpServletRequest.getRequestURI() + " \uD83D\uDD37 Status Code: "
+                + httpServletResponse.getStatus() + "  \uD83D\uDD37 \uD83D\uDD37 \uD83D\uDD37 ");
     }
 
     private void print(@NotNull HttpServletRequest httpServletRequest) {

@@ -7,6 +7,7 @@ import com.boha.geo.repos.OrganizationRepository;
 import com.boha.geo.util.FileToUsers;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import lombok.RequiredArgsConstructor;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,19 +17,14 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
+@RequiredArgsConstructor
 @Service
 public class UserBatchService {
     private static final Gson G = new GsonBuilder().setPrettyPrinting().create();
     private static final Logger LOGGER = LoggerFactory.getLogger(UserBatchService.class);
 
-    final DataService dataService;
-    final OrganizationRepository organizationRepository;
-
-    public UserBatchService(DataService dataService, OrganizationRepository organizationRepository) {
-        this.dataService = dataService;
-        this.organizationRepository = organizationRepository;
-    }
+    private final DataService dataService;
+    private final OrganizationRepository organizationRepository;
 
     public  List<User> handleUsersFromJSON(File file, String organizationId, String translatedTitle, String translatedMessage) throws Exception {
         Organization org = organizationRepository.findByOrganizationId(organizationId);

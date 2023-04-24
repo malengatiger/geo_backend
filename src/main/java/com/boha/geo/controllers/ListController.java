@@ -8,15 +8,14 @@ import com.boha.geo.monitor.services.MongoDataService;
 import com.boha.geo.util.E;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
-import io.github.bucket4j.Refill;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.RequiredArgsConstructor;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,9 +26,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
-import java.time.Duration;
 import java.util.List;
-
+@RequiredArgsConstructor
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 
@@ -37,17 +35,6 @@ public class ListController {
     public static final Logger LOGGER = LoggerFactory.getLogger(ListController.class.getSimpleName());
     private static final Gson G = new GsonBuilder().setPrettyPrinting().create();
     Bucket bucket;
-
-    public ListController(ListService listService, MessageService messageService, MongoDataService mongoDataService) {
-        this.listService = listService;
-        this.messageService = messageService;
-        this.mongoDataService = mongoDataService;
-        Bandwidth limit = Bandwidth.classic(10, Refill.greedy(10, Duration.ofMinutes(1)));
-        this.bucket = Bucket.builder()
-                .addLimit(limit)
-                .build();
-        LOGGER.info(E.DICE.concat(E.DICE.concat(" ListController ready and able ".concat(E.RED_APPLE))));
-    }
 
     private final ListService listService;
     private final MessageService messageService;

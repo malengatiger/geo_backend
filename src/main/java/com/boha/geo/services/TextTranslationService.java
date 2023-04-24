@@ -3,6 +3,7 @@ package com.boha.geo.services;
 // Imports the Google Cloud Translation library.
 
 import com.boha.geo.monitor.data.LocaleTranslations;
+import com.boha.geo.monitor.data.TranslationBag;
 import com.boha.geo.repos.LocaleTranslationsRepository;
 import com.boha.geo.util.E;
 import com.google.cloud.translate.v3.*;

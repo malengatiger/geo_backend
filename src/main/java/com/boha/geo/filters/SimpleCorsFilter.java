@@ -1,6 +1,7 @@
-package com.boha.geo.util;
+package com.boha.geo.filters;
 
 
+import com.boha.geo.util.E;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -9,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.Enumeration;
 
 @Component
 public class SimpleCorsFilter implements Filter {
@@ -26,18 +26,6 @@ public class SimpleCorsFilter implements Filter {
 
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
-
-        log.info(E.AMP + E.AMP +E.AMP +  " Port "
-                +E.AMP + req.getServerPort()+ " " + E.AMP + " ServerName: " + req.getServerName());
-        Enumeration<String> en = req.getParameterNames();
-        while (en.hasMoreElements()) {
-            String key = en.nextElement();
-            log.info(E.AMP +E.AMP + E.AMP + " " + key + " "
-                    + E.RED_APPLE + " " + req.getParameter(key));
-        }
-        log.info(E.AMP + E.AMP +E.AMP + " " + request.getContextPath()
-                + E.AMP +" requestURI: " + request.getRequestURI());
-
 
         response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
         response.setHeader("Access-Control-Allow-Credentials", "true");

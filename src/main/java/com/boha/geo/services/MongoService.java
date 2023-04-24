@@ -15,6 +15,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.IndexOptions;
 import com.mongodb.client.model.Indexes;
+import lombok.RequiredArgsConstructor;
 import org.bson.Document;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -33,27 +34,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
+@RequiredArgsConstructor
 
 @Service
 public class MongoService {
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private static final Logger logger = Logger.getLogger(MongoService.class.getSimpleName());
     private static final String xx = E.COFFEE + E.COFFEE + E.COFFEE;
-    @Autowired
+
     private final CityRepository cityRepo;
-
-    public MongoService(CityRepository cityRepo, MongoClient mongoClient, ResourceLoader resourceLoader, UserRepository userRepository, OrganizationRepository organizationRepository) {
-        this.cityRepo = cityRepo;
-        this.mongoClient = mongoClient;
-        this.resourceLoader = resourceLoader;
-        this.userRepository = userRepository;
-        this.organizationRepository = organizationRepository;
-        logger.info(xx + " MongoService constructed, will set database and initializeIndexes ........... " + E.BELL + E.BELL);
-        setDatabase();
-        logger.info(xx + " MongoService has completed setup of database ........... " + E.BELL + E.BELL);
-
-    }
-
     private final MongoClient mongoClient;
     private final ResourceLoader resourceLoader;
     private final UserRepository userRepository;

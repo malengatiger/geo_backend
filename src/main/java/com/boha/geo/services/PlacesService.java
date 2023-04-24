@@ -5,7 +5,6 @@ import com.boha.geo.monitor.data.City;
 import com.boha.geo.repos.CityPlaceRepo;
 import com.boha.geo.repos.CityRepo;
 import com.boha.geo.util.E;
-import com.boha.geo.util.SecretMgr;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mongodb.client.MongoClient;
@@ -14,6 +13,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.geojson.Point;
 import com.mongodb.client.model.geojson.Position;
 import com.squareup.okhttp.*;
+import lombok.RequiredArgsConstructor;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.joda.time.DateTime;
@@ -27,6 +27,8 @@ import static com.mongodb.client.model.Filters.near;
 /**
  * Manages the CityPlace resource. Creates CityPlaces on Firestore using the Places API
  */
+@RequiredArgsConstructor
+
 @Service
 public class PlacesService {
     private static final String prefix =
@@ -34,7 +36,8 @@ public class PlacesService {
     private static final Logger logger = Logger.getLogger(PlacesService.class.getSimpleName());
     private static final Gson gson = new GsonBuilder()
             .setPrettyPrinting().create();
-    private final SecretMgr secretMgr;
+
+    private final SecretManagerService secretManagerService;
     private final CityRepo cityRepo;
     private final CityPlaceRepo cityPlaceRepo;
     private final MongoClient mongoClient;
@@ -42,17 +45,6 @@ public class PlacesService {
     private String apiKey;
     private static final String xx = E.COFFEE+E.COFFEE+E.COFFEE;
 
-
-    public PlacesService(SecretMgr secretMgr, CityRepo cityRepo,
-                         CityPlaceRepo cityPlaceRepo,
-                         MongoClient mongoClient) {
-        this.secretMgr = secretMgr;
-        this.cityRepo = cityRepo;
-        this.cityPlaceRepo = cityPlaceRepo;
-        this.mongoClient = mongoClient;
-
-        logger.info(xx+ " PlacesService constructed and services injected");
-    }
 
     private String buildLink(double lat, double lng, int radiusInMetres) throws Exception {
         StringBuilder sb = new StringBuilder();
@@ -313,7 +305,7 @@ public class PlacesService {
         cityCounter = 9510;
         List<City> cities = cityRepo.findAll();
         Collections.sort(cities);
-        apiKey = secretMgr.getPlacesAPIKey();
+        apiKey = secretManagerService.getPlacesAPIKey();
         //todo remove the shit!
         int START = 9510;
         int index = 0;
@@ -335,7 +327,7 @@ public class PlacesService {
         List<City> cities = cityRepo.findAll();
         Collections.sort(cities);
 
-        apiKey = secretMgr.getPlacesAPIKey();
+        apiKey = secretManagerService.getPlacesAPIKey();
         MAX_PAGE_COUNT = 3;
 
         setHashMap();

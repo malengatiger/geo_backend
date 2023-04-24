@@ -19,14 +19,14 @@ import java.util.List;
 public class DataServiceToTypescript {
     static final Logger logger = LoggerFactory.getLogger(DataServiceToTypescript.class);
 
-    public static void main(String[] args) throws Exception {
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-        Path dirPath = Files.createDirectory(Path.of("controllers_" + sdf.format(new Date())));
-
-
-        convertToTypeScriptInterfaces(dirPath);
-
-    }
+//    public static void main(String[] args) throws Exception {
+//        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+//        Path dirPath = Files.createDirectory(Path.of("controllers_" + sdf.format(new Date())));
+//
+//
+//        convertToTypeScriptInterfaces(dirPath);
+//
+//    }
 
     private static void convertToTypeScriptInterfaces(Path outputPath) throws Exception {
 
@@ -36,7 +36,12 @@ public class DataServiceToTypescript {
                 null, null, null, null, null,
                 null, null, null, null, null,
                 null, null, null);
-        ListService listService = new ListService();
+        ListService listService = new ListService(null,null, null, null,
+                null, null, null, null,
+                null, null, null, null,
+                null,null,null, null,
+                null,null,null,null,null,
+                null);
         RegistrationService registrationService = new RegistrationService(
                 null, null, null,
                 null, null,

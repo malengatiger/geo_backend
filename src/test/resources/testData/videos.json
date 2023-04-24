@@ -1,0 +1,462 @@
+[
+  {
+    "_id": "63e45cd453c452199a26eb79",
+    "projectId": "826a9228-650f-42e8-87bb-a3178324e533",
+    "projectName": "Sample Project",
+    "videoId": "881b357c-ada5-47cd-89c8-55bf5f6a7558",
+    "organizationId": "8b6af025-1821-4f29-995a-77c80e9b0996",
+    "projectPosition": {
+      "type": "Point",
+      "coordinates": [
+        27.8526158,
+        -25.7605508
+      ]
+    },
+    "distanceFromProjectPosition": 12.147356382008395,
+    "url": "https://firebasestorage.googleapis.com/v0/b/thermal-effort-366015.appspot.com/o/geoVideos3%2Fvideo%40826a9228-650f-42e8-87bb-a3178324e533%402023-02-09T02%3A38%3A55.578112Z.mp4?alt\u003dmedia\u0026token\u003d61bb9518-9164-4be0-87a9-acfd2c805214",
+    "thumbnailUrl": "https://firebasestorage.googleapis.com/v0/b/thermal-effort-366015.appspot.com/o/geoVideos3%2Fthumbnail%40826a9228-650f-42e8-87bb-a3178324e533%402023-02-09T02%3A39%3A13.069405Z.jpg?alt\u003dmedia\u0026token\u003daaa97fa2-df4e-4dca-b3fc-cc362727c0c0",
+    "caption": "tbd",
+    "userId": "O3zZYr29sOdUZFlsdEuoNHsOE592",
+    "userName": "Doreen K Thamage",
+    "created": "2023-02-09T02:39:15.230887Z",
+    "durationInSeconds": 0,
+    "size": 0.0
+  },
+  {
+    "_id": "63e670f50097407727a42526",
+    "projectId": "ea8ba35a-5354-4244-8140-9ca44b27a69b",
+    "projectName": "Pecanwood Facilty Services ",
+    "videoId": "68f90ece-1cf5-4a45-ac92-eeb6a06574a8",
+    "organizationId": "8b6af025-1821-4f29-995a-77c80e9b0996",
+    "projectPosition": {
+      "type": "Point",
+      "coordinates": [
+        27.8526812,
+        -25.7606501
+      ]
+    },
+    "distanceFromProjectPosition": 21.016642917729293,
+    "url": "https://firebasestorage.googleapis.com/v0/b/thermal-effort-366015.appspot.com/o/geoVideos3%2Fvideo%40ea8ba35a-5354-4244-8140-9ca44b27a69b%402023-02-10T16%3A29%3A16.359022Z.mp4?alt\u003dmedia\u0026token\u003dcd5d3d60-aefe-4bda-8e48-2004b9a9c61f",
+    "thumbnailUrl": "https://firebasestorage.googleapis.com/v0/b/thermal-effort-366015.appspot.com/o/geoVideos3%2Fthumbnail%40ea8ba35a-5354-4244-8140-9ca44b27a69b%402023-02-10T16%3A29%3A38.672086Z.jpg?alt\u003dmedia\u0026token\u003ded58e413-87a7-4866-910a-06babd060361",
+    "caption": "tbd",
+    "userId": "O3zZYr29sOdUZFlsdEuoNHsOE592",
+    "userName": "Doreen K Thamage",
+    "created": "2023-02-10T16:29:40.150197Z",
+    "durationInSeconds": 0,
+    "size": 0.0
+  },
+  {
+    "_id": "63e67c170097407727a42542",
+    "projectId": "ea8ba35a-5354-4244-8140-9ca44b27a69b",
+    "projectName": "Pecanwood Facilty Services ",
+    "videoId": "24ee2cac-8197-4a22-807e-4021c2c7a066",
+    "organizationId": "8b6af025-1821-4f29-995a-77c80e9b0996",
+    "projectPosition": {
+      "type": "Point",
+      "coordinates": [
+        27.8525155,
+        -25.7604655
+      ]
+    },
+    "distanceFromProjectPosition": 10.987181232318989,
+    "url": "https://firebasestorage.googleapis.com/v0/b/thermal-effort-366015.appspot.com/o/geoVideos3%2Fvideo%40ea8ba35a-5354-4244-8140-9ca44b27a69b%402023-02-10T17%3A16%3A13.963790Z.mp4?alt\u003dmedia\u0026token\u003d36914890-07a2-4313-9a14-a39e616d52fe",
+    "thumbnailUrl": "https://firebasestorage.googleapis.com/v0/b/thermal-effort-366015.appspot.com/o/geoVideos3%2Fthumbnail%40ea8ba35a-5354-4244-8140-9ca44b27a69b%402023-02-10T17%3A17%3A09.403650Z.jpg?alt\u003dmedia\u0026token\u003d40d37ad4-5d26-4730-b9d1-2b172b0a9559",
+    "caption": "tbd",
+    "userId": "O3zZYr29sOdUZFlsdEuoNHsOE592",
+    "userName": "Doreen K Thamage",
+    "created": "2023-02-10T17:17:11.038376Z",
+    "durationInSeconds": 0,
+    "size": 0.0
+  },
+  {
+    "_id": "63e7ce868a0cd21f5a56170e",
+    "projectId": "ea8ba35a-5354-4244-8140-9ca44b27a69b",
+    "projectName": "Pecanwood Facilty Services ",
+    "videoId": "ddd35960-3583-48d8-9c29-5f82d3a91fcc",
+    "organizationId": "8b6af025-1821-4f29-995a-77c80e9b0996",
+    "projectPosition": {
+      "type": "Point",
+      "coordinates": [
+        27.8525885,
+        -25.7604981
+      ]
+    },
+    "distanceFromProjectPosition": 7.355730416254138,
+    "url": "https://firebasestorage.googleapis.com/v0/b/thermal-effort-366015.appspot.com/o/geoVideos3%2Fvideo%40ea8ba35a-5354-4244-8140-9ca44b27a69b%402023-02-11T17%3A20%3A54.915750Z.mp4?alt\u003dmedia\u0026token\u003d21baf254-7cb6-4d30-b62f-5123e6837dad",
+    "thumbnailUrl": "https://firebasestorage.googleapis.com/v0/b/thermal-effort-366015.appspot.com/o/geoVideos3%2Fthumbnail%40ea8ba35a-5354-4244-8140-9ca44b27a69b%402023-02-11T17%3A21%3A07.720271Z.jpg?alt\u003dmedia\u0026token\u003d01cb60be-4393-47fd-ab8f-73bbdc71f479",
+    "caption": "tbd",
+    "userId": "O3zZYr29sOdUZFlsdEuoNHsOE592",
+    "userName": "Doreen K Thamage",
+    "created": "2023-02-11T17:21:09.299362Z",
+    "durationInSeconds": 0,
+    "size": 0.0
+  },
+  {
+    "_id": "63e7cea68a0cd21f5a561710",
+    "projectId": "ea8ba35a-5354-4244-8140-9ca44b27a69b",
+    "projectName": "Pecanwood Facilty Services ",
+    "videoId": "60ced8b5-9a71-4699-9e2a-03a5317edf03",
+    "organizationId": "8b6af025-1821-4f29-995a-77c80e9b0996",
+    "projectPosition": {
+      "type": "Point",
+      "coordinates": [
+        27.8525356,
+        -25.7605483
+      ]
+    },
+    "distanceFromProjectPosition": 6.876212892098684,
+    "url": "https://firebasestorage.googleapis.com/v0/b/thermal-effort-366015.appspot.com/o/geoVideos3%2Fvideo%40ea8ba35a-5354-4244-8140-9ca44b27a69b%402023-02-11T17%3A21%3A24.907634Z.mp4?alt\u003dmedia\u0026token\u003d0d26cda8-6b29-4cc9-a39a-bda5b92d4aae",
+    "thumbnailUrl": "https://firebasestorage.googleapis.com/v0/b/thermal-effort-366015.appspot.com/o/geoVideos3%2Fthumbnail%40ea8ba35a-5354-4244-8140-9ca44b27a69b%402023-02-11T17%3A21%3A38.599959Z.jpg?alt\u003dmedia\u0026token\u003dd0fb27a7-fbdc-4a93-a205-2f3b50fbc305",
+    "caption": "tbd",
+    "userId": "O3zZYr29sOdUZFlsdEuoNHsOE592",
+    "userName": "Doreen K Thamage",
+    "created": "2023-02-11T17:21:39.935755Z",
+    "durationInSeconds": 0,
+    "size": 0.0
+  },
+  {
+    "_id": "63e8ef17901f5675febb217f",
+    "projectId": "ea8ba35a-5354-4244-8140-9ca44b27a69b",
+    "projectName": "Pecanwood Facilty Services ",
+    "videoId": "3842bab3-d31f-4cbe-8d64-fad1a6a0971a",
+    "organizationId": "8b6af025-1821-4f29-995a-77c80e9b0996",
+    "projectPosition": {
+      "type": "Point",
+      "coordinates": [
+        27.852645,
+        -25.7605757
+      ]
+    },
+    "distanceFromProjectPosition": 8.241849011946083,
+    "url": "https://firebasestorage.googleapis.com/v0/b/thermal-effort-366015.appspot.com/o/geoVideos3%2Fvideo%40ea8ba35a-5354-4244-8140-9ca44b27a69b%402023-02-12T13%3A52%3A04.434784Z.mp4?alt\u003dmedia\u0026token\u003d3422cd15-b9a8-4dab-b434-14724e01437d",
+    "thumbnailUrl": "https://firebasestorage.googleapis.com/v0/b/thermal-effort-366015.appspot.com/o/geoVideos3%2Fthumbnail%40ea8ba35a-5354-4244-8140-9ca44b27a69b%402023-02-12T13%3A52%3A20.409469Z.jpg?alt\u003dmedia\u0026token\u003dab5257e0-4339-42eb-9710-fe191566523f",
+    "caption": "tbd",
+    "userId": "OYMZvjq7SpXFxoKOBBEGTFjFuD32",
+    "userName": "Thabo John Mkhwanazi ",
+    "created": "2023-02-12T13:52:21.837677Z",
+    "durationInSeconds": 0,
+    "size": 0.0
+  },
+  {
+    "_id": "63e8f3bc901f5675febb218d",
+    "projectId": "ea8ba35a-5354-4244-8140-9ca44b27a69b",
+    "projectName": "Pecanwood Facilty Services ",
+    "videoId": "2ea528d1-bcbf-43f1-8f25-76f2b57a023d",
+    "organizationId": "8b6af025-1821-4f29-995a-77c80e9b0996",
+    "projectPosition": {
+      "type": "Point",
+      "coordinates": [
+        27.8525316,
+        -25.7605652
+      ]
+    },
+    "distanceFromProjectPosition": 7.710554238855815,
+    "url": "https://firebasestorage.googleapis.com/v0/b/thermal-effort-366015.appspot.com/o/geoVideos3%2Fvideo%40ea8ba35a-5354-4244-8140-9ca44b27a69b%402023-02-12T14%3A11%3A19.400595Z.mp4?alt\u003dmedia\u0026token\u003d707ef3e6-f126-41a0-91f0-3ce2aa284977",
+    "thumbnailUrl": "https://firebasestorage.googleapis.com/v0/b/thermal-effort-366015.appspot.com/o/geoVideos3%2Fthumbnail%40ea8ba35a-5354-4244-8140-9ca44b27a69b%402023-02-12T14%3A11%3A53.224372Z.jpg?alt\u003dmedia\u0026token\u003d58498c2d-492d-45a2-86d7-240e99469030",
+    "caption": "tbd",
+    "userId": "OYMZvjq7SpXFxoKOBBEGTFjFuD32",
+    "userName": "Thabo John Mkhwanazi ",
+    "created": "2023-02-12T14:12:10.229843Z",
+    "durationInSeconds": 0,
+    "size": 0.0
+  },
+  {
+    "_id": "63e8f3e9901f5675febb2192",
+    "projectId": "ea8ba35a-5354-4244-8140-9ca44b27a69b",
+    "projectName": "Pecanwood Facilty Services ",
+    "videoId": "d909802d-1d79-4a53-9be2-8d9575097892",
+    "organizationId": "8b6af025-1821-4f29-995a-77c80e9b0996",
+    "projectPosition": {
+      "type": "Point",
+      "coordinates": [
+        27.85262,
+        -25.7605968
+      ]
+    },
+    "distanceFromProjectPosition": 13.655190298239592,
+    "url": "https://firebasestorage.googleapis.com/v0/b/thermal-effort-366015.appspot.com/o/geoVideos3%2Fvideo%40ea8ba35a-5354-4244-8140-9ca44b27a69b%402023-02-12T14%3A12%3A19.825037Z.mp4?alt\u003dmedia\u0026token\u003d409908d2-f2c6-41ca-8edb-926fedd11304",
+    "thumbnailUrl": "https://firebasestorage.googleapis.com/v0/b/thermal-effort-366015.appspot.com/o/geoVideos3%2Fthumbnail%40ea8ba35a-5354-4244-8140-9ca44b27a69b%402023-02-12T14%3A12%3A54.613281Z.jpg?alt\u003dmedia\u0026token\u003d8858b369-19cf-44f8-bd08-cf5d37df85dc",
+    "caption": "tbd",
+    "userId": "OYMZvjq7SpXFxoKOBBEGTFjFuD32",
+    "userName": "Thabo John Mkhwanazi ",
+    "created": "2023-02-12T14:12:56.111161Z",
+    "durationInSeconds": 0,
+    "size": 0.0
+  },
+  {
+    "_id": "63e8f709901f5675febb21a2",
+    "projectId": "ea8ba35a-5354-4244-8140-9ca44b27a69b",
+    "projectName": "Pecanwood Facilty Services ",
+    "videoId": "4cce0e45-a4f1-40b0-94d0-b297ed8c11d2",
+    "organizationId": "8b6af025-1821-4f29-995a-77c80e9b0996",
+    "projectPosition": {
+      "type": "Point",
+      "coordinates": [
+        27.8525318,
+        -25.7605316
+      ]
+    },
+    "distanceFromProjectPosition": 2.798962249314076,
+    "url": "https://firebasestorage.googleapis.com/v0/b/thermal-effort-366015.appspot.com/o/geoVideos3%2Fvideo%40ea8ba35a-5354-4244-8140-9ca44b27a69b%402023-02-12T14%3A25%3A49.375875Z.mp4?alt\u003dmedia\u0026token\u003d641b7ecb-dc21-4096-a818-59664faf348c",
+    "thumbnailUrl": "https://firebasestorage.googleapis.com/v0/b/thermal-effort-366015.appspot.com/o/geoVideos3%2Fthumbnail%40ea8ba35a-5354-4244-8140-9ca44b27a69b%402023-02-12T14%3A26%3A14.113389Z.jpg?alt\u003dmedia\u0026token\u003d5458c152-0f7e-47f6-b111-bcef07ebb514",
+    "caption": "tbd",
+    "userId": "OYMZvjq7SpXFxoKOBBEGTFjFuD32",
+    "userName": "Thabo John Mkhwanazi ",
+    "created": "2023-02-12T14:26:15.724500Z",
+    "durationInSeconds": 0,
+    "size": 0.0
+  },
+  {
+    "_id": "63e8f81323d10d7ec2b335af",
+    "projectId": "ea8ba35a-5354-4244-8140-9ca44b27a69b",
+    "projectName": "Pecanwood Facilty Services ",
+    "videoId": "1300024c-cf86-4541-94fb-6dd15a050e7b",
+    "organizationId": "8b6af025-1821-4f29-995a-77c80e9b0996",
+    "projectPosition": {
+      "type": "Point",
+      "coordinates": [
+        27.8525654,
+        -25.7606298
+      ]
+    },
+    "distanceFromProjectPosition": 8.1489897339614,
+    "url": "https://firebasestorage.googleapis.com/v0/b/thermal-effort-366015.appspot.com/o/geoVideos3%2Fvideo%40ea8ba35a-5354-4244-8140-9ca44b27a69b%402023-02-12T14%3A30%3A19.377077Z.mp4?alt\u003dmedia\u0026token\u003d9a5f4ef9-1fd1-4094-b3d0-98275f719bfb",
+    "thumbnailUrl": "https://firebasestorage.googleapis.com/v0/b/thermal-effort-366015.appspot.com/o/geoVideos3%2Fthumbnail%40ea8ba35a-5354-4244-8140-9ca44b27a69b%402023-02-12T14%3A30%3A38.795615Z.jpg?alt\u003dmedia\u0026token\u003d3f08cc68-ac42-4bc0-84a3-ab3fa39f3675",
+    "caption": "tbd",
+    "userId": "OYMZvjq7SpXFxoKOBBEGTFjFuD32",
+    "userName": "Thabo John Mkhwanazi ",
+    "created": "2023-02-12T14:30:40.214220Z",
+    "durationInSeconds": 0,
+    "size": 0.0
+  },
+  {
+    "_id": "63e8f95a23d10d7ec2b335b4",
+    "projectId": "ea8ba35a-5354-4244-8140-9ca44b27a69b",
+    "projectName": "Pecanwood Facilty Services ",
+    "videoId": "1b2195fc-86d7-4f19-a77f-c3577cdf445e",
+    "organizationId": "8b6af025-1821-4f29-995a-77c80e9b0996",
+    "projectPosition": {
+      "type": "Point",
+      "coordinates": [
+        27.8526552,
+        -25.760633
+      ]
+    },
+    "distanceFromProjectPosition": 14.692077420781729,
+    "url": "https://firebasestorage.googleapis.com/v0/b/thermal-effort-366015.appspot.com/o/geoVideos3%2Fvideo%40ea8ba35a-5354-4244-8140-9ca44b27a69b%402023-02-12T14%3A35%3A19.378199Z.mp4?alt\u003dmedia\u0026token\u003dfe3547c4-42b9-45d7-a037-f33b17aae24a",
+    "thumbnailUrl": "https://firebasestorage.googleapis.com/v0/b/thermal-effort-366015.appspot.com/o/geoVideos3%2Fthumbnail%40ea8ba35a-5354-4244-8140-9ca44b27a69b%402023-02-12T14%3A36%3A07.544312Z.jpg?alt\u003dmedia\u0026token\u003de05d12fc-97c8-436d-a96e-278810259dfd",
+    "caption": "tbd",
+    "userId": "OYMZvjq7SpXFxoKOBBEGTFjFuD32",
+    "userName": "Thabo John Mkhwanazi ",
+    "created": "2023-02-12T14:36:09.014693Z",
+    "durationInSeconds": 0,
+    "size": 0.0
+  },
+  {
+    "_id": "63e91f66361949415f46d84c",
+    "projectId": "ea8ba35a-5354-4244-8140-9ca44b27a69b",
+    "projectName": "Pecanwood Facilty Services ",
+    "videoId": "f139f968-904c-4388-888c-a283ebe59234",
+    "organizationId": "8b6af025-1821-4f29-995a-77c80e9b0996",
+    "projectPosition": {
+      "type": "Point",
+      "coordinates": [
+        27.8524708,
+        -25.7604731
+      ]
+    },
+    "distanceFromProjectPosition": 18.40851045500648,
+    "url": "https://firebasestorage.googleapis.com/v0/b/thermal-effort-366015.appspot.com/o/geoVideos3%2Fvideo%40ea8ba35a-5354-4244-8140-9ca44b27a69b%402023-02-12T17%3A18%3A12.474621Z.mp4?alt\u003dmedia\u0026token\u003de5811811-c883-476f-85d0-e785a3907141",
+    "thumbnailUrl": "https://firebasestorage.googleapis.com/v0/b/thermal-effort-366015.appspot.com/o/geoVideos3%2Fthumbnail%40ea8ba35a-5354-4244-8140-9ca44b27a69b%402023-02-12T17%3A18%3A27.394498Z.jpg?alt\u003dmedia\u0026token\u003d3c79fe14-42ef-4aab-a934-76a0c911e18d",
+    "caption": "tbd",
+    "userId": "OYMZvjq7SpXFxoKOBBEGTFjFuD32",
+    "userName": "Thabo John Mkhwanazi ",
+    "created": "2023-02-12T17:18:28.905346Z",
+    "durationInSeconds": 0,
+    "size": 0.0
+  },
+  {
+    "_id": "63e92058361949415f46d852",
+    "projectId": "ea8ba35a-5354-4244-8140-9ca44b27a69b",
+    "projectName": "Pecanwood Facilty Services ",
+    "videoId": "88029b86-b169-46c6-b5a8-1779e4119081",
+    "organizationId": "8b6af025-1821-4f29-995a-77c80e9b0996",
+    "projectPosition": {
+      "type": "Point",
+      "coordinates": [
+        27.852542,
+        -25.7605534
+      ]
+    },
+    "distanceFromProjectPosition": 3.165670437805298,
+    "url": "https://firebasestorage.googleapis.com/v0/b/thermal-effort-366015.appspot.com/o/geoVideos3%2Fvideo%40ea8ba35a-5354-4244-8140-9ca44b27a69b%402023-02-12T17%3A22%3A12.442736Z.mp4?alt\u003dmedia\u0026token\u003da4967212-6445-46ba-b8a6-4f8803e5b5d6",
+    "thumbnailUrl": "https://firebasestorage.googleapis.com/v0/b/thermal-effort-366015.appspot.com/o/geoVideos3%2Fthumbnail%40ea8ba35a-5354-4244-8140-9ca44b27a69b%402023-02-12T17%3A22%3A29.165604Z.jpg?alt\u003dmedia\u0026token\u003da59ebcf1-0f9f-4ca1-afc0-1e2cfb947c1f",
+    "caption": "tbd",
+    "userId": "OYMZvjq7SpXFxoKOBBEGTFjFuD32",
+    "userName": "Thabo John Mkhwanazi ",
+    "created": "2023-02-12T17:22:30.578683Z",
+    "durationInSeconds": 0,
+    "size": 0.0
+  },
+  {
+    "_id": "63e9fe3e52a0d72891cfcddd",
+    "projectId": "ea8ba35a-5354-4244-8140-9ca44b27a69b",
+    "projectName": "Pecanwood Facilty Services ",
+    "videoId": "51f07280-9a8e-4904-b857-ada83b4d5bfe",
+    "organizationId": "8b6af025-1821-4f29-995a-77c80e9b0996",
+    "projectPosition": {
+      "type": "Point",
+      "coordinates": [
+        27.85258546731467,
+        -25.760576801001886
+      ]
+    },
+    "distanceFromProjectPosition": 1.687878497239755,
+    "url": "https://firebasestorage.googleapis.com/v0/b/thermal-effort-366015.appspot.com/o/geoVideos3%2Fvideo@ea8ba35a-5354-4244-8140-9ca44b27a69b@2023-02-13T09:07:54.454481Z.mp4?alt\u003dmedia\u0026token\u003d87a49773-efbb-49c6-9bf7-02757712981f",
+    "thumbnailUrl": "https://firebasestorage.googleapis.com/v0/b/thermal-effort-366015.appspot.com/o/geoVideos3%2Fthumbnail@ea8ba35a-5354-4244-8140-9ca44b27a69b@2023-02-13T09:09:15.465832Z.jpg?alt\u003dmedia\u0026token\u003dca2c3153-5c26-4836-b2ec-ecfaeb8b898f",
+    "caption": "tbd",
+    "userId": "6D6uxX8HJ6fZdESEQ9R48Mbv3PK2",
+    "userName": "Fannie Mae Johnson",
+    "created": "2023-02-13T09:09:18.163478Z",
+    "durationInSeconds": 0,
+    "size": 0.0
+  },
+  {
+    "_id": "63ea26f89d245d0df5a0e6dc",
+    "projectId": "ea8ba35a-5354-4244-8140-9ca44b27a69b",
+    "projectName": "Pecanwood Facilty Services ",
+    "videoId": "200530d5-fdaf-4dea-9f96-8ae242cd3e8a",
+    "organizationId": "8b6af025-1821-4f29-995a-77c80e9b0996",
+    "projectPosition": {
+      "type": "Point",
+      "coordinates": [
+        27.852576375214642,
+        -25.760548993724804
+      ]
+    },
+    "distanceFromProjectPosition": 1.2137631003464664,
+    "url": "https://firebasestorage.googleapis.com/v0/b/thermal-effort-366015.appspot.com/o/geoVideos3%2Fvideo@ea8ba35a-5354-4244-8140-9ca44b27a69b@2023-02-13T12:02:54.283787Z.mp4?alt\u003dmedia\u0026token\u003d5f20c8f0-1533-42dc-951e-fbc94574d602",
+    "thumbnailUrl": "https://firebasestorage.googleapis.com/v0/b/thermal-effort-366015.appspot.com/o/geoVideos3%2Fthumbnail@ea8ba35a-5354-4244-8140-9ca44b27a69b@2023-02-13T12:03:02.552856Z.jpg?alt\u003dmedia\u0026token\u003d8550be64-b6ac-4ab9-adfc-7ff2a32a3e53",
+    "caption": "tbd",
+    "userId": "6D6uxX8HJ6fZdESEQ9R48Mbv3PK2",
+    "userName": "Fannie Mae Johnson",
+    "created": "2023-02-13T12:03:04.225020Z",
+    "durationInSeconds": 0,
+    "size": 0.0
+  },
+  {
+    "_id": "63ea349caabbef586d8a7199",
+    "projectId": "ea8ba35a-5354-4244-8140-9ca44b27a69b",
+    "projectName": "Pecanwood Facilty Services ",
+    "videoId": "ee8181e9-b09a-40d4-b69b-aa2b61a41e6b",
+    "organizationId": "8b6af025-1821-4f29-995a-77c80e9b0996",
+    "projectPosition": {
+      "type": "Point",
+      "coordinates": [
+        27.8543165,
+        -25.7646414
+      ]
+    },
+    "distanceFromProjectPosition": 41.29365960290877,
+    "url": "https://firebasestorage.googleapis.com/v0/b/thermal-effort-366015.appspot.com/o/geoVideos3%2Fvideo%40ea8ba35a-5354-4244-8140-9ca44b27a69b%402023-02-13T12%3A59%3A38.997297Z.mp4?alt\u003dmedia\u0026token\u003d0d75675f-fa54-4a59-832d-8eecced0f617",
+    "thumbnailUrl": "https://firebasestorage.googleapis.com/v0/b/thermal-effort-366015.appspot.com/o/geoVideos3%2Fthumbnail%40ea8ba35a-5354-4244-8140-9ca44b27a69b%402023-02-13T13%3A00%3A13.843981Z.jpg?alt\u003dmedia\u0026token\u003d1e17846c-4176-450a-aa0c-953e5950d27f",
+    "caption": "tbd",
+    "userId": "OYMZvjq7SpXFxoKOBBEGTFjFuD32",
+    "userName": "Thabo John Mkhwanazi ",
+    "created": "2023-02-13T13:01:13.854571Z",
+    "durationInSeconds": 0,
+    "size": 0.0
+  },
+  {
+    "_id": "63ea34f3aabbef586d8a71a0",
+    "projectId": "ea8ba35a-5354-4244-8140-9ca44b27a69b",
+    "projectName": "Pecanwood Facilty Services ",
+    "videoId": "3d07b259-84a9-4b94-87e1-8ef7ef8714c1",
+    "organizationId": "8b6af025-1821-4f29-995a-77c80e9b0996",
+    "projectPosition": {
+      "type": "Point",
+      "coordinates": [
+        27.8555581,
+        -25.7641253
+      ]
+    },
+    "distanceFromProjectPosition": 126.65718233230116,
+    "url": "https://firebasestorage.googleapis.com/v0/b/thermal-effort-366015.appspot.com/o/geoVideos3%2Fvideo%40ea8ba35a-5354-4244-8140-9ca44b27a69b%402023-02-13T13%3A02%3A08.975317Z.mp4?alt\u003dmedia\u0026token\u003d1f653db5-1a87-4770-9b85-1eeaf54f2063",
+    "thumbnailUrl": "https://firebasestorage.googleapis.com/v0/b/thermal-effort-366015.appspot.com/o/geoVideos3%2Fthumbnail%40ea8ba35a-5354-4244-8140-9ca44b27a69b%402023-02-13T13%3A02%3A28.373836Z.jpg?alt\u003dmedia\u0026token\u003db7776c21-be24-4090-a894-e95084bf7bad",
+    "caption": "tbd",
+    "userId": "OYMZvjq7SpXFxoKOBBEGTFjFuD32",
+    "userName": "Thabo John Mkhwanazi ",
+    "created": "2023-02-13T13:02:40.481095Z",
+    "durationInSeconds": 0,
+    "size": 0.0
+  },
+  {
+    "_id": "63ea3b85aabbef586d8a7215",
+    "projectId": "ea8ba35a-5354-4244-8140-9ca44b27a69b",
+    "projectName": "Pecanwood Facilty Services ",
+    "videoId": "ade66925-86b3-4e7a-b815-7b285858fc6b",
+    "organizationId": "8b6af025-1821-4f29-995a-77c80e9b0996",
+    "projectPosition": {
+      "type": "Point",
+      "coordinates": [
+        27.8570766,
+        -25.7580149
+      ]
+    },
+    "distanceFromProjectPosition": 116.90036333831851,
+    "url": "https://firebasestorage.googleapis.com/v0/b/thermal-effort-366015.appspot.com/o/geoVideos3%2Fvideo%40ea8ba35a-5354-4244-8140-9ca44b27a69b%402023-02-13T13%3A29%3A34.227373Z.mp4?alt\u003dmedia\u0026token\u003d3d05411a-dcb5-4a38-807d-dea35877a99c",
+    "thumbnailUrl": "https://firebasestorage.googleapis.com/v0/b/thermal-effort-366015.appspot.com/o/geoVideos3%2Fthumbnail%40ea8ba35a-5354-4244-8140-9ca44b27a69b%402023-02-13T13%3A30%3A43.266104Z.jpg?alt\u003dmedia\u0026token\u003d0bcc7495-2a42-464a-bcae-18090a0b6abd",
+    "caption": "tbd",
+    "userId": "QThQvEVU5Icrn8mkpjBVOb8Gwso2",
+    "userName": "Suzanne Terry Franklin",
+    "created": "2023-02-13T13:30:44.812009Z",
+    "durationInSeconds": 0,
+    "size": 0.0
+  },
+  {
+    "_id": "63ec13f233603f3fd7eb64a2",
+    "projectId": "ea8ba35a-5354-4244-8140-9ca44b27a69b",
+    "projectName": "Pecanwood Facilty Services ",
+    "videoId": "798496d0-6f73-4e52-8c0a-15ede82f1248",
+    "organizationId": "8b6af025-1821-4f29-995a-77c80e9b0996",
+    "projectPosition": {
+      "type": "Point",
+      "coordinates": [
+        27.8526232,
+        -25.7605447
+      ]
+    },
+    "distanceFromProjectPosition": 0.0,
+    "url": "https://firebasestorage.googleapis.com/v0/b/thermal-effort-366015.appspot.com/o/geoVideos3%2Fvideo%40ea8ba35a-5354-4244-8140-9ca44b27a69b%402023-02-14T23%3A06%3A04.565373Z.mp4?alt\u003dmedia\u0026token\u003d400fc386-729b-4f1f-af17-632a4a329db3",
+    "thumbnailUrl": "https://firebasestorage.googleapis.com/v0/b/thermal-effort-366015.appspot.com/o/geoVideos3%2Fthumbnail%40ea8ba35a-5354-4244-8140-9ca44b27a69b%402023-02-14T23%3A06%3A22.456694Z.jpg?alt\u003dmedia\u0026token\u003ddb53a640-25c9-467b-9b2d-865f84ce7571",
+    "caption": "tbd",
+    "userId": "OYMZvjq7SpXFxoKOBBEGTFjFuD32",
+    "userName": "Thabo John Mkhwanazi ",
+    "created": "2023-02-14T23:06:23.840185Z",
+    "durationInSeconds": 0,
+    "size": 0.0
+  },
+  {
+    "_id": "63ecacf88b351801cc9b75f1",
+    "projectId": "ea8ba35a-5354-4244-8140-9ca44b27a69b",
+    "projectName": "Pecanwood Facilty Services ",
+    "videoId": "8d0c2770-c6cc-4d81-be17-a81dab318add",
+    "organizationId": "8b6af025-1821-4f29-995a-77c80e9b0996",
+    "projectPosition": {
+      "type": "Point",
+      "coordinates": [
+        27.8525929,
+        -25.7605252
+      ]
+    },
+    "distanceFromProjectPosition": 0.0,
+    "url": "https://firebasestorage.googleapis.com/v0/b/thermal-effort-366015.appspot.com/o/geoVideos3%2Fvideo%40ea8ba35a-5354-4244-8140-9ca44b27a69b%402023-02-15T09%3A59%3A04.684468Z.mp4?alt\u003dmedia\u0026token\u003da9406b44-9b09-40b8-90e4-7878755a6d90",
+    "thumbnailUrl": "https://firebasestorage.googleapis.com/v0/b/thermal-effort-366015.appspot.com/o/geoVideos3%2Fthumbnail%40ea8ba35a-5354-4244-8140-9ca44b27a69b%402023-02-15T09%3A59%3A17.502694Z.jpg?alt\u003dmedia\u0026token\u003dd7e1e88a-453a-43e7-a0f4-44a4769b9eac",
+    "caption": "tbd",
+    "userId": "OYMZvjq7SpXFxoKOBBEGTFjFuD32",
+    "userName": "Thabo John Mkhwanazi ",
+    "created": "2023-02-15T09:58:50.841669Z",
+    "durationInSeconds": 0,
+    "size": 0.0
+  }
+]
