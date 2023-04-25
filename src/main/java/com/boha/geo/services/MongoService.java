@@ -15,11 +15,9 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.IndexOptions;
 import com.mongodb.client.model.Indexes;
-import lombok.RequiredArgsConstructor;
 import org.bson.Document;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
@@ -34,7 +32,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 @Service
 public class MongoService {
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -46,6 +44,17 @@ public class MongoService {
     private final ResourceLoader resourceLoader;
     private final UserRepository userRepository;
     private final OrganizationRepository organizationRepository;
+
+    public MongoService(CityRepository cityRepo, MongoClient mongoClient, ResourceLoader resourceLoader, UserRepository userRepository, OrganizationRepository organizationRepository) {
+        this.cityRepo = cityRepo;
+        this.mongoClient = mongoClient;
+        this.resourceLoader = resourceLoader;
+        this.userRepository = userRepository;
+        this.organizationRepository = organizationRepository;
+
+        setDatabase();
+        initializeIndexes();
+    }
 
 
     private List<City> getCitiesFromFile() throws IOException {

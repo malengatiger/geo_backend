@@ -8,6 +8,9 @@ brew services stop mongodb-community@6.0
 
 brew services list
 
+ ./mvnw test -Dtest="com/boha/geo/*Test"
+
+
 lsof -n -i4TCP:8080
 kill -9 51101
 
