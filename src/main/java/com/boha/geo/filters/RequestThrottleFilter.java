@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +20,7 @@ import java.util.function.Function;
 
 
 @Component
+@Profile("prod")
 public class RequestThrottleFilter implements Filter {
     private static final Logger LOGGER = LoggerFactory.getLogger(RequestThrottleFilter.class);
 
@@ -36,7 +38,7 @@ public class RequestThrottleFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        LOGGER.info(E.PANDA+E.PANDA+ "init for RequestThrottleFilter: " + filterConfig.getFilterName());
+        LOGGER.info(E.PANDA+E.PANDA+E.PANDA+ "init for RequestThrottleFilter: " + filterConfig.getFilterName());
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.boha.geo.monitor.data.*;
 import com.boha.geo.monitor.services.ListService;
 import com.boha.geo.monitor.services.MessageService;
 import com.boha.geo.monitor.services.MongoDataService;
+import com.boha.geo.monitor.services.PricingPlanService;
 import com.boha.geo.util.E;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -34,10 +35,12 @@ import java.util.List;
 public class ListController {
     public static final Logger LOGGER = LoggerFactory.getLogger(ListController.class.getSimpleName());
     private static final Gson G = new GsonBuilder().setPrettyPrinting().create();
-    Bucket bucket;
+//    private final Bucket bucket;
 
     private final ListService listService;
     private final MessageService messageService;
+    private final PricingPlanService pricingPlanService;
+
 
     @GetMapping("/hello")
     public String hello() throws Exception {
@@ -154,13 +157,14 @@ public class ListController {
     public ResponseEntity<Object> getCountries() throws Exception {
         try {
             List<Country> countries = listService.getCountries();
-            if (bucket.tryConsume(1)) {
-                return ResponseEntity.ok(countries);
-            } else {
-                LOGGER.error(E.RED_DOT + E.RED_DOT + E.RED_DOT +
-                        "Rate limiter got you!");
-                throw new Exception("Too many fucking requests");
-            }
+            return ResponseEntity.ok(countries);
+//            if (bucket.tryConsume(1)) {
+//                return ResponseEntity.ok(countries);
+//            } else {
+//                LOGGER.error(E.RED_DOT + E.RED_DOT + E.RED_DOT +
+//                        "Rate limiter got you!");
+//                throw new Exception("Too many fucking requests");
+//            }
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,

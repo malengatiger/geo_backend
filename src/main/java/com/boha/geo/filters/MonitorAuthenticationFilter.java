@@ -16,7 +16,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -24,19 +25,22 @@ import java.io.IOException;
 import java.util.Enumeration;
 
 @Component
+@Profile("prod")
 public class MonitorAuthenticationFilter extends OncePerRequestFilter {
     private static final String xx = E.COFFEE+E.COFFEE+E.COFFEE;
     String mm = "" + E.AMP + E.AMP + E.AMP + E.AMP;
 
-    public MonitorAuthenticationFilter() {
+    public MonitorAuthenticationFilter(DataService dataService) {
+        this.dataService = dataService;
         LOGGER.info(xx +
                 "MonitorAuthenticationFilter : constructor \uD83D\uDE21");
     }
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MonitorAuthenticationFilter.class);
     private static final Gson G = new GsonBuilder().setPrettyPrinting().create();
-    @Autowired
-    private DataService dataService;
+    private final DataService dataService;
+    @Value("${spring.profiles.active}")
+    private String profile;
 
     @Override
     protected void doFilterInternal(@NotNull HttpServletRequest httpServletRequest,
@@ -44,8 +48,12 @@ public class MonitorAuthenticationFilter extends OncePerRequestFilter {
                                     @NotNull FilterChain filterChain) throws ServletException, IOException {
 
         String url = httpServletRequest.getRequestURL().toString();
+        if (profile.equalsIgnoreCase("test")) {
+            doFilter(httpServletRequest, httpServletResponse, filterChain);
+            return;
+        }
 
-        if (url.contains("localhost:8177") || url.contains("uploadFile")) {   //this is my local machine
+        if (url.contains("uploadFile")) {   //this is my local machine
             LOGGER.info(E.ANGRY + E.ANGRY + "this request is not subject to authentication: "
                     + E.HAND2 + url);
             doFilter(httpServletRequest, httpServletResponse, filterChain);
@@ -82,9 +90,6 @@ public class MonitorAuthenticationFilter extends OncePerRequestFilter {
             FirebaseToken mToken = future.get();
 
             if (mToken != null) {
-                String uid = mToken.getUid();
-                String email = mToken.getEmail();
-//                LOGGER.info("\uD83D\uDE21 \uD83D\uDE21 \uD83D\uDE21 uid let in by the bouncers, uid: " + uid + " email: " + email);
                 doFilter(httpServletRequest, httpServletResponse, filterChain);
             } else {
                 LOGGER.info("\uD83D\uDE21 \uD83D\uDE21 \uD83D\uDE21 request has been forbidden, token invalid");

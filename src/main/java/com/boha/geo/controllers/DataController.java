@@ -40,11 +40,9 @@ import java.util.List;
 public class DataController {
     private static final Logger LOGGER = LoggerFactory.getLogger(DataController.class);
 
-    Bucket bucket;
     private final DataService dataService;
     private final UserBatchService userBatchService;
     private final CloudStorageUploaderService cloudStorageUploaderService;
-    private final MongoGenerator mongoGenerator;
     private final MessageService messageService;
     private final RegistrationService registrationService;
 
@@ -62,18 +60,19 @@ public class DataController {
 
     })
     @PostMapping("/registerOrganization")
-    public ResponseEntity<Object> registerOrganization(@RequestBody OrganizationRegistrationBag orgBag) throws Exception {
+    public OrganizationRegistrationBag registerOrganization(@RequestBody OrganizationRegistrationBag orgBag) throws Exception {
         LOGGER.info(E.RAIN_DROPS.concat(E.RAIN_DROPS)
                 .concat(".... Registering new Organization: ".concat(orgBag.getOrganization().getName())));
-        try {
-            return ResponseEntity.ok(registrationService.registerOrganization(orgBag));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().body(
-                    new CustomErrorResponse(400,
-                            "addOrganization failed: " + e.getMessage(),
-                            new DateTime().toDateTimeISO().toString()));
-        }
+//        try {
+            OrganizationRegistrationBag bag = registrationService.registerOrganization(orgBag);
+            return bag;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return ResponseEntity.badRequest().body(
+//                    new CustomErrorResponse(400,
+//                            "addOrganization failed: " + e.getMessage(),
+//                            new DateTime().toDateTimeISO().toString()));
+//        }
 
     }
 

@@ -6,7 +6,7 @@ import com.boha.geo.monitor.services.ListService;
 import com.boha.geo.services.CloudStorageUploaderService;
 import com.boha.geo.services.TextTranslationService;
 import com.boha.geo.services.UserBatchService;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -14,7 +14,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 
 @ExtendWith(SpringExtension.class)
-public class SmokeTest {
+class SmokeTest {
 
     @Mock
     DataController dataController;
@@ -33,27 +33,27 @@ public class SmokeTest {
     @Mock
     ListService listService;
     @Test
-    public void dataControllerIsNotNull() {
-        Assert.assertNotNull(dataController);
+    void dataControllerIsNotNull() {
+        Assertions.assertNotNull(dataController);
     }
     @Test
-    public void listControllerIsNotNull() {
-        Assert.assertNotNull(listController);
+    void listControllerIsNotNull() {
+        Assertions.assertNotNull(listController);
     }
     @Test
-    public void textTranslationServiceIsNotNull() {
-        Assert.assertNotNull(textTranslationService);
+    void textTranslationServiceIsNotNull() {
+        Assertions.assertNotNull(textTranslationService);
     }
     @Test
-    public void userBatchServiceIsNotNull() {
-        Assert.assertNotNull(userBatchService);
+    void userBatchServiceIsNotNull() {
+        Assertions.assertNotNull(userBatchService);
     }
     @Test
-    public void cloudStorageUploaderServiceIsNotNull() {
-        Assert.assertNotNull(cloudStorageUploaderService);
+    void cloudStorageUploaderServiceIsNotNull() {
+        Assertions.assertNotNull(cloudStorageUploaderService);
     }
     @Test
-    public void listServiceIsNotNull() {
-        Assert.assertNotNull(listService);
+    void listServiceIsNotNull() {
+        Assertions.assertNotNull(listService);
     }
 }

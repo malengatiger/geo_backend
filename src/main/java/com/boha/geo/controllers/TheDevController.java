@@ -15,6 +15,7 @@ import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Refill;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.joda.time.DateTime;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.Duration;
 import java.util.List;
 import java.util.logging.Logger;
-
+@RequiredArgsConstructor
 @RestController
 public class TheDevController {
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -40,25 +41,6 @@ public class TheDevController {
     final MessageService messageService;
 
     final OrganizationRepository organizationRepository;
-
-    Bucket bucket;
-    public TheDevController(PlacesService placesService, MongoService mongoService,
-                            UserService userService, CityService cityService, StorageService storageService, MessageService messageService, OrganizationRepository organizationRepository) {
-        this.placesService = placesService;
-        this.mongoService = mongoService;
-        this.userService = userService;
-        this.cityService = cityService;
-        this.storageService = storageService;
-        this.messageService = messageService;
-        this.organizationRepository = organizationRepository;
-
-        Bandwidth limit = Bandwidth.classic(50, Refill.greedy(50, Duration.ofMinutes(1)));
-        this.bucket = Bucket.builder()
-                .addLimit(limit)
-                .build();
-
-        logger.info(xx+" MainController constructed and services injected");
-    }
 
     @GetMapping("/addUsers")
     private ResponseEntity<Object> addUsers() {

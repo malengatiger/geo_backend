@@ -18,6 +18,7 @@ import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerF
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
@@ -32,6 +33,7 @@ import java.util.logging.Logger;
 
 @SpringBootApplication
 @EnableMongoRepositories(basePackages = "com.boha.geo.repos")
+@Configuration
 
 public class GeoApplication implements ApplicationListener<ApplicationReadyEvent> {
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();

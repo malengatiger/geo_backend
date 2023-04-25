@@ -25,19 +25,20 @@ public class FirebaseService {
     @Value("${storageBucket}")
     private String storageBucket;
     private FirebaseApp app;
-
+    @Value("${projectId}")
+    private String projectId;
 
 
     public void initializeFirebase() {
         LOGGER.info(E.AMP+E.AMP+E.AMP+ " .... initializing Firebase ....");
         FirebaseOptions options;
-        String projectId = System.getenv().get("PROJECT_ID");
-        if (projectId == null) {
-            LOGGER.info(E.RED_DOT+E.RED_DOT+E.AMP+ " .... missing ProjectId WTF? ....");
-            throw  new RuntimeException("Project  ID is missing from environment variables");
-        }
+//        String projectId = System.getenv().get("PROJECT_ID");
+//        if (projectId == null) {
+//            LOGGER.info(E.RED_DOT+E.RED_DOT+E.AMP+ " .... missing ProjectId WTF? ....");
+//            throw  new RuntimeException("Project  ID is missing from environment variables");
+//        }
         LOGGER.info(E.AMP+E.AMP+E.AMP+
-                " Project Id from System.getenv: "+E.RED_APPLE + " " + projectId);
+                " Project Id from Properties: "+E.RED_APPLE + " " + projectId);
         try {
             options = FirebaseOptions.builder()
                     .setCredentials(GoogleCredentials.getApplicationDefault())

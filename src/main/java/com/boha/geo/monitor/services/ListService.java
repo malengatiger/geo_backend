@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.*;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.NearQuery;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
@@ -92,7 +93,7 @@ public class ListService {
         if (user != null) {
             LOGGER.info(E.GLOBE.concat(E.GLOBE).concat("findUserByEmail ... found: \uD83D\uDC24 " + G.toJson(user)));
         } else {
-            throw new Exception(E.ALIEN + "User " + email + " not found, probably not registered yet ".concat(E.NOT_OK));
+            LOGGER.info(E.ALIEN + "User " + email + " not found, probably not registered yet ".concat(E.NOT_OK));
         }
         return user;
     }
@@ -264,7 +265,9 @@ public class ListService {
         DataBag bag = new DataBag();
         Project project = projectRepository.findByProjectId(projectId);
         List<Project> projects = new ArrayList<>();
-        projects.add(project);
+        if (project != null) {
+            projects.add(project);
+        }
 
         List<Photo> photos = getProjectPhotos(projectId, startDate, endDate);
         List<Video> videos = getProjectVideos(projectId, startDate, endDate);
@@ -337,13 +340,6 @@ public class ListService {
         List<ProjectSummary> list = dataService.createDailyOrganizationSummaries(organizationId, startDate, endDate);
 
         return list;
-    }
-
-    public List<ProjectSummary> getProjectSummary(
-            String projectId, String startDate, String endDate) throws Exception {
-
-
-        return new ArrayList<>();
     }
 
     static final String mm = "" + E.BLUE_DOT + E.BLUE_DOT  + " Zip: ";
@@ -544,9 +540,15 @@ public class ListService {
     ProjectPositionRepository projectPositionRepository;
 
     public List<Project> findProjectsByLocation(String organizationId, double latitude, double longitude, double radiusInKM) {
+
+
         Point point = new Point(longitude, latitude);
         Distance distance = new Distance(radiusInKM, Metrics.KILOMETERS);
+        if (projectPositionRepository == null) {
+            return new ArrayList<>();
+        }
         List<ProjectPosition> projects = projectPositionRepository.findByPositionNear(point, distance);
+
         List<Project> fList = new ArrayList<>();
         for (ProjectPosition projectPosition : projects) {
 
@@ -569,6 +571,10 @@ public class ListService {
         GeoResults<City> cities = cityRepository.findByCityLocationNear(point, distance);
 
         List<City> mList = new ArrayList<>();
+        if (cities == null) {
+            return mList;
+        }
+
         for (GeoResult<City> city : cities) {
             mList.add(city.getContent());
         }
@@ -580,12 +586,18 @@ public class ListService {
 
     public int countPhotosByProject(String projectId) {
 
-        int cnt = photoRepository.findByProjectId(projectId).size();
-        return cnt;
+        List<Photo> list = photoRepository.findByProjectId(projectId);
+        return list.size();
     }
 
     public ProjectSummary getCountsByProject(String projectId) {
 
+        if (photoRepository == null || projectPositionRepository == null) {
+            val pc = new ProjectSummary();
+            pc.setPhotos(0);
+            pc.setDate(new DateTime().toDateTimeISO().toString());
+            return pc;
+        }
         int photos = photoRepository.findByProjectId(projectId).size();
         int videos = videoRepository.findByProjectId(projectId).size();
         int audios = audioRepository.findByProjectId(projectId).size();
@@ -612,6 +624,13 @@ public class ListService {
 
     public UserCount getCountsByUser(String userId) {
 
+        if (photoRepository == null) {
+            val pc = new UserCount();
+            pc.setVideos(0);
+            pc.setPhotos(0);
+            pc.setDate(DateTime.now().toDateTimeISO().toString());
+            return pc;
+        }
         List<Photo> photos = photoRepository.findByUserId(userId);
         List<Video> videos = videoRepository.findByUserId(userId);
 
@@ -625,7 +644,9 @@ public class ListService {
 
         User user = userRepository.findByUserId(userId);
         val pc = new UserCount();
-        pc.setUser(user);
+        if (user != null) {
+            pc.setUser(user);
+        }
         pc.setVideos(videos.size());
         pc.setPhotos(photos.size());
         pc.setDate(DateTime.now().toDateTimeISO().toString());
@@ -634,32 +655,52 @@ public class ListService {
     }
 
     public int countVideosByProject(String projectId) {
-
-        int cnt = videoRepository.findByProjectId(projectId).size();
-        return cnt;
+        if (videoRepository == null) {
+            return 0;
+        }
+        List<Video> videos = videoRepository.findByProjectId(projectId);
+        return videos.size();
     }
 
     public int countPhotosByUser(String userId) {
-
-        int cnt = photoRepository.findByUserId(userId).size();
-        return cnt;
+        if (photoRepository == null) {
+            return 0;
+        }
+        List<Photo> photos = photoRepository.findByUserId(userId);
+        return photos.size();
     }
 
     public int countVideosByUser(String userId) {
 
-        int cnt = videoRepository.findByUserId(userId).size();
-        return cnt;
+        if (videoRepository == null) {
+            return 0;
+        }
+
+        List<Video> list = videoRepository.findByUserId(userId);
+        int res = list.size();
+        LOGGER.info("..... videos found: " + res);
+        return res;
     }
 
     public List<ProjectPosition> findProjectPositionsByLocation(String organizationId, double latitude, double longitude, double radiusInKM) {
         Point point = new Point(longitude, latitude);
         Distance distance = new Distance(radiusInKM, Metrics.KILOMETERS);
+//        if (projectPositionRepository == null) {
+//            return new ArrayList<>();
+//        }
 
-        List<ProjectPosition> positions = projectPositionRepository.findByPositionNear(point, distance);
+        NearQuery nearQuery = NearQuery.near(point).maxDistance(50, Metrics.MILES);
+
+        GeoResults<ProjectPosition> positions = mongoTemplate.geoNear(nearQuery, ProjectPosition.class);
+//        List<ProjectPosition> positions = projectPositionRepository.findByPositionNear(point, distance);
+
         List<ProjectPosition> mPositions = new ArrayList<>();
-        for (ProjectPosition position : positions) {
-            if (position.getOrganizationId().equalsIgnoreCase(organizationId)) {
-                mPositions.add(position);
+        if (positions == null) {
+            return mPositions;
+        }
+        for (GeoResult<ProjectPosition> position : positions) {
+            if (position.getContent().getOrganizationId().equalsIgnoreCase(organizationId)) {
+                mPositions.add(position.getContent());
             }
         }
 
@@ -694,6 +735,9 @@ public class ListService {
     }
     public List<ProjectPosition> getOrganizationProjectPositions(String organizationId) {
 
+        if (projectPositionRepository == null) {
+            return new ArrayList<>();
+        }
         List<ProjectPosition> mList = projectPositionRepository.findByOrganizationId(organizationId);
 
         return mList;
@@ -724,6 +768,9 @@ public class ListService {
         Distance distance = new Distance(radiusInKM, Metrics.KILOMETERS);
         GeoResults<City> cities = cityRepository.findByCityLocationNear(point, distance);
 
+        if (cities == null) {
+            return new ArrayList<>();
+        }
         List<City> mList = new ArrayList<>();
         for (GeoResult<City> city : cities) {
             mList.add(city.getContent());
@@ -817,7 +864,9 @@ public class ListService {
     public User getUserById(String userId) {
 
         User user = userRepository.findByUserId(userId);
-
+        if (user == null) {
+            return null;
+        }
         if (user.getActive() > 0) {
             return null;
         }

@@ -49,16 +49,16 @@ public class MongoConfig {
     @Bean
     public MongoClient mongo() {
         LOGGER.info(E.RAIN+E.RAIN+E.RAIN+E.RAIN+
-                " MongoClient prep, profile: " + profile);
+                " MongoClient bean prep, active profile: " + profile);
 
         String mString = "";
 
         String uri;
-        if (profile.equalsIgnoreCase("dev")) {
-            LOGGER.info(E.RAIN+E.RAIN+E.RAIN+E.RAIN+
-                    " Using local MongoDB Server with " + mongoString);
-            uri = mongoString;
-        } else {
+//        if (profile.equalsIgnoreCase("dev")) {
+//            LOGGER.info(E.RAIN+E.RAIN+E.RAIN+E.RAIN+
+//                    " Using local MongoDB Server with " + mongoString);
+//            uri = mongoString;
+//        } else {
             try {
 
                 uri = secretManagerService.getMongoString();
@@ -71,7 +71,7 @@ public class MongoConfig {
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-        }
+//        }
 
 
         LOGGER.info(mm + "MongoDB Connection string: " + E.RED_APPLE + mString);

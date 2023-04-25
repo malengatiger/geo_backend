@@ -28,9 +28,9 @@ public class ControllerToTypescript {
     private static void convertToTypeScript(Path dirPath) throws Exception {
 
         DataController dataController = new DataController(null, null, null, null,
-                null, null, null
+                null, null
         );
-        ListController listController = new ListController(null,null,null);
+        ListController listController = new ListController(null,null,null, null);
 
         try {
             logger.info("\n\n\uD83D\uDD35\uD83D\uDD35 DataController \n\n");
