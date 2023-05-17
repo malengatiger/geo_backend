@@ -19,21 +19,22 @@ public class Project {
     private List<City> nearestCities;
     private String translatedMessage;
     private String translatedTitle;
+    private String imageUrl;
 
     public Project() {
     }
 
-    public Project(String _partitionKey, String projectId, String name, String organizationId,
-                   String description, String organizationName, double monitorMaxDistanceInMetres,
-                   String created, List<City> nearestCities) {
-        this._partitionKey = _partitionKey;
-        this.projectId = projectId;
-        this.name = name;
-        this.organizationId = organizationId;
-        this.description = description;
-        this.organizationName = organizationName;
-        this.monitorMaxDistanceInMetres = monitorMaxDistanceInMetres;
-        this.created = created;
-        this.nearestCities = nearestCities;
-    }
+//    public Project(String _partitionKey, String projectId, String name, String organizationId,
+//                   String description, String organizationName, double monitorMaxDistanceInMetres,
+//                   String created, List<City> nearestCities) {
+//        this._partitionKey = _partitionKey;
+//        this.projectId = projectId;
+//        this.name = name;
+//        this.organizationId = organizationId;
+//        this.description = description;
+//        this.organizationName = organizationName;
+//        this.monitorMaxDistanceInMetres = monitorMaxDistanceInMetres;
+//        this.created = created;
+//        this.nearestCities = nearestCities;
+//    }
 }

@@ -262,7 +262,8 @@ public class DataController {
     @PostMapping("/addSettings")
     public ResponseEntity<Object> addSettings(@RequestBody SettingsModel model) throws Exception {
         try {
-            return ResponseEntity.ok(dataService.addSettings(model));
+            dataService.addSettings(model);
+            return ResponseEntity.ok(model);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
                     new CustomErrorResponse(400,

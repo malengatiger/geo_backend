@@ -747,6 +747,7 @@ public class DataService {
         am.setOrganizationId(model.getOrganizationId());
         am.setUserName(model.getUserName());
         am.setUserThumbnailUrl(model.getUserThumbnailUrl());
+        am.setSettingsModel(model);
         am.setProjectName(null);
 
         addActivityModel(am);

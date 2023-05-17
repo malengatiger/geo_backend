@@ -3,7 +3,7 @@ application:
     version: Geo Version 1.0.0
 cloudStorageDirectory: geoMedia
 email: bryangrant217x@gmail.com
-requestsPerSecond: 1
+requestsPerSecond: 5
 spring:
     mail:
         host: smtp.gmail.com

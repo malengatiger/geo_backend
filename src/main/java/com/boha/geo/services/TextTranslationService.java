@@ -207,9 +207,47 @@ public class TextTranslationService {
     }
 
     private void setStrings() {
+        hashMap.put("saveProjectLocation","Save Project Location");
+        hashMap.put("latitude","Latitude");
+        hashMap.put("longitude","Longitude");
+        hashMap.put("areaPoint","Area Point");
 
-        hashMap.put("events","Events");
-        hashMap.put("recentEvents","Recent Events");
+//        hashMap.put("searchMembers","Search Members");
+//        hashMap.put("searchUsers","Search Users");
+//        hashMap.put("closeCancel","Close/Cancel");
+//        hashMap.put("exit","Exit");
+
+
+
+//        hashMap.put("searchProjects","Search Projects");
+//        hashMap.put("search","Search");
+
+//        hashMap.put("rateVideo","Rate Video");
+//        hashMap.put("rateAudio","Rate Audio Clip");
+//
+//        hashMap.put("timeLine","Timeline");
+//        hashMap.put("projectTimeline","Project Timeline");
+//        hashMap.put("seeLocationDetails","See Location Details");
+//        hashMap.put("ratePhoto","Rate Photo");
+//        hashMap.put("createdBy","Created By");
+//
+//        hashMap.put("actionsOnPhoto","Actions on Photo");
+//        hashMap.put("actionsOnVideo","Actions on Video");
+//        hashMap.put("actionsOnAudio","Actions on Audio");
+//
+//        hashMap.put("close","Close");
+//        hashMap.put("cancel","Cancel");
+//
+//        hashMap.put("loadingData","Loading Data");
+//        hashMap.put("recentEvents","Recent Events");
+
+
+
+
+
+
+//        hashMap.put("events","Events");
+//        hashMap.put("recentEvents","Recent Events");
 
 //        hashMap.put("uploadMemberBatchFile","Upload Member File");
 //        hashMap.put("pickMemberBatchFile","Pick Member file for upload");

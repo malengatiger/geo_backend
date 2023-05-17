@@ -14,6 +14,7 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.data.geo.*;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -194,16 +195,18 @@ public class ListService {
     }
 
     public List<ActivityModel> getOrganizationActivity(String organizationId, int hours) {
-
+        LOGGER.info("getOrganizationActivity , hours: " + hours);
         DateTime then = DateTime.now().minusHours(hours);
         String date = then.toDateTimeISO().toString();
-
+        LOGGER.info("getOrganizationActivity , date: " + date);
         Criteria criteria = new Criteria();
         criteria = criteria.and("organizationId").is(organizationId);
         criteria = criteria.and("date").gt(date);
 
         Query query = new Query(criteria);
         List<ActivityModel> activities = mongoTemplate.find(query, ActivityModel.class);
+        LOGGER.info("getOrganizationActivity , activities: " + activities.size());
+
         return activities;
     }
 
@@ -304,22 +307,35 @@ public class ListService {
         return audioRepository.findByAudioId(photoId);
     }
 
-    public DataBag getOrganizationData(String organizationId, String startDate, String endDate) throws Exception {
-        DataBag bag = new DataBag();
+    public DataBag getOrganizationData(String organizationId, String startDate, String endDate, int activityStreamHours) throws Exception {
+        long start = System.currentTimeMillis();
 
-        List<Project> projects = getOrganizationProjects(organizationId, startDate, endDate);
+        LOGGER.info("getOrganizationData .............................: ");
+        List<Project> projects = getAllOrganizationProjects(organizationId);
+        LOGGER.info("projects: " + projects.size());
         List<Photo> photos = getOrganizationPhotos(organizationId, startDate, endDate);
+        LOGGER.info("photos: " + photos.size());
         List<Video> videos = getOrganizationVideos(organizationId, startDate, endDate);
+        LOGGER.info("videos: " + videos.size());
         List<Audio> audios = getOrganizationAudios(organizationId, startDate, endDate);
+        LOGGER.info("audios: " + audios.size());
+
+
+        List<ActivityModel> models = getOrganizationActivity(organizationId,activityStreamHours);
+        LOGGER.info("activities: " + models.size());
 
         List<ProjectAssignment> assignments = getOrganizationProjectAssignments(organizationId);
-
         List<ProjectPosition> projectPositions = getOrganizationProjectPositions(organizationId, startDate, endDate);
+        LOGGER.info("projectPositions: " + projectPositions.size());
+
         List<FieldMonitorSchedule> fieldMonitorSchedules = getOrgFieldMonitorSchedules(organizationId, startDate, endDate);
         List<ProjectPolygon> polygons = getOrganizationProjectPolygons(organizationId, startDate, endDate);
+        LOGGER.info("polygons: " + polygons.size());
 
-        List<User> users = getOrganizationUsers(organizationId, startDate, endDate);
+        List<User> users = getOrganizationUsers(organizationId);
+        LOGGER.info("users: " + users.size());
 
+        DataBag bag = new DataBag();
         bag.setDate(DateTime.now().toDateTimeISO().toString());
         bag.setProjects(projects);
         bag.setFieldMonitorSchedules(fieldMonitorSchedules);
@@ -330,9 +346,14 @@ public class ListService {
         bag.setAudios(audios);
         bag.setUsers(users);
         bag.setProjectAssignments(assignments);
-
+        bag.setActivityModels(models);
+        long end = System.currentTimeMillis();
+        long ms = (end - start);
+        double elapsed = Double.parseDouble(""+ms) / Double.parseDouble("1000");
+        LOGGER.info("getOrganizationData returning bag: .........  elapsed time: " + elapsed + " seconds");
         return bag;
     }
+
 
     public List<ProjectSummary> getOrganizationSummary(
             String organizationId, String startDate, String endDate) throws Exception {
@@ -344,14 +365,14 @@ public class ListService {
 
     static final String mm = "" + E.BLUE_DOT + E.BLUE_DOT  + " Zip: ";
 
-    public File getOrganizationDataZippedFile(String organizationId, String startDate, String endDate) throws Exception {
-
+    public File getOrganizationDataZippedFile(String organizationId, String startDate, String endDate,int activityStreamHours) throws Exception {
+        LOGGER.info("getOrganizationDataZippedFile .............................." );
         long start = System.currentTimeMillis();
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
         decimalFormat.setGroupingUsed(true);
         decimalFormat.setGroupingSize(3);
 
-        DataBag bag = getOrganizationData(organizationId, startDate, endDate);
+        DataBag bag = getOrganizationData(organizationId, startDate, endDate, activityStreamHours);
         String json = G.toJson(bag);
         LOGGER.info(mm + E.RED_DOT+E.RED_DOT+" Before zip: " + decimalFormat.format(json.length()) + " bytes in file");
         File dir = new File("zipDirectory");
@@ -726,11 +747,25 @@ public class ListService {
     }
 
     public List<ProjectPosition> getOrganizationProjectPositions(String organizationId, String startDate, String endDate) {
-        Criteria c = Criteria.where("organizationId").is(organizationId)
-                .and("created").gte(startDate).lte(endDate);
-        Query query = new Query(c);
-        List<ProjectPosition> mList = mongoTemplate.find(query, ProjectPosition.class);
+        List<ProjectPosition> mList = new ArrayList<>();
 
+        try {
+            Criteria c = Criteria.where("organizationId").is(organizationId)
+                    .and("created").gte(startDate).lte(endDate);
+            Query query = new Query(c);
+            mList = mongoTemplate.find(query, ProjectPosition.class);
+
+        return mList;
+        } catch (Exception e) {
+            if (e instanceof DataAccessResourceFailureException) {
+                LOGGER.info("Retrying failed request ,,,");
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException ex) {
+                    getOrganizationProjectPositions(organizationId, startDate,endDate);
+                }
+            }
+        }
         return mList;
     }
     public List<ProjectPosition> getOrganizationProjectPositions(String organizationId) {

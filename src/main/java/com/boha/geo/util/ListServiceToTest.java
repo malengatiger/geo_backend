@@ -19,14 +19,14 @@ import java.util.List;
 public class ListServiceToTest {
     static final Logger logger = LoggerFactory.getLogger(ListServiceToTest.class);
 
-    public static void main(String[] args) throws Exception {
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-        Path dirPath = Files.createDirectory(Path.of("controllers_" + sdf.format(new Date())));
-
-
-        convertToTests(dirPath);
-
-    }
+//    public static void main(String[] args) throws Exception {
+//        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+//        Path dirPath = Files.createDirectory(Path.of("controllers_" + sdf.format(new Date())));
+//
+//
+//        convertToTests(dirPath);
+//
+//    }
 
     private static void convertToTests(Path outputPath) throws Exception {
 

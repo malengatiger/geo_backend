@@ -1,0 +1,145 @@
+[
+  {
+    "_id": "63c7cc5c134e27a8b2eea5b9",
+    "countryId": "63c7cb00134e27a8b2eea5b8",
+    "name": "South Africa",
+    "countryCode": "ZA",
+    "position": {
+      "type": "Point",
+      "coordinates": [
+        24.655,
+        -29.856
+      ]
+    }
+  },
+  {
+    "_id": "63c7cfc2134e27a8b2eea5ba",
+    "countryId": "98c7cb00134e27a8b2eea5b2",
+    "name": "Zimbabwe",
+    "countryCode": "ZW",
+    "position": {
+      "type": "Point",
+      "coordinates": [
+        30.0655,
+        -20.006
+      ]
+    }
+  },
+  {
+    "_id": "63c7d104134e27a8b2eea5bb",
+    "countryId": "58c7cb00134e27a8b2eea5e3",
+    "name": "Namibia",
+    "countryCode": "NA",
+    "position": {
+      "type": "Point",
+      "coordinates": [
+        17.07655,
+        -22.0856
+      ]
+    }
+  },
+  {
+    "_id": "63c7d12f134e27a8b2eea5bc",
+    "countryId": "66c7cb00134e27a8b2eea5b7",
+    "name": "Mozambique",
+    "countryCode": "MZ",
+    "position": {
+      "type": "Point",
+      "coordinates": [
+        35.03655,
+        -18.25856
+      ]
+    }
+  },
+  {
+    "_id": "641578b9d6ac03735ef4cda5",
+    "countryId": "66c7cb00134e27a8b2eec5b7",
+    "name": "Angola",
+    "countryCode": "AO",
+    "position": {
+      "type": "Point",
+      "coordinates": [
+        17.877,
+        -11.21352
+      ]
+    }
+  },
+  {
+    "_id": "63c7d12f134e27a8b2eea5bc",
+    "countryId": "66c7cb00134e27a8b4aea5b7",
+    "name": "Democratic Republic of Congo",
+    "countryCode": "CD",
+    "position": {
+      "type": "Point",
+      "coordinates": [
+        21.75006,
+        -4.03351
+      ]
+    }
+  },
+  {
+    "_id": "64157aaad6ac03735ef4cda7",
+    "countryId": "66c7cb00134e27a6b2eba5b4",
+    "name": "Botswana",
+    "countryCode": "BW",
+    "position": {
+      "type": "Point",
+      "coordinates": [
+        24.6871,
+        -22.3428
+      ]
+    }
+  },
+  {
+    "_id": "64157b61d6ac03735ef4cda8",
+    "countryId": "66c7cb11134e28a8b2eea5b7",
+    "name": "Kenya",
+    "countryCode": "KE",
+    "position": {
+      "type": "Point",
+      "coordinates": [
+        37.9083,
+        0.17686
+      ]
+    }
+  },
+  {
+    "_id": "64157bdbd6ac03735ef4cda9",
+    "countryId": "66c7cb00134e27a8b3eea5c3",
+    "name": "Nigeria",
+    "countryCode": "NG",
+    "position": {
+      "type": "Point",
+      "coordinates": [
+        8.67745,
+        9.077751
+      ]
+    }
+  },
+  {
+    "_id": "6415823cd6ac03735ef4cdaa",
+    "countryId": "66c7cb00174e27a7c3eea5c3",
+    "name": "Lesotho",
+    "countryCode": "LS",
+    "position": {
+      "type": "Point",
+      "coordinates": [
+        28.23346,
+        -29.62319
+      ]
+    }
+  },
+  {
+    "_id": "641582efd6ac03735ef4cdab",
+    "countryId": "66c7cb00134e27a8b3eea5c3",
+    "name": "Eswatini",
+    "countryCode": "SZ",
+    "position": {
+      "type": "Point",
+      "coordinates": [
+        31.465866,
+        -26.522503
+      ]
+    }
+  }
+]

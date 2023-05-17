@@ -649,6 +649,7 @@ public class ListController {
     public ResponseEntity<Object> getOrganizationActivity(@RequestParam String organizationId,
                                                           @RequestParam int hours) {
         try {
+            LOGGER.info("getOrganizationActivity: ");
             return ResponseEntity.ok(listService.getOrganizationActivity(organizationId, hours));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
@@ -792,11 +793,12 @@ public class ListController {
     }
 
     @GetMapping("/getOrganizationData")
-    public ResponseEntity<Object> getOrganizationData(@RequestParam String organizationId,@RequestParam  String startDate, @RequestParam String endDate) {
+    public ResponseEntity<Object> getOrganizationData(@RequestParam String organizationId,@RequestParam  String startDate,
+                                                      @RequestParam String endDate, @RequestParam int activityStreamHours) {
 
         try {
             long start = System.currentTimeMillis();
-            DataBag bag = listService.getOrganizationData(organizationId, startDate, endDate);
+            DataBag bag = listService.getOrganizationData(organizationId, startDate, endDate, activityStreamHours);
             long end = System.currentTimeMillis();
             Double m = Double.valueOf("" + (end - start));
             Double ms = 1000.0;
@@ -839,9 +841,10 @@ public class ListController {
 
     })
     @GetMapping(value = "/getOrganizationDataZippedFile", produces = "application/zip")
-    public byte[] getOrganizationDataZippedFile(@RequestParam String organizationId,@RequestParam  String startDate, @RequestParam String endDate) throws Exception {
+    public byte[] getOrganizationDataZippedFile(@RequestParam String organizationId,@RequestParam  String startDate, @RequestParam String endDate, @RequestParam int activityStreamHours) throws Exception {
 
-        File zippedFile = listService.getOrganizationDataZippedFile(organizationId, startDate, endDate);
+        LOGGER.info("getOrganizationDataZippedFile in list controller: ");
+        File zippedFile = listService.getOrganizationDataZippedFile(organizationId, startDate, endDate, activityStreamHours);
         byte[] bytes = java.nio.file.Files.readAllBytes(zippedFile.toPath());
         zippedFile.delete();
 

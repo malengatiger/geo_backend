@@ -78,6 +78,15 @@ public class MonitorAuthenticationFilter extends OncePerRequestFilter {
             doFilter(httpServletRequest, httpServletResponse, filterChain);
             return;
         }
+        //allow localhost
+        if (url.contains("localhost")) {
+            LOGGER.info("" + mm + " contextPath: " + httpServletRequest.getContextPath()
+                    + E.AMP + " requestURI: " + httpServletRequest.getRequestURI() + "\n\n");
+            LOGGER.info("" + mm + " allowing call from localhost");
+
+            doFilter(httpServletRequest, httpServletResponse, filterChain);
+            return;
+        }
 
         String m = httpServletRequest.getHeader("Authorization");
         if (m == null) {
@@ -114,10 +123,19 @@ public class MonitorAuthenticationFilter extends OncePerRequestFilter {
                           @NotNull HttpServletResponse httpServletResponse,
                           FilterChain filterChain) throws IOException, ServletException {
         filterChain.doFilter(httpServletRequest, httpServletResponse);
-        LOGGER.info("\uD83D\uDD37\uD83D\uDD37\uD83D\uDD37\uD83D\uDD37"
-                + httpServletRequest.getRequestURI() + " \uD83D\uDD37 Status Code: "
-                + httpServletResponse.getStatus() + "  \uD83D\uDD37 \uD83D\uDD37 \uD83D\uDD37 ");
+
+        if (httpServletResponse.getStatus() != 200) {
+            LOGGER.info(reds + " \n" + httpServletRequest.getRequestURI() + " \uD83D\uDD37 Status Code: "
+                    + httpServletResponse.getStatus() + "  \uD83D\uDCA6\uD83D\uDCA6  buffer size: " +
+                    httpServletResponse.getBufferSize());
+        } else {
+            LOGGER.info("\uD83D\uDD37\uD83D\uDD37\uD83D\uDD37\uD83D\uDD37"
+                    + httpServletRequest.getRequestURI() + " \uD83D\uDD37 Status Code: "
+                    + httpServletResponse.getStatus() + "  \uD83D\uDD37 \uD83D\uDD37 \uD83D\uDD37 ");
+        }
     }
+
+    static final String reds = E.RED_DOT+E.RED_DOT+E.RED_DOT+E.RED_DOT+E.RED_DOT+" Bad Response Status:";
 
     private void print(@NotNull HttpServletRequest httpServletRequest) {
         String url = httpServletRequest.getRequestURL().toString();

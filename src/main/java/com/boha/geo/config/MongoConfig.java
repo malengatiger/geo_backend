@@ -10,6 +10,7 @@ import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import lombok.RequiredArgsConstructor;
+import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 
@@ -93,11 +94,9 @@ public class MongoConfig {
         MongoClient client = MongoClients.create(settings);
 
         LOGGER.info(mm + " " + client.listDatabases().iterator().getServerAddress() + " MongoClientSettings have been set with pojoCodecRegistry");
-//        for (Document document : client.listDatabases()) {
-//            LOGGER.info(mm + "Database Document: " + document.toJson() + E.RAIN);
-//        }
-//        LOGGER.info(mm + " ClusterDescription: "
-//                + client.getClusterDescription().getShortDescription() + mm);
+        for (Document document : client.listDatabases()) {
+            LOGGER.info(mm + "MongoDB Atlas Database: " + document.toJson() + E.RAIN+E.RAIN);
+        }
         LOGGER.info(mm + " Database Name: "
                 + client.getDatabase(databaseName).getName() + " " + mm);
 

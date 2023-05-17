@@ -29,6 +29,7 @@ public class ActivityModel {
         GeofenceEvent geofenceEvent;
         LocationRequest locationRequest;
         LocationResponse locationResponse;
+        SettingsModel settingsModel;
         String userType;
         String translatedUserType;
 }

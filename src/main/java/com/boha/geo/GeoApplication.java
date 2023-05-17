@@ -71,7 +71,7 @@ public class GeoApplication implements ApplicationListener<ApplicationReadyEvent
         logger.info(E.PEAR + E.PEAR + E.PEAR + E.PEAR +
                 " Total Endpoints: " + map.size() + "\n");
 
-            //firebaseService.initializeFirebase();
+            firebaseService.initializeFirebase();
 
         try (final DatagramSocket datagramSocket = new DatagramSocket()) {
             datagramSocket.connect(InetAddress.getByName("8.8.8.8"), 12345);
