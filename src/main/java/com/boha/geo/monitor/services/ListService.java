@@ -347,6 +347,7 @@ public class ListService {
         bag.setUsers(users);
         bag.setProjectAssignments(assignments);
         bag.setActivityModels(models);
+
         long end = System.currentTimeMillis();
         long ms = (end - start);
         double elapsed = Double.parseDouble(""+ms) / Double.parseDouble("1000");
